@@ -1,2 +1,2 @@
-# phpstan-rules
+# PHPStan rules
 PHPStan extension rules
