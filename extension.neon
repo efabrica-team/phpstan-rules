@@ -1,0 +1,5 @@
+services:
+    - PhpParser\NodeFinder
+
+includes:
+    - vendor/symplify/astral/config/services.neon

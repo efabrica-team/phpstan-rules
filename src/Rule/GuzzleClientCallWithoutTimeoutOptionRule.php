@@ -31,22 +31,22 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
      * @var array<string, int> method name => position of $options parameter (indexed from 0)
      */
     private array $methodOptionArgPosition = [
+        'get' => 1,
+        'post' => 1,
+        'put' => 1,
+        'head' => 1,
+        'patch' => 1,
+        'delete' => 1,
+        'getAsync' => 1,
+        'postAsync' => 1,
+        'putAsync' => 1,
+        'headAsync' => 1,
+        'patchAsync' => 1,
+        'deleteAsync' => 1,
         'send' => 1,
         'sendAsync' => 1,
         'request' => 2,
         'requestAsync' => 2,
-        'get' => 1,
-        'head' => 1,
-        'put' => 1,
-        'post' => 1,
-        'patch' => 1,
-        'delete' => 1,
-        'getAsync' => 1,
-        'headAsync' => 1,
-        'putAsync' => 1,
-        'postAsync' => 1,
-        'patchAsync' => 1,
-        'deleteAsync' => 1,
     ];
 
     private ConstExprEvaluator $constExprEvaluator;
