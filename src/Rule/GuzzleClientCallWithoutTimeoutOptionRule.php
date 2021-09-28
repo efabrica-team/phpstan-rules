@@ -37,15 +37,15 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
         'head' => 1,
         'patch' => 1,
         'delete' => 1,
+        'send' => 1,
+        'request' => 2,
         'getAsync' => 1,
         'postAsync' => 1,
         'putAsync' => 1,
         'headAsync' => 1,
         'patchAsync' => 1,
         'deleteAsync' => 1,
-        'send' => 1,
         'sendAsync' => 1,
-        'request' => 2,
         'requestAsync' => 2,
     ];
 
@@ -68,10 +68,12 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
     public function processNode(Node $inClassNode, Scope $scope): array
     {
         $file = $scope->getFile();
-        $methodCallNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], MethodCall::class);
         $this->constExprEvaluator = new ConstExprEvaluator(fn (Expr $expr) => $this->resolveByNode($inClassNode, $scope, $expr));
 
         $errors = [];
+
+        /** @var MethodCall[] $methodCallNodes */
+        $methodCallNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], MethodCall::class);
         foreach ($methodCallNodes as $node) {
             $callerType = $scope->getType($node->var);
             if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf('GuzzleHttp\Client')->yes()) {
@@ -82,11 +84,11 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
             if (!isset($this->methodOptionArgPosition[$methodName])) {
                 continue;
             }
-
             $argPosition = $this->methodOptionArgPosition[$methodName];
             $argAtPosition = $node->args[$argPosition] ?? null;
             if ($argAtPosition === null) {
                 $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option')->file($file)->line($node->getStartLine())->build();
+                continue;
             }
 
             $options = $this->nodeValueResolver->resolveWithScope($argAtPosition->value, $scope);

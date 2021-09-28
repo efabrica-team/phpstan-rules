@@ -3,8 +3,3 @@ services:
         factory: Efabrica\PHPStanRules\Rule\GuzzleClientCallWithoutTimeoutOptionRule
         tags:
             - phpstan.rules.rule
-
-    - PhpParser\NodeFinder
-
-includes:
-    - vendor/symplify/astral/config/services.neon
