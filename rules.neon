@@ -3,3 +3,8 @@ services:
         factory: Efabrica\PHPStanRules\Rule\GuzzleClientCallWithoutTimeoutOptionRule
         tags:
             - phpstan.rules.rule
+
+    @PHPStan\Type\Php\JsonThrowOnErrorDynamicReturnTypeExtension:
+        factory: Efabrica\PHPStanRules\Type\JsonDecodeDynamicReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicFunctionReturnTypeExtension
