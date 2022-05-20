@@ -11,7 +11,7 @@ composer require --dev efabrica/phpstan-rules
 
 ## Setup
 
-This extension adds several rules. You can use them all by including these files:
+This extension adds several rules. You can use them all by including these files in your `phpstan.neon`:
 ```neon
 includes:
     - vendor/phpstan/phpstan-nette/extension.neon

@@ -23,10 +23,6 @@ use Symplify\Astral\NodeValue\NodeValueResolver;
 
 final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
 {
-    private NodeFinder $nodeFinder;
-
-    private NodeValueResolver $nodeValueResolver;
-
     /**
      * @var array<string, int> method name => position of $options parameter (indexed from 0)
      */
@@ -51,10 +47,8 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
 
     private ConstExprEvaluator $constExprEvaluator;
 
-    public function __construct(NodeFinder $nodeFinder, NodeValueResolver $nodeValueResolver)
+    public function __construct(private NodeFinder $nodeFinder, private NodeValueResolver $nodeValueResolver)
     {
-        $this->nodeFinder = $nodeFinder;
-        $this->nodeValueResolver = $nodeValueResolver;
     }
 
     public function getNodeType(): string
@@ -63,7 +57,7 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
     }
 
     /**
-     * @param InClassNode $node
+     * @param InClassNode $inClassNode
      */
     public function processNode(Node $inClassNode, Scope $scope): array
     {
