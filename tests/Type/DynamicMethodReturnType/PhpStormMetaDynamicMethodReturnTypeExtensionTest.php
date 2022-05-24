@@ -21,9 +21,8 @@ final class PhpStormMetaDynamicMethodReturnTypeExtensionTest extends TypeInferen
     public function testFileAsserts(
         string $assertType,
         string $file,
-               ...$args
-    ): void
-    {
+        ...$args
+    ): void {
         $this->assertFileAsserts($assertType, $file, ...$args);
     }
 

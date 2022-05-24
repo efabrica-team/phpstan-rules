@@ -8,6 +8,19 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
+/**
+ * @return array<string, array<string, string>>
+ */
+function getClasssesMethodsAndTypes(Parser $parser, string $content): array
+{
+    $stmts = $parser->parse($content) ?: [];
+    $traverser = new NodeTraverser();
+    $overrideVisitor = new OverrideVisitor();
+    $traverser->addVisitor($overrideVisitor);
+    $traverser->traverse($stmts);
+    return $overrideVisitor->getClasssesMethodsAndTypes();
+}
+
 $phpStormMetaFiles = include __DIR__ . '/find_phpstorm_meta_files.php';
 
 $parserFactory = new ParserFactory();
@@ -16,7 +29,7 @@ $parser = $parserFactory->create(ParserFactory::PREFER_PHP7);
 $classesMethodsAndTypes = [];
 /** @var SplFileInfo $phpStormMetaFile */
 foreach ($phpStormMetaFiles as $phpStormMetaFile) {
-    $phpStormMetaContent = file_get_contents($phpStormMetaFile->getRealPath());
+    $phpStormMetaContent = (string)file_get_contents($phpStormMetaFile->getRealPath());
     $classesMethodsAndTypes = array_merge_recursive($classesMethodsAndTypes, getClasssesMethodsAndTypes($parser, $phpStormMetaContent));
 }
 
@@ -41,13 +54,3 @@ if ($services === []) {
 return [
     'services' => $services,
 ];
-
-function getClasssesMethodsAndTypes(Parser $parser, string $content): array
-{
-    $stmts = $parser->parse($content);
-    $traverser = new NodeTraverser();
-    $overrideVisitor = new OverrideVisitor();
-    $traverser->addVisitor($overrideVisitor);
-    $traverser->traverse($stmts);
-    return $overrideVisitor->getClasssesMethodsAndTypes();
-}

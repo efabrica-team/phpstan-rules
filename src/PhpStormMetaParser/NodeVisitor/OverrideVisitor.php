@@ -9,14 +9,18 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeVisitorAbstract;
 
 final class OverrideVisitor extends NodeVisitorAbstract
 {
+    /** @var array<string, string[]> */
     private array $uses = [];
 
+    /** @var array<string, array<string, string>> */
     private array $classesMethodsAndTypes = [];
 
     public function enterNode(Node $node)
@@ -32,16 +36,24 @@ final class OverrideVisitor extends NodeVisitorAbstract
             return null;
         }
 
+        if (!$node->name instanceof Name) {
+            return null;
+        }
+
         if ((string)$node->name !== 'override') {
             return null;
         }
 
-        if (!isset($node->args[1])) {
+        if (!isset($node->getArgs()[1])) {
             return null;
         }
 
-        $call = $node->args[0]->value;
+        $call = $node->getArgs()[0]->value;
         if (!$call instanceof StaticCall) {
+            return null;
+        }
+
+        if (!$call->class instanceof Name || !$call->name instanceof Identifier) {
             return null;
         }
 
@@ -56,12 +68,12 @@ final class OverrideVisitor extends NodeVisitorAbstract
         $class = implode('\\', $classNameParts);
         $method = $call->name->name;
 
-        $map = $node->args[1]->value;
+        $map = $node->getArgs()[1]->value;
         if (!$map instanceof FuncCall) {
             return null;
         }
 
-        $mapArgs = $map->args[0]->value;
+        $mapArgs = $map->getArgs()[0]->value;
         if (!$mapArgs instanceof Array_) {
             return null;
         }
@@ -72,8 +84,12 @@ final class OverrideVisitor extends NodeVisitorAbstract
                 $this->classesMethodsAndTypes[$class][$method] = $mapArg->value->value;
             }
         }
+        return null;
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public function getClasssesMethodsAndTypes(): array
     {
         return $this->classesMethodsAndTypes;

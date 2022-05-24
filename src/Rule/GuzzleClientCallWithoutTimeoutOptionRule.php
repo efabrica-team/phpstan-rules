@@ -21,6 +21,9 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use Symplify\Astral\NodeValue\NodeValueResolver;
 
+/**
+ * @implements Rule<InClassNode>
+ */
 final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
 {
     /**
@@ -74,12 +77,17 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
                 continue;
             }
 
-            $methodName = $node->name->name;
+            if ($node->name instanceof Identifier) {
+                $methodName = $node->name->name;
+            } else {
+                $methodName = $this->nodeValueResolver->resolveWithScope($node->name, $scope);
+            }
+
             if (!isset($this->methodOptionArgPosition[$methodName])) {
                 continue;
             }
             $argPosition = $this->methodOptionArgPosition[$methodName];
-            $argAtPosition = $node->args[$argPosition] ?? null;
+            $argAtPosition = $node->getArgs()[$argPosition] ?? null;
             if ($argAtPosition === null) {
                 $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option')->file($file)->line($node->getStartLine())->build();
                 continue;
@@ -100,7 +108,7 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
         return $errors;
     }
 
-    private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr)
+    private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr): mixed
     {
         if ($expr instanceof PropertyFetch) {
             /** @var PropertyProperty[] $propertyNodes */
@@ -110,9 +118,7 @@ final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
                 $properties[$propertyNode->name->name] = $propertyNode->default ? $this->nodeValueResolver->resolveWithScope($propertyNode->default, $scope) : null;
             }
 
-            if (is_string($expr->name)) {
-                $propertyFetchName = $expr->name;
-            } elseif ($expr->name instanceof Identifier) {
+            if ($expr->name instanceof Identifier) {
                 $propertyFetchName = $expr->name->name;
             } else {
                 $propertyFetchName = $this->nodeValueResolver->resolveWithScope($expr->name, $scope);
