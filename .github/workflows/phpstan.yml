@@ -3,7 +3,7 @@ name: PHP static analysis
 on:
   push:
     branches:
-      - master
+      - main
   pull_request: null
 
 jobs:
