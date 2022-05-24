@@ -11,5 +11,6 @@ $allFiles = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator(
         $rootDir,
         FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS
-    ));
+    )
+);
 return new RegexIterator($allFiles, '/\.phpstorm.meta.php/');

@@ -12,6 +12,5 @@ final class Asdf
 {
     public function __call(string $name, $args)
     {
-
     }
 }
