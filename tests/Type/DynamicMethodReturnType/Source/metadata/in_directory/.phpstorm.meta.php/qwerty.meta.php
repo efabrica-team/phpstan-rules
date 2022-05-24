@@ -3,19 +3,20 @@
 namespace PHPSTORM_META {
 
     use Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source\Asdf;
+    use Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source\Qwerty;
 
     class ExtendedAsdf extends Asdf
     {
 
     }
 
-    override(\Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source\Qwerty::post(),
+    override(Qwerty::post(),
         map([
             '' => 'string',
         ])
     );
 
-    override(\Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source\Qwerty::asdf(),
+    override(Qwerty::asdf(),
         map([
             '' => '\PHPSTORM_META\ExtendedAsdf',
         ])
