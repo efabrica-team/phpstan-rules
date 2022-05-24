@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Fixtures;
 
 use Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source\Asdf;

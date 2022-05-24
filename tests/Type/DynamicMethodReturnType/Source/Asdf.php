@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Efabrica\PHPStanRules\Tests\Type\DynamicMethodReturnType\Source;
 
 /**
  * @method post()
  * @method qwerty()
  */
-class Asdf
+final class Asdf
 {
     public function __call(string $name, $args)
     {

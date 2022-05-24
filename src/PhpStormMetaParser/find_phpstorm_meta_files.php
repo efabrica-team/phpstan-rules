@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // TODO pass somehow dirs to include if don't want to parse all
 
 $rootDir = getcwd();
