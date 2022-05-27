@@ -20,7 +20,7 @@ final class SomeHandler extends BaseHandler
         return [
             (new GetInputParam('correct_get_name'))->setRequired(),
             new GetInputParam('incorrect-get-name'),
-            (new PostInputParam('correct_post_name'))->setDescription('description')
+            (new PostInputParam('correct_post_name'))->setDescription('description'),
             (new PostInputParam('incorrect-post-name'))->setRequired(),
             (new JsonInputParam('incorrect-json-input-param-name', '{}')),
             (new PutInputParam('incorrect-PUT-name')),
