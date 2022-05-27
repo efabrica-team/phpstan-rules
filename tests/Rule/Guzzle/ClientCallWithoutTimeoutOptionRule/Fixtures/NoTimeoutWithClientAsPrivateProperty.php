@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\GuzzleClientCallWithoutTimeoutOptionRule\Fixtures;
+namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule\Fixtures;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;

@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\GuzzleClientCallWithoutTimeoutOptionRule;
+namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule;
 
-use Efabrica\PHPStanRules\Rule\GuzzleClientCallWithoutTimeoutOptionRule;
+use Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
-final class GuzzleClientCallWithoutTimeoutOptionRuleTest extends RuleTestCase
+final class ClientCallWithoutTimeoutOptionRuleTest extends RuleTestCase
 {
     public static function getAdditionalConfigFiles(): array
     {
         return [
-            __DIR__ . '/../../../extension.neon',
-            __DIR__ . '/../../../rules.neon',
+            __DIR__ . '/../../../../extension.neon',
+            __DIR__ . '/../../../../rules.neon',
         ];
     }
 
     protected function getRule(): Rule
     {
-        return $this->getContainer()->getByType(GuzzleClientCallWithoutTimeoutOptionRule::class);
+        return $this->getContainer()->getByType(ClientCallWithoutTimeoutOptionRule::class);
     }
 
     public function testNoTimeoutWithClientAsPrivateProperty(): void

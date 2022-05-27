@@ -81,7 +81,13 @@ final class OverrideVisitor extends NodeVisitorAbstract
         /** @var ArrayItem $mapArg */
         foreach ($mapArgs->items as $mapArg) {
             if ($mapArg->key instanceof String_ && $mapArg->key->value === '' && $mapArg->value instanceof String_) {
-                $this->classesMethodsAndTypes[$class][$method] = $mapArg->value->value;
+                $value = implode('|', array_filter(explode('|', $mapArg->value->value), function ($item) {
+                    return $item !== '@';   // TODO if @ is used we need to implement it in PhpStormMetaDynamicMethodReturnTypeExtension
+                }));
+
+                if ($value !== '') {
+                    $this->classesMethodsAndTypes[$class][$method] = $value;
+                }
             }
         }
         return null;
