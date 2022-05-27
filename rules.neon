@@ -1,5 +1,10 @@
 services:
     -
-        factory: Efabrica\PHPStanRules\Rule\GuzzleClientCallWithoutTimeoutOptionRule
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
         tags:
             - phpstan.rules.rule

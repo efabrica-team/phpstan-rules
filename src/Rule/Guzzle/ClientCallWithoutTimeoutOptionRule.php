@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Rule;
+namespace Efabrica\PHPStanRules\Rule\Guzzle;
 
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node;
@@ -24,7 +24,7 @@ use Symplify\Astral\NodeValue\NodeValueResolver;
 /**
  * @implements Rule<InClassNode>
  */
-final class GuzzleClientCallWithoutTimeoutOptionRule implements Rule
+final class ClientCallWithoutTimeoutOptionRule implements Rule
 {
     /**
      * @var array<string, int> method name => position of $options parameter (indexed from 0)
