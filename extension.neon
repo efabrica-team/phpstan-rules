@@ -1,4 +1,0 @@
-services:
-
-includes:
-    - vendor/symplify/astral/config/services.neon
