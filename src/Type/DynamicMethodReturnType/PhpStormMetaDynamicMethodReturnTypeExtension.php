@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Efabrica\PHPStanRules\Type\DynamicMethodReturnType;
 
 use PhpParser\Node\Expr\MethodCall;
@@ -9,7 +11,7 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
 
-class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
+final class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
     /**
      * @param array<string, string> $methodsReturnTypes
