@@ -2,7 +2,7 @@
     "name": "efabrica/phpstan-rules",
     "license": ["MIT"],
     "require": {
-        "php": ">=8.0 <8.2",
+        "php": ">=8.0 <=8.2",
         "phpstan/phpstan": "^1.6",
         "symplify/astral": "^10.2"
     },
