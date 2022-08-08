@@ -18,8 +18,8 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
-use Symplify\Astral\NodeValue\NodeValueResolver;
 
 /**
  * @implements Rule<InClassNode>
@@ -48,10 +48,13 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
         'requestAsync' => 2,
     ];
 
+    private NodeFinder $nodeFinder;
+
     private ConstExprEvaluator $constExprEvaluator;
 
-    public function __construct(private NodeFinder $nodeFinder, private NodeValueResolver $nodeValueResolver)
+    public function __construct(NodeFinder $nodeFinder)
     {
+        $this->nodeFinder = $nodeFinder;
     }
 
     public function getNodeType(): string
@@ -80,7 +83,11 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             if ($node->name instanceof Identifier) {
                 $methodName = $node->name->name;
             } else {
-                $methodName = $this->nodeValueResolver->resolveWithScope($node->name, $scope);
+                $methodNameType = $scope->getType($node->name);
+                if (!$methodNameType instanceof ConstantScalarType) {
+                    continue;
+                }
+                $methodName = $methodNameType->getValue();
             }
 
             if (!isset($this->methodOptionArgPosition[$methodName])) {
@@ -93,7 +100,11 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
                 continue;
             }
 
-            $options = $this->nodeValueResolver->resolveWithScope($argAtPosition->value, $scope);
+            $argAtPositionType = $scope->getType($argAtPosition->value);
+            if (!$argAtPositionType instanceof ConstantScalarType) {
+                continue;
+            }
+            $options = $argAtPositionType->getValue();
             if (!is_array($options)) {
                 $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
             }
@@ -108,20 +119,34 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
         return $errors;
     }
 
-    private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr): mixed
+    /**
+     * @return mixed
+     */
+    private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr)
     {
         if ($expr instanceof PropertyFetch) {
             /** @var PropertyProperty[] $propertyNodes */
             $propertyNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], PropertyProperty::class);
             $properties = [];
             foreach ($propertyNodes as $propertyNode) {
-                $properties[$propertyNode->name->name] = $propertyNode->default ? $this->nodeValueResolver->resolveWithScope($propertyNode->default, $scope) : null;
+                $propertyNodeDefault = null;
+                if ($propertyNode->default) {
+                    $propertyNodeDefaultType = $scope->getType($propertyNode->default);
+                    if ($propertyNodeDefaultType instanceof ConstantScalarType) {
+                        $propertyNodeDefault = $propertyNodeDefaultType->getValue();
+                    }
+                }
+                $properties[$propertyNode->name->name] = $propertyNodeDefault;
             }
 
+            $propertyFetchName = null;
             if ($expr->name instanceof Identifier) {
                 $propertyFetchName = $expr->name->name;
             } else {
-                $propertyFetchName = $this->nodeValueResolver->resolveWithScope($expr->name, $scope);
+                $nameType = $scope->getType($expr->name);
+                if ($nameType instanceof ConstantScalarType) {
+                    $propertyFetchName = $nameType->getValue();
+                }
             }
 
             if ($propertyFetchName === null) {
@@ -132,8 +157,17 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
         }
 
         if ($expr instanceof MethodCall) {
-            $methodName = $expr->name instanceof Identifier ? $expr->name->name : $this->nodeValueResolver->resolveWithScope($expr->name, $scope);
-            if (!$methodName) {
+            $methodName = null;
+            if ($expr->name instanceof Identifier) {
+                $methodName = $expr->name->name;
+            } else {
+                $nameType = $scope->getType($expr->name);
+                if ($nameType instanceof ConstantScalarType) {
+                    $methodName = $nameType->getValue();
+                }
+            }
+
+            if ($methodName === null) {
                 return null;
             }
             /** @var ClassMethod[] $classMethodNodes */
@@ -151,7 +185,12 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
                     return null;
                 }
 
-                $value = $this->nodeValueResolver->resolveWithScope($returnStatement->expr, $scope);
+                $returnStatementType = $scope->getType($returnStatement->expr);
+                if (!$returnStatementType instanceof ConstantScalarType) {
+                    return null;
+                }
+
+                $value = $returnStatementType->getValue();
                 if ($value === null) {
                     $value = $this->constExprEvaluator->evaluateDirectly($returnStatement->expr);
                 }

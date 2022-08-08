@@ -11,11 +11,21 @@ use PHPStan\Type\Type;
 
 class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
+    private string $className;
+
+    /** @var array<string, string> */
+    private array $methodsReturnTypes;
+
+    private TypeStringResolver $typeStringResolver;
+
     /**
      * @param array<string, string> $methodsReturnTypes
      */
-    public function __construct(private string $className, private array $methodsReturnTypes, private TypeStringResolver $typeStringResolver)
+    public function __construct(string $className, array $methodsReturnTypes, TypeStringResolver $typeStringResolver)
     {
+        $this->className = $className;
+        $this->methodsReturnTypes = $methodsReturnTypes;
+        $this->typeStringResolver = $typeStringResolver;
     }
 
     public function getClass(): string

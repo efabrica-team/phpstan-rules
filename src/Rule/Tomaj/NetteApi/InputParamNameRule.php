@@ -7,21 +7,18 @@ namespace Efabrica\PHPStanRules\Rule\Tomaj\NetteApi;
 use Nette\Utils\Strings;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
-use Symplify\Astral\NodeValue\NodeValueResolver;
 
 /**
  * @implements Rule<New_>
  */
 final class InputParamNameRule implements Rule
 {
-    public function __construct(private NodeValueResolver $nodeValueResolver)
-    {
-    }
-
     public function getNodeType(): string
     {
         return New_::class;
@@ -32,7 +29,7 @@ final class InputParamNameRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node->class instanceof Node\Name) {
+        if (!$node->class instanceof Name) {
             return [];
         }
 
@@ -50,7 +47,12 @@ final class InputParamNameRule implements Rule
             ];
         }
 
-        $paramName = $this->nodeValueResolver->resolve($nameArg->value, $file);
+        $nameArgType = $scope->getType($nameArg->value);
+        if (!$nameArgType instanceof ConstantScalarType) {
+            return [];
+        }
+
+        $paramName = $nameArgType->getValue();
         if (!is_string($paramName)) {
             return [];
         }
