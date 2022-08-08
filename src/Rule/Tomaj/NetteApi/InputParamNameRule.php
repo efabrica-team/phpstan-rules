@@ -50,7 +50,7 @@ final class InputParamNameRule implements Rule
             ];
         }
 
-        $paramName = $this->nodeValueResolver->resolveWithScope($nameArg->value, $scope);
+        $paramName = $this->nodeValueResolver->resolve($nameArg->value, $file);
         if (!is_string($paramName)) {
             return [];
         }
