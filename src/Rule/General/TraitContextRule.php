@@ -39,6 +39,7 @@ final class TraitContextRule implements Rule
         $errors = [];
         foreach ($classLike->getTraitUses() as $traitUse) {
             foreach ($traitUse->traits as $usedTraitName) {
+                /** @var class-string $usedTrait */
                 $usedTrait = $usedTraitName->toString();
                 $reflectionClass = new ReflectionClass($usedTrait);
                 $comment = $reflectionClass->getDocComment();
@@ -47,7 +48,6 @@ final class TraitContextRule implements Rule
                 }
 
                 preg_match('/@context (?P<contextType>.*)/', $comment, $match);
-
                 if (!isset($match['contextType'])) {
                     continue;
                 }

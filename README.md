@@ -91,8 +91,8 @@ final class SomeHandler extends BaseHandler
 ```
 :+1:
 
-### Check trait context - TratContextRule
-Checks if traits are used only in context of classes specified in them via class comment `@context {Type}`
+### Check trait context - TraitContextRule
+Checks if traits are used only in context of classes specified in them via comment `@context {Type}`
 ```neon
 services:  
     -
