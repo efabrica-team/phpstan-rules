@@ -27,19 +27,19 @@ final class InputParamNameRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/SomeHandler.php'], [
             [
-                'Incorrect parameter name "incorrect-get-name". Use "incorrect_get_name" instead',
+                'Incorrect parameter name "incorrect-get-name". Use "incorrect_get_name" instead.',
                 22,
             ],
             [
-                'Incorrect parameter name "incorrect-post-name". Use "incorrect_post_name" instead',
+                'Incorrect parameter name "incorrect-post-name". Use "incorrect_post_name" instead.',
                 24,
             ],
             [
-                'Incorrect parameter name "incorrect-json-input-param-name". Use "incorrect_json_input_param_name" instead',
+                'Incorrect parameter name "incorrect-json-input-param-name". Use "incorrect_json_input_param_name" instead.',
                 25,
             ],
             [
-                'Incorrect parameter name "incorrect-PUT-name". Use "incorrect_PUT_name" instead',
+                'Incorrect parameter name "incorrect-PUT-name". Use "incorrect_PUT_name" instead.',
                 26,
             ],
         ]);
