@@ -23,7 +23,7 @@ final class TraitContextRuleTest extends RuleTestCase
         return $this->getContainer()->getByType(TraitContextRule::class);
     }
 
-    public function testNoTimeoutWithClientAsPrivateProperty(): void
+    public function testTraitContext(): void
     {
         $this->analyse([__DIR__ . '/Fixtures/AllTraitsCorrect.php'], []);
         $this->analyse([__DIR__ . '/Fixtures/OneTraitCorrectAndOneWrong.php'], [
@@ -35,15 +35,19 @@ final class TraitContextRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/AllTraitsWrong.php'], [
             [
                 'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\FirstTrait is used in wrong context.',
-                13,
-            ],
-            [
-                'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\SecondTrait is used in wrong context.',
                 14,
             ],
             [
-                'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\ThirdTrait is used in wrong context.',
+                'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\SecondTrait is used in wrong context.',
                 15,
+            ],
+            [
+                'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\UnionContextTrait is used in wrong context.',
+                16,
+            ],
+            [
+                'Trait Efabrica\PHPStanRules\Tests\Rule\General\TraitContextRule\Source\IntersectionContextTrait is used in wrong context.',
+                17,
             ],
         ]);
     }
