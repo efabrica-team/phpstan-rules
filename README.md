@@ -1,5 +1,5 @@
 # eFabrica PHPStan extension
-Extension for PHPStan providing several services and rules to help find bugs in your applications.
+Extension for PHPStan is providing several services and rules to help find bugs in your applications.
 
 ## Installation
 
@@ -14,16 +14,14 @@ composer require --dev efabrica/phpstan-rules
 This extension adds several rules. You can use them all by including these files in your `phpstan.neon`:
 ```neon
 includes:
-    - vendor/symplify/astral/config/services.neon
-    - vendor/phpstan/phpstan-nette/extension.neon
-    - vendor/phpstan/phpstan-nette/rules.neon
+    - vendor/efabrica/phpstan-rules/extension.neon
+    - vendor/efabrica/phpstan-rules/rules.neon
 ```
 
 Or include just:
 ```neon
 includes:
-    - vendor/symplify/astral/config/services.neon
-    - vendor/phpstan/phpstan-nette/extension.neon
+    - vendor/efabrica/phpstan-rules/extension.neon
 ```
 and pick rules you want
 

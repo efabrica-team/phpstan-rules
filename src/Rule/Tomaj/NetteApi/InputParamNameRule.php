@@ -7,21 +7,18 @@ namespace Efabrica\PHPStanRules\Rule\Tomaj\NetteApi;
 use Nette\Utils\Strings;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
-use Symplify\Astral\NodeValue\NodeValueResolver;
 
 /**
  * @implements Rule<New_>
  */
 final class InputParamNameRule implements Rule
 {
-    public function __construct(private NodeValueResolver $nodeValueResolver)
-    {
-    }
-
     public function getNodeType(): string
     {
         return New_::class;
@@ -32,7 +29,7 @@ final class InputParamNameRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node->class instanceof Node\Name) {
+        if (!$node->class instanceof Name) {
             return [];
         }
 
@@ -46,11 +43,16 @@ final class InputParamNameRule implements Rule
         $nameArg = $node->getArgs()[0] ?? null;
         if (!$nameArg) {
             return [
-                RuleErrorBuilder::message('Missing name of input parameter')->file($file)->line($node->getStartLine())->build()
+                RuleErrorBuilder::message('Missing name of input parameter')->file($file)->line($node->getStartLine())->build(),
             ];
         }
 
-        $paramName = $this->nodeValueResolver->resolveWithScope($nameArg->value, $scope);
+        $nameArgType = $scope->getType($nameArg->value);
+        if (!$nameArgType instanceof ConstantScalarType) {
+            return [];
+        }
+
+        $paramName = $nameArgType->getValue();
         if (!is_string($paramName)) {
             return [];
         }
@@ -58,7 +60,7 @@ final class InputParamNameRule implements Rule
         $recommendedName = str_replace('-', '_', Strings::webalize($paramName, null, false));
         if ($paramName !== $recommendedName) {
             return [
-                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead')->file($file)->line($node->getStartLine())->build()
+                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead')->file($file)->line($node->getStartLine())->build(),
             ];
         }
 
