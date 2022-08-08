@@ -104,11 +104,8 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             if (!$argAtPositionType instanceof ConstantScalarType) {
                 continue;
             }
-            $options = $argAtPositionType->getValue();
-            if (!is_array($options)) {
-                $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
-            }
 
+            $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
             if (is_array($options)) {
                 if (!array_key_exists('timeout', $options)) {
                     $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option')->file($file)->line($node->getStartLine())->build();
