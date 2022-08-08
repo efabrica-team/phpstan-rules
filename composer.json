@@ -3,7 +3,7 @@
     "license": ["MIT"],
     "require": {
         "php": ">=7.4 <8.2",
-        "nikic/php-parser": "^4.13",
+        "nikic/php-parser": "^4.14",
         "phpstan/phpstan": "^1.6"
     },
     "require-dev": {

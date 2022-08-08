@@ -43,7 +43,7 @@ final class InputParamNameRule implements Rule
         $nameArg = $node->getArgs()[0] ?? null;
         if (!$nameArg) {
             return [
-                RuleErrorBuilder::message('Missing name of input parameter')->file($file)->line($node->getStartLine())->build(),
+                RuleErrorBuilder::message('Missing name of input parameter.')->file($file)->line($node->getStartLine())->build(),
             ];
         }
 
@@ -60,7 +60,7 @@ final class InputParamNameRule implements Rule
         $recommendedName = str_replace('-', '_', Strings::webalize($paramName, null, false));
         if ($paramName !== $recommendedName) {
             return [
-                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead')->file($file)->line($node->getStartLine())->build(),
+                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead.')->file($file)->line($node->getStartLine())->build(),
             ];
         }
 

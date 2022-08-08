@@ -96,7 +96,7 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             $argPosition = $this->methodOptionArgPosition[$methodName];
             $argAtPosition = $node->getArgs()[$argPosition] ?? null;
             if ($argAtPosition === null) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option')->file($file)->line($node->getStartLine())->build();
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option.')->file($file)->line($node->getStartLine())->build();
                 continue;
             }
 
@@ -108,7 +108,7 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
             if (is_array($options)) {
                 if (!array_key_exists('timeout', $options)) {
-                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option')->file($file)->line($node->getStartLine())->build();
+                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option.')->file($file)->line($node->getStartLine())->build();
                 }
             }
         }

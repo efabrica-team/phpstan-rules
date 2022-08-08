@@ -90,3 +90,45 @@ final class SomeHandler extends BaseHandler
 }
 ```
 :+1:
+
+### Check trait context - TraitContextRule
+Checks if traits are used only in context of classes specified in them via comment `@context {Type}`
+```neon
+services:  
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+/**
+ * @context MyInterface
+ */
+trait MyTrait
+{
+
+}
+
+final class SomeClass
+{
+    use MyTrait;
+}
+```
+:x:
+
+```php
+/**
+ * @context MyInterface
+ */
+trait MyTrait
+{
+
+}
+
+final class SomeClass implements MyInterface
+{
+    use MyTrait;
+}
+```
+:+1:
