@@ -7,6 +7,7 @@ namespace Efabrica\PHPStanRules\Rule\General;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 use PHPStan\Analyser\Scope;
+use PHPStan\PhpDoc\TypeStringResolver;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
@@ -17,6 +18,13 @@ use ReflectionClass;
  */
 final class TraitContextRule implements Rule
 {
+    private TypeStringResolver $typeStringResolver;
+
+    public function __construct(TypeStringResolver $typeStringResolver)
+    {
+        $this->typeStringResolver = $typeStringResolver;
+    }
+
     public function getNodeType(): string
     {
         return ClassLike::class;
@@ -52,36 +60,9 @@ final class TraitContextRule implements Rule
                     continue;
                 }
 
-                // primitive type checking, find way how to do it phpstan-like
-                $contextType = $match['contextType'];
-                if (str_contains($contextType, '|')) {
-                    $unionContextTypes = array_map('trim', explode('|', $contextType));
-                    $error = true;
-                    foreach ($unionContextTypes as $unionContextType) {
-                        if ($classType->isInstanceOf($unionContextType)->yes()) {
-                            $error = false;
-                            break;
-                        }
-                    }
-                    if ($error) {
-                        $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')->file($file)->line($traitUse->getStartLine())->build();
-                    }
-                } elseif (str_contains($contextType, '&')) {
-                    $intersectionContextTypes = array_map('trim', explode('&', $contextType));
-                    $error = false;
-                    foreach ($intersectionContextTypes as $intersectionContextType) {
-                        if ($classType->isInstanceOf($intersectionContextType)->no()) {
-                            $error = true;
-                            break;
-                        }
-                    }
-                    if ($error) {
-                        $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')->file($file)->line($traitUse->getStartLine())->build();
-                    }
-                } else {
-                    if ($classType->isInstanceOf($match['contextType'])->no()) {
-                        $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')->file($file)->line($traitUse->getStartLine())->build();
-                    }
+                $contextType = $this->typeStringResolver->resolve($match['contextType']);
+                if ($contextType->accepts($classType, true)->no()) {
+                    $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')->file($file)->line($traitUse->getStartLine())->build();
                 }
             }
         }
