@@ -11,7 +11,6 @@ final class PhpStormMetaDynamicMethodReturnTypeExtensionTest extends TypeInferen
     public static function getAdditionalConfigFiles(): array
     {
         return [
-            __DIR__ . '/../../../vendor/symplify/astral/config/services.neon',
             __DIR__ . '/../../../extension.neon',
             __DIR__ . '/../../../rules.neon',
             __DIR__ . '/config.neon',

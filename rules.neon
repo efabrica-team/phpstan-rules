@@ -8,3 +8,8 @@ services:
         factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
         tags:
             - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
+        tags:
+            - phpstan.rules.rule
