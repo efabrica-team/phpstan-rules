@@ -1,6 +1,11 @@
 services:
-    -
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule
+    guzzleClientCallWithoutTimeoutOptionRule:
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
+        tags:
+            - phpstan.rules.rule
+
+    guzzleClientCallWithoutConnectTimeoutOptionRule:
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('connect_timeout')
         tags:
             - phpstan.rules.rule
 

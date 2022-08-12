@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule\Fixtures;
+namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutOptionRule\Fixtures;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -27,14 +27,15 @@ final class EmptyArrayOptionsWithClientAsPrivateProperty
         $this->guzzleClient->send($request, []);
         $this->guzzleClient->request('GET', $url, []);
 
-        $this->guzzleClient->getAsync($url, []);
-        $this->guzzleClient->postAsync($url, []);
-        $this->guzzleClient->putAsync($url, []);
-        $this->guzzleClient->headAsync($url, []);
-        $this->guzzleClient->patchAsync($url, []);
-        $this->guzzleClient->deleteAsync($url, []);
-        $this->guzzleClient->sendAsync($request, []);
-        $this->guzzleClient->requestAsync('GET', $url, []);
+        $options = [];
+        $this->guzzleClient->getAsync($url, $options);
+        $this->guzzleClient->postAsync($url, $options);
+        $this->guzzleClient->putAsync($url, $options);
+        $this->guzzleClient->headAsync($url, $options);
+        $this->guzzleClient->patchAsync($url, $options);
+        $this->guzzleClient->deleteAsync($url, $options);
+        $this->guzzleClient->sendAsync($request, $options);
+        $this->guzzleClient->requestAsync('GET', $url, $options);
 
         $this->guzzleClient->getConfig();
     }
