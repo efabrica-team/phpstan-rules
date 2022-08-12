@@ -25,12 +25,18 @@ includes:
 ```
 and pick rules you want
 
-### Guzzle - ClientCallWithoutTimeoutOptionRule
-Finds all calls of GuzzleHttp\Client methods without timeout option
+### Guzzle - ClientCallWithoutOptionRule
+Finds all calls of GuzzleHttp\Client methods without some option e.g. timeout, connect_timeout
+
 ```neon
 services:
-    -
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule
+    guzzleClientCallWithoutTimeoutOptionRule:
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
+        tags:
+            - phpstan.rules.rule
+
+    guzzleClientCallWithoutConnectTimeoutOptionRule:
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('connect_timeout')
         tags:
             - phpstan.rules.rule
 ```
@@ -47,7 +53,7 @@ $guzzleClient->request('GET', 'https://example.com/api/url');
 use GuzzleHttp\Client;
 
 $guzzleClient = new Client();
-$guzzleClient->request('GET', 'https://example.com/api/url', ['timeout' => 3]);
+$guzzleClient->request('GET', 'https://example.com/api/url', ['timeout' => 3, 'connect_timeout' => 1]);
 ```
 :+1:
 

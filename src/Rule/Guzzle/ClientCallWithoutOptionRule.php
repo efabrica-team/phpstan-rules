@@ -28,7 +28,7 @@ use ReflectionClass;
 /**
  * @implements Rule<InClassNode>
  */
-final class ClientCallWithoutTimeoutOptionRule implements Rule
+final class ClientCallWithoutOptionRule implements Rule
 {
     /**
      * @var array<string, int> method name => position of $options parameter (indexed from 0)
@@ -52,12 +52,15 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
         'requestAsync' => 2,
     ];
 
+    private string $optionName;
+
     private NodeFinder $nodeFinder;
 
     private ConstExprEvaluator $constExprEvaluator;
 
-    public function __construct(NodeFinder $nodeFinder)
+    public function __construct(string $optionName, NodeFinder $nodeFinder)
     {
+        $this->optionName = $optionName;
         $this->nodeFinder = $nodeFinder;
     }
 
@@ -100,15 +103,13 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             $argPosition = $this->methodOptionArgPosition[$methodName];
             $argAtPosition = $node->getArgs()[$argPosition] ?? null;
             if ($argAtPosition === null) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option.')->file($file)->line($node->getStartLine())->build();
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
                 continue;
             }
 
             $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
-            if (is_array($options)) {
-                if (!array_key_exists('timeout', $options)) {
-                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without timeout option.')->file($file)->line($node->getStartLine())->build();
-                }
+            if ($options === null || (is_array($options) && !array_key_exists($this->optionName, $options))) {
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
             }
         }
 

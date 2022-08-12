@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule;
+namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutOptionRule;
 
-use Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutTimeoutOptionRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
@@ -20,7 +19,7 @@ final class ClientCallWithoutTimeoutOptionRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return $this->getContainer()->getByType(ClientCallWithoutTimeoutOptionRule::class);
+        return $this->getContainer()->getService('guzzleClientCallWithoutTimeoutOptionRule');
     }
 
     public function testNoOptionsWithClientAsPrivateProperty(): void
@@ -130,41 +129,41 @@ final class ClientCallWithoutTimeoutOptionRuleTest extends RuleTestCase
             ],
             [
                 'Method GuzzleHttp\Client::getAsync is called without timeout option.',
-                30,
-            ],
-            [
-                'Method GuzzleHttp\Client::postAsync is called without timeout option.',
                 31,
             ],
             [
-                'Method GuzzleHttp\Client::putAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::postAsync is called without timeout option.',
                 32,
             ],
             [
-                'Method GuzzleHttp\Client::headAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::putAsync is called without timeout option.',
                 33,
             ],
             [
-                'Method GuzzleHttp\Client::patchAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::headAsync is called without timeout option.',
                 34,
             ],
             [
-                'Method GuzzleHttp\Client::deleteAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::patchAsync is called without timeout option.',
                 35,
             ],
             [
-                'Method GuzzleHttp\Client::sendAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::deleteAsync is called without timeout option.',
                 36,
             ],
             [
-                'Method GuzzleHttp\Client::requestAsync is called without timeout option.',
+                'Method GuzzleHttp\Client::sendAsync is called without timeout option.',
                 37,
+            ],
+            [
+                'Method GuzzleHttp\Client::requestAsync is called without timeout option.',
+                38,
             ],
         ]);
     }
 
     public function testCorrectTimeoutOptionWithClientAsPrivateProperty(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/CorrectTimeoutOptionWithClientAsPrivateProperty.php'], []);
+        $this->analyse([__DIR__ . '/Fixtures/CorrectTimeoutOptionsWithClientAsPrivateProperty.php'], []);
     }
 }
