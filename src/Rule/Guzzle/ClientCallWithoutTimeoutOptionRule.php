@@ -20,6 +20,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
+use ReflectionClass;
 
 /**
  * @implements Rule<InClassNode>
@@ -100,11 +101,6 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
                 continue;
             }
 
-            $argAtPositionType = $scope->getType($argAtPosition->value);
-            if (!$argAtPositionType instanceof ConstantScalarType) {
-                continue;
-            }
-
             $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
             if (is_array($options)) {
                 if (!array_key_exists('timeout', $options)) {
@@ -121,6 +117,11 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
      */
     private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr)
     {
+        if ($expr instanceof Expr\ClassConstFetch) {
+            $reflectionClass = new ReflectionClass($expr->class->toString());
+            return $reflectionClass->getConstant($expr->name->toString());
+        }
+
         if ($expr instanceof PropertyFetch) {
             /** @var PropertyProperty[] $propertyNodes */
             $propertyNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], PropertyProperty::class);

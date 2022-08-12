@@ -23,73 +23,148 @@ final class ClientCallWithoutTimeoutOptionRuleTest extends RuleTestCase
         return $this->getContainer()->getByType(ClientCallWithoutTimeoutOptionRule::class);
     }
 
-    public function testNoTimeoutWithClientAsPrivateProperty(): void
+    public function testNoOptionsWithClientAsPrivateProperty(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/NoTimeoutWithClientAsPrivateProperty.php'], [
+        $this->analyse([__DIR__ . '/Fixtures/NoOptionsWithClientAsPrivateProperty.php'], [
             [
                 'Method GuzzleHttp\Client::get is called without timeout option.',
-                22,
+                21,
             ],
             [
                 'Method GuzzleHttp\Client::post is called without timeout option.',
-                23,
+                22,
             ],
             [
                 'Method GuzzleHttp\Client::put is called without timeout option.',
-                24,
+                23,
             ],
             [
                 'Method GuzzleHttp\Client::head is called without timeout option.',
-                25,
+                24,
             ],
             [
                 'Method GuzzleHttp\Client::patch is called without timeout option.',
-                26,
+                25,
             ],
             [
                 'Method GuzzleHttp\Client::delete is called without timeout option.',
-                27,
+                26,
             ],
             [
                 'Method GuzzleHttp\Client::send is called without timeout option.',
-                28,
+                27,
             ],
             [
                 'Method GuzzleHttp\Client::request is called without timeout option.',
-                29,
+                28,
             ],
             [
                 'Method GuzzleHttp\Client::getAsync is called without timeout option.',
-                31,
+                30,
             ],
             [
                 'Method GuzzleHttp\Client::postAsync is called without timeout option.',
-                32,
+                31,
             ],
             [
                 'Method GuzzleHttp\Client::putAsync is called without timeout option.',
-                33,
+                32,
             ],
             [
                 'Method GuzzleHttp\Client::headAsync is called without timeout option.',
-                34,
+                33,
             ],
             [
                 'Method GuzzleHttp\Client::patchAsync is called without timeout option.',
-                35,
+                34,
             ],
             [
                 'Method GuzzleHttp\Client::deleteAsync is called without timeout option.',
-                36,
+                35,
             ],
             [
                 'Method GuzzleHttp\Client::sendAsync is called without timeout option.',
-                37,
+                36,
             ],
             [
                 'Method GuzzleHttp\Client::requestAsync is called without timeout option.',
-                38,
+                37,
             ],
         ]);
+    }
+
+    public function testEmptyArrayOptionsWithClientAsPrivateProperty(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/EmptyArrayOptionsWithClientAsPrivateProperty.php'], [
+            [
+                'Method GuzzleHttp\Client::get is called without timeout option.',
+                21,
+            ],
+            [
+                'Method GuzzleHttp\Client::post is called without timeout option.',
+                22,
+            ],
+            [
+                'Method GuzzleHttp\Client::put is called without timeout option.',
+                23,
+            ],
+            [
+                'Method GuzzleHttp\Client::head is called without timeout option.',
+                24,
+            ],
+            [
+                'Method GuzzleHttp\Client::patch is called without timeout option.',
+                25,
+            ],
+            [
+                'Method GuzzleHttp\Client::delete is called without timeout option.',
+                26,
+            ],
+            [
+                'Method GuzzleHttp\Client::send is called without timeout option.',
+                27,
+            ],
+            [
+                'Method GuzzleHttp\Client::request is called without timeout option.',
+                28,
+            ],
+            [
+                'Method GuzzleHttp\Client::getAsync is called without timeout option.',
+                30,
+            ],
+            [
+                'Method GuzzleHttp\Client::postAsync is called without timeout option.',
+                31,
+            ],
+            [
+                'Method GuzzleHttp\Client::putAsync is called without timeout option.',
+                32,
+            ],
+            [
+                'Method GuzzleHttp\Client::headAsync is called without timeout option.',
+                33,
+            ],
+            [
+                'Method GuzzleHttp\Client::patchAsync is called without timeout option.',
+                34,
+            ],
+            [
+                'Method GuzzleHttp\Client::deleteAsync is called without timeout option.',
+                35,
+            ],
+            [
+                'Method GuzzleHttp\Client::sendAsync is called without timeout option.',
+                36,
+            ],
+            [
+                'Method GuzzleHttp\Client::requestAsync is called without timeout option.',
+                37,
+            ],
+        ]);
+    }
+
+    public function testCorrectTimeoutOptionWithClientAsPrivateProperty(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/CorrectTimeoutOptionWithClientAsPrivateProperty.php'], []);
     }
 }

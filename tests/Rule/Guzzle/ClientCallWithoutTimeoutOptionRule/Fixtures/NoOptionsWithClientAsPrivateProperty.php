@@ -7,10 +7,9 @@ namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutTimeoutOption
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-final class NoTimeoutWithClientAsPrivateProperty
+final class NoOptionsWithClientAsPrivateProperty
 {
-    /** @var Client */
-    private $guzzleClient;
+    private Client $guzzleClient;
 
     public function __construct()
     {
