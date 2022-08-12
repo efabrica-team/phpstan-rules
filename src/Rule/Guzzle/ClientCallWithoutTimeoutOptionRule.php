@@ -20,6 +20,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
 use ReflectionClass;
@@ -204,7 +205,7 @@ final class ClientCallWithoutTimeoutOptionRule implements Rule
             return $name->toString();
         }
         $nameType = $scope->getType($name);
-        if ($nameType instanceof ConstantScalarType) {
+        if ($nameType instanceof ConstantStringType) {
             return $nameType->getValue();
         }
         return null;
