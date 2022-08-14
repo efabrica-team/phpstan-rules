@@ -9,7 +9,6 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\Constant\ConstantArrayType;
@@ -17,7 +16,7 @@ use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ObjectType;
 
 /**
- * @implements Rule<InClassNode>
+ * @implements Rule<MethodCall>
  */
 final class ClientCallWithoutOptionRule implements Rule
 {
