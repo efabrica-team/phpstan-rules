@@ -28,22 +28,15 @@ final class CallsWithEmptyArray
         $this->guzzleClient->request('GET', $url, []);
 
         $optionsTimeout = [];
-        $optionsRequestOptionsTimeout = $this->getOptions();
-
         $this->guzzleClient->getAsync($url, $optionsTimeout);
         $this->guzzleClient->postAsync($url, $optionsTimeout);
-        $this->guzzleClient->putAsync($url, $optionsRequestOptionsTimeout);
-        $this->guzzleClient->headAsync($url, $optionsRequestOptionsTimeout);
+        $this->guzzleClient->putAsync($url, $optionsTimeout);
+        $this->guzzleClient->headAsync($url, $optionsTimeout);
         $this->guzzleClient->patchAsync($url, $optionsTimeout);
         $this->guzzleClient->deleteAsync($url, $optionsTimeout);
-        $this->guzzleClient->sendAsync($request, $this->getOptions());
-        $this->guzzleClient->requestAsync('GET', $url, $this->getOptions());
+        $this->guzzleClient->sendAsync($request, $optionsTimeout);
+        $this->guzzleClient->requestAsync('GET', $url, $optionsTimeout);
 
         $this->guzzleClient->getConfig();
-    }
-
-    private function getOptions(): array
-    {
-        return [];
     }
 }
