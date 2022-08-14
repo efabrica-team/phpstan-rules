@@ -7,7 +7,7 @@ namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutOptionRule\Fi
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-final class NoOptionsWithClientAsPrivateProperty
+final class CallsWithNoOptions
 {
     private Client $guzzleClient;
 
@@ -16,7 +16,7 @@ final class NoOptionsWithClientAsPrivateProperty
         $this->guzzleClient = new Client();
     }
 
-    public function doCalls(string $url, Request $request)
+    public function clientAsPrivateProperty(string $url, Request $request)
     {
         $this->guzzleClient->get($url);
         $this->guzzleClient->post($url);
@@ -37,5 +37,29 @@ final class NoOptionsWithClientAsPrivateProperty
         $this->guzzleClient->requestAsync('GET', $url);
 
         $this->guzzleClient->getConfig();
+    }
+
+    public function clientAsLocalVariable(string $url, Request $request)
+    {
+        $client = new Client();
+        $client->get($url);
+        $client->post($url);
+        $client->put($url);
+        $client->head($url);
+        $client->patch($url);
+        $client->delete($url);
+        $client->send($request);
+        $client->request('GET', $url);
+
+        $client->getAsync($url);
+        $client->postAsync($url);
+        $client->putAsync($url);
+        $client->headAsync($url);
+        $client->patchAsync($url);
+        $client->deleteAsync($url);
+        $client->sendAsync($request);
+        $client->requestAsync('GET', $url);
+
+        $client->getConfig();
     }
 }

@@ -4,29 +4,19 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Rule\Guzzle;
 
-use PhpParser\ConstExprEvaluator;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
-use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Identifier;
-use PhpParser\Node\Name;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\PropertyProperty;
-use PhpParser\Node\Stmt\Return_;
-use PhpParser\NodeFinder;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
-use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
-use ReflectionClass;
 
 /**
- * @implements Rule<InClassNode>
+ * @implements Rule<MethodCall>
  */
 final class ClientCallWithoutOptionRule implements Rule
 {
@@ -54,147 +44,64 @@ final class ClientCallWithoutOptionRule implements Rule
 
     private string $optionName;
 
-    private NodeFinder $nodeFinder;
-
-    private ConstExprEvaluator $constExprEvaluator;
-
-    public function __construct(string $optionName, NodeFinder $nodeFinder)
+    public function __construct(string $optionName)
     {
         $this->optionName = $optionName;
-        $this->nodeFinder = $nodeFinder;
     }
 
     public function getNodeType(): string
     {
-        return InClassNode::class;
+        return MethodCall::class;
     }
 
     /**
-     * @param InClassNode $inClassNode
+     * @param MethodCall $node
      */
-    public function processNode(Node $inClassNode, Scope $scope): array
+    public function processNode(Node $node, Scope $scope): array
     {
         $file = $scope->getFile();
-        $this->constExprEvaluator = new ConstExprEvaluator(fn (Expr $expr) => $this->resolveByNode($inClassNode, $scope, $expr));
+        $callerType = $scope->getType($node->var);
+
+        if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf('GuzzleHttp\Client')->yes()) {
+            return [];
+        }
+
+        $methodName = $this->getNameValue($node->name, $scope);
+        if (!isset($this->methodOptionArgPosition[$methodName])) {
+            return [];
+        }
+
+        $argPosition = $this->methodOptionArgPosition[$methodName];
+        $argAtPosition = $node->getArgs()[$argPosition] ?? null;
+
+        if ($argAtPosition === null) {
+            $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+            return  $errors;
+        }
 
         $errors = [];
-
-        /** @var MethodCall[] $methodCallNodes */
-        $methodCallNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], MethodCall::class);
-        foreach ($methodCallNodes as $node) {
-            $callerType = $scope->getType($node->var);
-            if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf('GuzzleHttp\Client')->yes()) {
-                continue;
-            }
-
-            if ($node->name instanceof Identifier) {
-                $methodName = $node->name->name;
-            } else {
-                $methodNameType = $scope->getType($node->name);
-                if (!$methodNameType instanceof ConstantScalarType) {
-                    continue;
+        $argAtPositionType = ($scope->getType($argAtPosition->value));
+        if ($argAtPositionType instanceof ConstantArrayType) {
+            $optionalKeys = $argAtPositionType->getOptionalKeys();
+            $requiredOptions = [];
+            $optionalOptions = [];
+            foreach ($argAtPositionType->getKeyTypes() as $i => $keyType) {
+                if (in_array($i, $optionalKeys, true)) {
+                    $optionalOptions[] = $keyType->getValue();
+                } else {
+                    $requiredOptions[] = $keyType->getValue();
                 }
-                $methodName = $methodNameType->getValue();
             }
 
-            if (!isset($this->methodOptionArgPosition[$methodName])) {
-                continue;
-            }
-            $argPosition = $this->methodOptionArgPosition[$methodName];
-            $argAtPosition = $node->getArgs()[$argPosition] ?? null;
-            if ($argAtPosition === null) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
-                continue;
-            }
-
-            $options = $this->constExprEvaluator->evaluateDirectly($argAtPosition->value);
-            if ($options === null || (is_array($options) && !array_key_exists($this->optionName, $options))) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+            if (!in_array($this->optionName, $requiredOptions, true)) {
+                if (!in_array($this->optionName, $optionalOptions, true)) {
+                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+                } else {
+                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is possibly called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+                }
             }
         }
-
         return $errors;
-    }
-
-    /**
-     * @return mixed
-     */
-    private function resolveByNode(InClassNode $inClassNode, Scope $scope, Expr $expr)
-    {
-        if ($expr instanceof ClassConstFetch) {
-            if (!$expr->class instanceof Name) {
-                return null;
-            }
-            if (!$expr->name instanceof Identifier) {
-                return null;
-            }
-            /** @var class-string $className */
-            $className = $expr->class->toString();
-            $reflectionClass = new ReflectionClass($className);
-            $constantName = $this->getNameValue($expr->name, $scope);
-            if ($constantName === null) {
-                return null;
-            }
-            return $reflectionClass->getConstant($constantName);
-        }
-
-        if ($expr instanceof PropertyFetch) {
-            /** @var PropertyProperty[] $propertyNodes */
-            $propertyNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], PropertyProperty::class);
-            $properties = [];
-            foreach ($propertyNodes as $propertyNode) {
-                $propertyNodeDefault = null;
-                if ($propertyNode->default) {
-                    $propertyNodeDefaultType = $scope->getType($propertyNode->default);
-                    if ($propertyNodeDefaultType instanceof ConstantScalarType) {
-                        $propertyNodeDefault = $propertyNodeDefaultType->getValue();
-                    }
-                }
-                $properties[$propertyNode->name->name] = $propertyNodeDefault;
-            }
-
-            $propertyFetchName = $this->getNameValue($expr->name, $scope);
-            if ($propertyFetchName === null) {
-                return null;
-            }
-
-            return $properties[$propertyFetchName] ?? null;
-        }
-
-        if ($expr instanceof MethodCall) {
-            $methodName = $this->getNameValue($expr->name, $scope);
-            if ($methodName === null) {
-                return null;
-            }
-            /** @var ClassMethod[] $classMethodNodes */
-            $classMethodNodes = $this->nodeFinder->findInstanceOf([$inClassNode->getOriginalNode()], ClassMethod::class);
-            foreach ($classMethodNodes as $classMethodNode) {
-                if ($classMethodNode->name->name !== $methodName) {
-                    continue;
-                }
-                /** @var Return_|null $returnStatement */
-                $returnStatement = $this->nodeFinder->findFirstInstanceOf($classMethodNode, Return_::class);
-                if (!$returnStatement) {
-                    return null;
-                }
-                if ($returnStatement->expr === null) {
-                    return null;
-                }
-
-                $returnStatementType = $scope->getType($returnStatement->expr);
-                if (!$returnStatementType instanceof ConstantScalarType) {
-                    return null;
-                }
-
-                $value = $returnStatementType->getValue();
-                if ($value === null) {
-                    $value = $this->constExprEvaluator->evaluateDirectly($returnStatement->expr);
-                }
-                return $value;
-            }
-        }
-
-        return null;
     }
 
     /**

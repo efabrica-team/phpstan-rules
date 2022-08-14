@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 
-final class CorrectTimeoutOptionsWithClientAsPrivateProperty
+final class CorrectCalls
 {
     private Client $guzzleClient;
 
@@ -17,7 +17,7 @@ final class CorrectTimeoutOptionsWithClientAsPrivateProperty
         $this->guzzleClient = new Client();
     }
 
-    public function doCalls(string $url, Request $request)
+    public function clientAsPrivateProperty(string $url, Request $request)
     {
         $this->guzzleClient->get($url, ['timeout' => 1, 'connect_timeout' => 1]);
         $this->guzzleClient->post($url, [RequestOptions::TIMEOUT => 2, RequestOptions::CONNECT_TIMEOUT => 2]);
@@ -28,24 +28,18 @@ final class CorrectTimeoutOptionsWithClientAsPrivateProperty
         $this->guzzleClient->send($request, ['timeout' => 7, 'connect_timeout' => 7]);
         $this->guzzleClient->request('GET', $url, [RequestOptions::TIMEOUT => 8, RequestOptions::CONNECT_TIMEOUT => 8]);
 
-        // NOT YET IMPLEMENTED options as variable or method call
-//        $optionsTimeout = ['timeout' => 1, 'connect_timeout' => 1];
-//        $optionsRequestOptionsTimeout = $this->getOptions();
-//
-//        $this->guzzleClient->getAsync($url, $optionsTimeout);
-//        $this->guzzleClient->postAsync($url, $optionsTimeout);
-//        $this->guzzleClient->putAsync($url, $optionsRequestOptionsTimeout);
-//        $this->guzzleClient->headAsync($url, $optionsRequestOptionsTimeout);
-//        $this->guzzleClient->patchAsync($url, $optionsTimeout);
-//        $this->guzzleClient->deleteAsync($url, $optionsTimeout);
-//        $this->guzzleClient->sendAsync($request, $this->getOptions());
-//        $this->guzzleClient->requestAsync('GET', $url, $this->getOptions());
+        $optionsTimeout = ['timeout' => 1, 'connect_timeout' => 1];
+        $optionsRequestOptionsTimeout = [RequestOptions::TIMEOUT => 2, RequestOptions::CONNECT_TIMEOUT => 2];
+
+        $this->guzzleClient->getAsync($url, $optionsTimeout);
+        $this->guzzleClient->postAsync($url, $optionsTimeout);
+        $this->guzzleClient->putAsync($url, $optionsRequestOptionsTimeout);
+        $this->guzzleClient->headAsync($url, $optionsRequestOptionsTimeout);
+        $this->guzzleClient->patchAsync($url, $optionsTimeout);
+        $this->guzzleClient->deleteAsync($url, $optionsTimeout);
+        $this->guzzleClient->sendAsync($request, $optionsRequestOptionsTimeout);
+        $this->guzzleClient->requestAsync('GET', $url, $optionsRequestOptionsTimeout);
 
         $this->guzzleClient->getConfig();
-    }
-
-    private function getOptions(): array
-    {
-        return [RequestOptions::TIMEOUT => 2, RequestOptions::CONNECT_TIMEOUT => 2];
     }
 }

@@ -7,7 +7,7 @@ namespace Efabrica\PHPStanRules\Tests\Rule\Guzzle\ClientCallWithoutOptionRule\Fi
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-final class EmptyArrayOptionsWithClientAsPrivateProperty
+final class CallsWithEmptyArray
 {
     private Client $guzzleClient;
 
@@ -16,7 +16,7 @@ final class EmptyArrayOptionsWithClientAsPrivateProperty
         $this->guzzleClient = new Client();
     }
 
-    public function doCalls(string $url, Request $request)
+    public function clientAsPrivateProperty(string $url, Request $request)
     {
         $this->guzzleClient->get($url, []);
         $this->guzzleClient->post($url, []);
@@ -27,15 +27,15 @@ final class EmptyArrayOptionsWithClientAsPrivateProperty
         $this->guzzleClient->send($request, []);
         $this->guzzleClient->request('GET', $url, []);
 
-        $options = [];
-        $this->guzzleClient->getAsync($url, $options);
-        $this->guzzleClient->postAsync($url, $options);
-        $this->guzzleClient->putAsync($url, $options);
-        $this->guzzleClient->headAsync($url, $options);
-        $this->guzzleClient->patchAsync($url, $options);
-        $this->guzzleClient->deleteAsync($url, $options);
-        $this->guzzleClient->sendAsync($request, $options);
-        $this->guzzleClient->requestAsync('GET', $url, $options);
+        $optionsTimeout = [];
+        $this->guzzleClient->getAsync($url, $optionsTimeout);
+        $this->guzzleClient->postAsync($url, $optionsTimeout);
+        $this->guzzleClient->putAsync($url, $optionsTimeout);
+        $this->guzzleClient->headAsync($url, $optionsTimeout);
+        $this->guzzleClient->patchAsync($url, $optionsTimeout);
+        $this->guzzleClient->deleteAsync($url, $optionsTimeout);
+        $this->guzzleClient->sendAsync($request, $optionsTimeout);
+        $this->guzzleClient->requestAsync('GET', $url, $optionsTimeout);
 
         $this->guzzleClient->getConfig();
     }
