@@ -2,6 +2,12 @@
 
 ## [Unreleased][unreleased]
 
+### Changed
+- `GuzzleClientWithoutOptionRule` Changed node to MethodCall
+
+### Added
+- Support for options retrieved from method with typehints
+
 ## [0.2.0]
 ### Changed
 - `GuzzleClientWithoutTimeoutOptionRule` changed to generic `GuzzleClientWithoutOptionRule` 

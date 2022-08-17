@@ -29,7 +29,7 @@ final class CorrectCalls
         $this->guzzleClient->request('GET', $url, [RequestOptions::TIMEOUT => 8, RequestOptions::CONNECT_TIMEOUT => 8]);
 
         $optionsTimeout = ['timeout' => 1, 'connect_timeout' => 1];
-        $optionsRequestOptionsTimeout = [RequestOptions::TIMEOUT => 2, RequestOptions::CONNECT_TIMEOUT => 2];
+        $optionsRequestOptionsTimeout = $this->getOptions();
 
         $this->guzzleClient->getAsync($url, $optionsTimeout);
         $this->guzzleClient->postAsync($url, $optionsTimeout);
@@ -41,5 +41,16 @@ final class CorrectCalls
         $this->guzzleClient->requestAsync('GET', $url, $optionsRequestOptionsTimeout);
 
         $this->guzzleClient->getConfig();
+    }
+
+    /**
+     * @return array{timeout: int, connect_timeout: int}
+     */
+    private function getOptions(): array
+    {
+        return [
+            RequestOptions::TIMEOUT => 2,
+            RequestOptions::CONNECT_TIMEOUT => 2,
+        ];
     }
 }
