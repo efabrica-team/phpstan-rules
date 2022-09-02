@@ -6,16 +6,10 @@ namespace Efabrica\PHPStanRules\Rule\Notcms;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
-use PhpParser\Node\Stmt\ClassLike;
 use PHPStan\Analyser\Scope;
-use PHPStan\PhpDoc\TypeStringResolver;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\ObjectType;
 
-/**
- * @implements Rule<ClassLike>
- */
 final class PluginConfigItemNoRequiredInGlobalConfigurationRule implements Rule
 {
     public function getNodeType(): string
@@ -25,7 +19,6 @@ final class PluginConfigItemNoRequiredInGlobalConfigurationRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-
         if (get_class($node) !== MethodCall::class) {
             return [];
         }

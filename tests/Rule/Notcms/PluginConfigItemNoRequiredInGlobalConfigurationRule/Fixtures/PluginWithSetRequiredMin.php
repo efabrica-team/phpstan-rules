@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 class PluginWithSetRequiredMin extends APluginWithSetRequired
 {
     public function globalConfiguration(): array

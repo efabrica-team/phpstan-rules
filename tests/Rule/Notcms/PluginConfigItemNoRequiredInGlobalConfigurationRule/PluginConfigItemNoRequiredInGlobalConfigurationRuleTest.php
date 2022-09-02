@@ -26,7 +26,7 @@ final class PluginConfigItemNoRequiredInGlobalConfigurationRuleTest extends Rule
     {
         $this->analyse([__DIR__ . '/Fixtures/PluginWithSetRequiredMin.php'], [
             [
-                'Method PluginWithSetRequiredMin::globalConfiguration is called with setRequired() option.',
+                'Method App\PluginWithSetRequiredMin::globalConfiguration is called with setRequired() option.',
                 8,
             ],
         ]);
