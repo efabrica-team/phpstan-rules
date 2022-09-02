@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+### Added
+- Rule for checking call `setRequired()` in method `globalConfiguration` - for Notcms plugins
 
 ## [0.3.0] - 2022-08-17
 ### Changed
