@@ -14,8 +14,8 @@ services:
         tags:
             - phpstan.rules.rule
 
-    pluginConfigItemNoRequiredInPageConfigurationRule:
-        factory: Efabrica\PHPStanRules\Rule\Notcms\PluginConfigItemNoRequiredInPageConfigurationRule
+    disableCallMethodInObjectMethodRule:
+        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('pageConfiguration', 'setRequired')
         tags:
             - phpstan.rules.rule
 

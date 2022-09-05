@@ -2,11 +2,9 @@
 
 namespace BaseModule\Plugin\Header;
 
-use Efabrica\Cms\Core\Plugin\BasePluginDefinition;
-use Efabrica\Cms\Core\Plugin\Config\ChoozerConfigItem;
-
 class PluginWithSetRequired extends BasePluginDefinition
 {
+<<<<<<< HEAD:tests/Rule/Notcms/PluginConfigItemNoRequiredInGlobalConfigurationRule/Fixtures/PluginWithSetRequired.php
     protected $identifier = 'header';
 
     protected $name = 'Header plugin';
@@ -15,12 +13,14 @@ class PluginWithSetRequired extends BasePluginDefinition
 
     protected $globalPlugin = true;
 
-    public function test(): array
+    public function pageConfiguration(): array
+=======
+    public function anotherMethod(): array
+>>>>>>> Generic:tests/Rule/General/DisableCallMethodInObjectMethodRule/Fixtures/PluginWithSetRequired.php
     {
         return [
             new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'),
-            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))
-                ->setRequired(),
+            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))->setRequired(),
         ];
     }
 
@@ -28,7 +28,7 @@ class PluginWithSetRequired extends BasePluginDefinition
     {
         return [
             new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'),
-            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page')),
+            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))->setRequired(),
         ];
     }
 }
