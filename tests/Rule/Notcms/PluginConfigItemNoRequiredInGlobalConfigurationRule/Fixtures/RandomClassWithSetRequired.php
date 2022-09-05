@@ -2,10 +2,7 @@
 
 namespace App;
 
-use Efabrica\Cms\Core\Plugin\BasePluginDefinition;
-use Efabrica\Cms\Core\Plugin\Config\ChoozerConfigItem;
-
-class PluginWithSetRequiredMin extends BasePluginDefinition
+class RandomClassWithSetRequired
 {
     public function pageConfiguration(): array
     {

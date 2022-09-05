@@ -1,3 +1,8 @@
+parameters:
+	stubFiles:
+		- src/stubs/BasePluginDefinition.stub
+		- src/stubs/PluginDefinitionInterface.stub
+
 services:
     guzzleClientCallWithoutTimeoutOptionRule:
         factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
@@ -9,8 +14,8 @@ services:
         tags:
             - phpstan.rules.rule
 
-    pluginConfigItemNoRequiredInGlobalConfigurationRule:
-        factory: Efabrica\PHPStanRules\Rule\Notcms\PluginConfigItemNoRequiredInGlobalConfigurationRule
+    pluginConfigItemNoRequiredInPageConfigurationRule:
+        factory: Efabrica\PHPStanRules\Rule\Notcms\PluginConfigItemNoRequiredInPageConfigurationRule
         tags:
             - phpstan.rules.rule
 

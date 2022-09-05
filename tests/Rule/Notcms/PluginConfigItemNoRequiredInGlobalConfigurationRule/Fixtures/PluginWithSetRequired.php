@@ -11,16 +11,15 @@ class PluginWithSetRequired extends BasePluginDefinition
 
     protected $name = 'Header plugin';
 
-    protected $frontendControlClass = HeaderPluginControl::class;
+    protected $frontendControlClass = PluginWithSetRequired::class;
 
     protected $globalPlugin = true;
 
-    public function test(): array
+    public function pageConfiguration(): array
     {
         return [
             new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'),
-            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))
-                ->setRequired(),
+            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))->setRequired(),
         ];
     }
 
@@ -28,8 +27,7 @@ class PluginWithSetRequired extends BasePluginDefinition
     {
         return [
             new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'),
-            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))
-                ->setRequired(),
+            (new ChoozerConfigItem('main_menu_parent_page_id', 'Stránka s hlavným menu', 'page'))->setRequired(),
         ];
     }
 }

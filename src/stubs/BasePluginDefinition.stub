@@ -1,0 +1,85 @@
+<?php
+
+namespace Efabrica\Cms\Core\Plugin;
+
+use Efabrica\Cms\Core\Plugin\Config\Factory\ConfigItemFactoryStorage;
+use InvalidArgumentException;
+use Nette\Application\UI\Control;
+use Nette\ComponentModel\IContainer;
+use Nette\Database\Table\IRow;
+use Nette\DI\Container;
+use Nette\Localization\ITranslator;
+use ReflectionClass;
+
+abstract class BasePluginDefinition implements PluginDefinitionInterface
+{
+    private Container $container;
+
+    private ConfigItemFactoryStorage $configItemFactoryStorage;
+
+    protected ITranslator $translator;
+
+    protected string $identifier;
+
+    protected string $name;
+
+    protected string $description = '';
+
+    protected string $icon = '';
+
+    protected string $group = '';
+
+    protected bool $globalPlugin = false;
+
+    /** @var string|null */
+    protected $frontendControlClass;
+
+    /** @var string|null */
+    protected $backendControlClass;
+
+    protected array $backendJavascriptCodes = [];
+
+    public function __construct(Container $container);
+
+    public function getIdentifier(): string;
+
+    public function getName(): string;
+
+    public function getDescription(): string;
+
+    public function getIcon(): string;
+
+    public function getGroup(): string;
+
+    public function pageConfiguration(): array;
+
+    public function configuration(): array;
+
+    public function globalConfiguration(): array;
+
+    public function isGlobalPlugin(): bool;
+
+    public function bridgeBlueprint(): BridgeBlueprintInterface;
+
+    public function urlParamsDefinition(): UrlParamsDefinitionInterface;
+
+    public function innerPluginsDefinition(Control $control): array;
+
+    public function createFrontendControl(?IContainer $parent = null, ?string $name = null, ?IRow $content = null): FrontendPluginControl;
+
+    public function createBackendControl(?IContainer $parent = null, ?string $name = null, ?IRow $content = null): BackendPluginControl;
+
+    private function createControlAutoWired(string $class, ?IContainer $parent = null, ?string $name = null): BasePluginControl;
+
+    public function getBackendJavascriptCodes(): array;
+
+    public function setBackendJavascriptCode(string $key, string $code): void;
+
+    public function removeBackendJavascriptCode($key): void;
+
+    public function processPluginConfigurationCreateRecord(array $pluginConfiguration): array;
+
+    public function processPluginConfigurationUpdateRecord(array $pluginConfiguration): array;
+
+    protected function getConfigItemFactoryStorage(): ConfigItemFactoryStorage;
+}
