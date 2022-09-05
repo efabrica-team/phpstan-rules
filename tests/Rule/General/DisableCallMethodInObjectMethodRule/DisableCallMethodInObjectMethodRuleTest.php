@@ -33,7 +33,7 @@ final class DisableCallMethodInObjectMethodRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/PluginWithSetRequired.php'], [
             [
                 'Method BaseModule\Plugin\Header\PluginWithSetRequired::pageConfiguration is called with setRequired() option.',
-                20,
+                19,
             ],
         ]);
     }
