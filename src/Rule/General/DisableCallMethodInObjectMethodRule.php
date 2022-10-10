@@ -9,17 +9,25 @@ use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use Tracy\Debugger;
 
+/**
+ * @implements Rule<MethodCall>
+ */
 final class DisableCallMethodInObjectMethodRule implements Rule
 {
-    private string $objectMethod;
+    private string $sourceObject;
+
+    private string $sourceMethod;
+
+    private string $calledObject;
 
     private string $calledMethod;
 
-    public function __construct(string $objectMethod, string $calledMethod)
+    public function __construct(string $sourceObject, string $sourceMethod, string $calledObject, string $calledMethod)
     {
-        $this->objectMethod = $objectMethod;
+        $this->sourceObject = $sourceObject;
+        $this->sourceMethod = $sourceMethod;
+        $this->calledObject = $calledObject;
         $this->calledMethod = $calledMethod;
     }
 
@@ -30,16 +38,23 @@ final class DisableCallMethodInObjectMethodRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (
-            !$node instanceof MethodCall ||
+        $class = (isset($node->var->class)) ? $node->var->class->toString() : null;
+        if (!$node instanceof MethodCall ||
+            !isset($node->name->name) ||
             $node->name->name !== $this->calledMethod ||
-            $scope->getFunctionName() !== $this->objectMethod ||
-            !$scope->isInClass()
+            $scope->getFunctionName() !== $this->sourceMethod ||
+            !$scope->isInClass() ||
+            (
+                $scope->getClassReflection() !== null &&
+                !$scope->getClassReflection()->is($this->sourceObject)
+            ) ||
+            $class === null ||
+            !new $class instanceof $this->calledObject
         ) {
             return [];
         }
         $file = $scope->getFile();
-        $errors[] = RuleErrorBuilder::message('Method ' . $scope->getClassReflection()->getName() . '::' . $scope->getFunctionName() . ' is called with ' . $node->name->name . '() option.')->file($file)->line($node->getLine())->build();
+        $errors[] = RuleErrorBuilder::message('Method ' . ($scope->getClassReflection() ? $scope->getClassReflection()->getName() : '') . '::' . $scope->getFunctionName() . '() called ' . $class . '::' . $node->name->name . '().')->file($file)->line($node->getLine())->build();
         return $errors;
     }
 }

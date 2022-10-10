@@ -1,8 +1,3 @@
-parameters:
-	stubFiles:
-		- src/stubs/BasePluginDefinition.stub
-		- src/stubs/PluginDefinitionInterface.stub
-
 services:
     guzzleClientCallWithoutTimeoutOptionRule:
         factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
@@ -15,7 +10,7 @@ services:
             - phpstan.rules.rule
 
     disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('pageConfiguration', 'setRequired')
+        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\Cms\Core\Plugin\PluginDefinitionInterface', 'pageConfiguration', 'Efabrica\Cms\Core\Plugin\Config\PluginConfigInterface', 'setRequired')
         tags:
             - phpstan.rules.rule
 

@@ -13,7 +13,7 @@ final class DisableCallMethodInObjectMethodRuleTest extends RuleTestCase
     {
         return [
             __DIR__ . '/../../../../extension.neon',
-            __DIR__ . '/../../../../rules.neon',
+            __DIR__ . '/rules.neon',
         ];
     }
 
@@ -22,24 +22,18 @@ final class DisableCallMethodInObjectMethodRuleTest extends RuleTestCase
         return $this->getContainer()->getService('disableCallMethodInObjectMethodRule');
     }
 
-    public function testFindSetRequired(): void
+    public function testFindDisabledMethod(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/PluginWithSetRequiredMin.php'], [
+        $this->analyse([__DIR__ . '/Fixtures/ClassWithCallDisabledMethod.php'], [
             [
-                'Method App\PluginWithSetRequiredMin::pageConfiguration is called with setRequired() option.',
-                10,
-            ],
-        ]);
-        $this->analyse([__DIR__ . '/Fixtures/PluginWithSetRequired.php'], [
-            [
-                'Method BaseModule\Plugin\Header\PluginWithSetRequired::pageConfiguration is called with setRequired() option.',
-                19,
+                'Method Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Fixtures\ClassWithCallDisabledMethod::checkedMethod() called Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\CheckedClass::disabledMethod().',
+                24,
             ],
         ]);
     }
 
     public function testCorrectCalls(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/PluginWithoutSetRequired.php'], []);
+        $this->analyse([__DIR__ . '/Fixtures/ClassWithoutDisablingCallDisabledMethod.php'], []);
     }
 }

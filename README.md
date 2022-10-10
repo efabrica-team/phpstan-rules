@@ -144,38 +144,38 @@ Checks if some method is not used in disabled context - specific method of objec
 ```neon
 services:
     disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('pageConfiguration', 'setRequired')
+        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithCallInterface', 'checkedMethod', 'Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithDisabledMethodInterface', 'disabledMethod')
         tags:
             - phpstan.rules.rule
 ```
 
 ```php
-class PluginConfigItem
+class ClassWithDisabledMethod implements WithDisabledMethodInterface
 {
-    public function setRequired() {}
+    public function disabledMethod() {}
 }
 
-final class HeaderPlugin
+final class SomeClass implements WithCallInterface
 {
-    public function pageConfiguration(): array
+    public function checkedMethod(): array
     {
-        return [(new PluginConfigItem)->setRequired()]
+        return [(new ClassWithDisabledMethod)->disabledMethod()]
     }
 }
 ```
 :x:
 
 ```php
-class PluginConfigItem
+class ClassWithDisabledMethod implements WithDisabledMethodInterface
 {
-    public function setRequired() {}
+    public function disabledMethod() {}
 }
 
-final class HeaderPlugin
+final class SomeClass implements WithCallInterface
 {
-    public function pageConfiguration(): array
+    public function checkedMethod(): array
     {
-        return [(new PluginConfigItem))]
+        return [(new ClassWithDisabledMethod)]
     }
 }
 ```
