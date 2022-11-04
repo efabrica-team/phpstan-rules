@@ -49,7 +49,7 @@ final class DisableCallMethodInObjectMethodRule implements Rule
                 !$scope->getClassReflection()->is($this->sourceObject)
             ) ||
             $class === null ||
-            !new $class instanceof $this->calledObject
+            !new $class() instanceof $this->calledObject
         ) {
             return [];
         }
