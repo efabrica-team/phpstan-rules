@@ -9,6 +9,11 @@ services:
         tags:
             - phpstan.rules.rule
 
+    disableCallMethodInObjectMethodRule:
+        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\Cms\Core\Plugin\PluginDefinitionInterface', 'pageConfiguration', 'Efabrica\Cms\Core\Plugin\Config\PluginConfigInterface', 'setRequired')
+        tags:
+            - phpstan.rules.rule
+
     -
         factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
         tags:

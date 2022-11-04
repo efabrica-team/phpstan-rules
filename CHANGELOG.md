@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+### Added
+- Rule for check calling method in object method
 
 ## [0.3.0] - 2022-08-17
 ### Changed

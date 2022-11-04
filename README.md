@@ -138,3 +138,45 @@ final class SomeClass implements MyInterface
 }
 ```
 :+1:
+
+### Check calling method in object method
+Checks if some method is not used in disabled context - specific method of object.
+```neon
+services:
+    disableCallMethodInObjectMethodRule:
+        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithCallInterface', 'checkedMethod', 'Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithDisabledMethodInterface', 'disabledMethod')
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+class ClassWithDisabledMethod implements WithDisabledMethodInterface
+{
+    public function disabledMethod() {}
+}
+
+final class SomeClass implements WithCallInterface
+{
+    public function checkedMethod(): array
+    {
+        return [(new ClassWithDisabledMethod)->disabledMethod()]
+    }
+}
+```
+:x:
+
+```php
+class ClassWithDisabledMethod implements WithDisabledMethodInterface
+{
+    public function disabledMethod() {}
+}
+
+final class SomeClass implements WithCallInterface
+{
+    public function checkedMethod(): array
+    {
+        return [(new ClassWithDisabledMethod)]
+    }
+}
+```
+:+1:
