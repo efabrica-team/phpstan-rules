@@ -54,7 +54,7 @@ final class DisableCallMethodInObjectMethodRule implements Rule
             return [];
         }
         $file = $scope->getFile();
-        $errors[] = RuleErrorBuilder::message('Method ' . ($scope->getClassReflection() ? $scope->getClassReflection()->getName() : '') . '::' . $scope->getFunctionName() . '() called ' . $class . '::' . $node->name->name . '().')->file($file)->line($node->getLine())->build();
+        $errors[] = RuleErrorBuilder::message('Method ' . $scope->getClassReflection()->getName() . '::' . $scope->getFunctionName() . '() called ' . $class . '::' . $node->name->name . '().')->file($file)->line($node->getLine())->build();
         return $errors;
     }
 }
