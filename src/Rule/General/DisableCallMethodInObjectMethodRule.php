@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Efabrica\PHPStanRules\Rule\General;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\ShouldNotHappenException;
+use PHPStan\Type\Constant\ConstantStringType;
+use PHPStan\Type\ObjectType;
 
 /**
  * @implements Rule<MethodCall>
@@ -37,29 +42,58 @@ final class DisableCallMethodInObjectMethodRule implements Rule
         return MethodCall::class;
     }
 
+    /**
+     * @param MethodCall $node
+     * @throws ShouldNotHappenException
+     */
     public function processNode(Node $node, Scope $scope): array
     {
-        $class = (isset($node->var->class)) ? $node->var->class->toString() : null;
-        if (!$node instanceof MethodCall ||
-            !isset($node->name->name) ||
-            $node->name->name !== $this->calledMethod ||
-            $scope->getFunctionName() !== $this->sourceMethod ||
-            !$scope->isInClass() ||
-            (
-                $scope->getClassReflection() !== null &&
-                !$scope->getClassReflection()->is($this->sourceObject)
-            ) ||
-            $class === null ||
-            !new $class() instanceof $this->calledObject
-        ) {
+        if (!$scope->isInClass()) {
             return [];
         }
-        $file = $scope->getFile();
-        $className = '';
-        if ($scope->getClassReflection() instanceof ClassReflection) {
-            $className = $scope->getClassReflection()->getName();
+
+        $classReflection = $scope->getClassReflection();
+        if (!$classReflection instanceof ClassReflection) {
+            return [];
         }
-        $errors[] = RuleErrorBuilder::message('Method ' . $className . '::' . $scope->getFunctionName() . '() called ' . $class . '::' . $node->name->name . '().')->file($file)->line($node->getLine())->build();
+
+        $className = $classReflection->getName();
+        $sourceClassType = new ObjectType($className);
+        if (!$sourceClassType->isInstanceOf($this->sourceObject)->yes()) {
+            return [];
+        }
+
+        if ($scope->getFunctionName() !== $this->sourceMethod) {
+            return [];
+        }
+
+        $callerType = $scope->getType($node->var);
+        if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf($this->calledObject)->yes()) {
+            return [];
+        }
+
+        $methodName = $this->getNameValue($node->name, $scope);
+        if ($methodName !== $this->calledMethod) {
+            return [];
+        }
+
+        $file = $scope->getFile();
+        $errors[] = RuleErrorBuilder::message('Method ' . $className . '::' . $scope->getFunctionName() . '() called ' . $callerType->getClassName() . '::' . $methodName . '().')->file($file)->line($node->getLine())->build();
         return $errors;
+    }
+
+    /**
+     * @param Identifier|Expr $name
+     */
+    private function getNameValue($name, Scope $scope): ?string
+    {
+        if ($name instanceof Identifier) {
+            return $name->toString();
+        }
+        $nameType = $scope->getType($name);
+        if ($nameType instanceof ConstantStringType) {
+            return $nameType->getValue();
+        }
+        return null;
     }
 }

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\Notcom\DisableCallMethodInObjectMethodRule;
+namespace Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule;
 
+use Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
@@ -19,7 +20,7 @@ final class DisableCallMethodInObjectMethodRuleTest extends RuleTestCase
 
     protected function getRule(): Rule
     {
-        return $this->getContainer()->getService('disableCallMethodInObjectMethodRule');
+        return $this->getContainer()->getByType(DisableCallMethodInObjectMethodRule::class);
     }
 
     public function testFindDisabledMethod(): void
