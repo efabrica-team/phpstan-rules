@@ -23,7 +23,7 @@ Or include just:
 includes:
     - vendor/efabrica/phpstan-rules/extension.neon
 ```
-and pick rules you want
+and pick rules you want to use
 
 ### Guzzle - ClientCallWithoutOptionRule
 Finds all calls of GuzzleHttp\Client methods without some option e.g. timeout, connect_timeout
@@ -58,7 +58,7 @@ $guzzleClient->request('GET', 'https://example.com/api/url', ['timeout' => 3, 'c
 :+1:
 
 ### Tomaj/Nette API - InputParamNameRule
-Checks names of all input parameters. Every name has to contain only alphanumeric characters and `_`
+Checks if names of all input parameters. Every name has to contain only alphanumeric characters and `_`
 ```neon
 services:  
     -
@@ -141,10 +141,17 @@ final class SomeClass implements MyInterface
 
 ### Check calling method in object method
 Checks if some method is not used in disabled context - specific method of object.
+
 ```neon
+parameters:
+    disabledMethodCalls:
+        -
+            context: 'ContextClass::contextMethod'
+            disabled: 'DisabledClass::disabledMethod'
+
 services:
-    disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithCallInterface', 'checkedMethod', 'Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithDisabledMethodInterface', 'disabledMethod')
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
         tags:
             - phpstan.rules.rule
 ```

@@ -1,9 +1,9 @@
 <?php
 
-namespace Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Fixtures;
+namespace Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Fixtures;
 
-use Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\CheckedClass;
-use Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\UncheckedClass;
+use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\CheckedClass;
+use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\UncheckedClass;
 
 class ClassWithoutDisablingCallDisabledMethod
 {

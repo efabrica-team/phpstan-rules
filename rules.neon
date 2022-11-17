@@ -9,8 +9,8 @@ services:
         tags:
             - phpstan.rules.rule
 
-    disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\Cms\Core\Plugin\PluginDefinitionInterface', 'pageConfiguration', 'Efabrica\Cms\Core\Plugin\Config\PluginConfigInterface', 'setRequired')
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
         tags:
             - phpstan.rules.rule
 

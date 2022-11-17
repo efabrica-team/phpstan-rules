@@ -1,2 +1,8 @@
+parameters:
+    disabledMethodCalls: []
+
+parametersSchema:
+    disabledMethodCalls: arrayOf(arrayOf(string(), string()))
+
 services:
     - PhpParser\NodeFinder

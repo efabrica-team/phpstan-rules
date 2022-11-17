@@ -1,5 +1,0 @@
-services:
-    disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithCallInterface', 'checkedMethod', 'Efabrica\PHPStanRules\Tests\Rule\General\DisableCallMethodInObjectMethodRule\Source\WithDisabledMethodInterface', 'disabledMethod')
-        tags:
-            - phpstan.rules.rule
