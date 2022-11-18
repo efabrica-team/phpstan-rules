@@ -30,13 +30,8 @@ Finds all calls of GuzzleHttp\Client methods without some option e.g. timeout, c
 
 ```neon
 services:
-    guzzleClientCallWithoutTimeoutOptionRule:
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
-        tags:
-            - phpstan.rules.rule
-
-    guzzleClientCallWithoutConnectTimeoutOptionRule:
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('connect_timeout')
+    -
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
         tags:
             - phpstan.rules.rule
 ```
