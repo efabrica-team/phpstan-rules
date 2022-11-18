@@ -1,0 +1,11 @@
+parameters:
+    disabledMethodCalls:
+        -
+            context: 'Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\WithCallInterface::checkedMethod'
+            disabled: 'Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\WithDisabledMethodInterface::disabledMethod'
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
+        tags:
+            - phpstan.rules.rule

@@ -42,11 +42,15 @@ final class ClientCallWithoutOptionRule implements Rule
         'requestAsync' => 2,
     ];
 
-    private string $optionName;
+    /** @var string[] */
+    private array $optionNames;
 
-    public function __construct(string $optionName)
+    /**
+     * @param string[] $optionNames
+     */
+    public function __construct(array $optionNames)
     {
-        $this->optionName = $optionName;
+        $this->optionNames = $optionNames;
     }
 
     public function getNodeType(): string
@@ -74,31 +78,37 @@ final class ClientCallWithoutOptionRule implements Rule
         $argPosition = $this->methodOptionArgPosition[$methodName];
         $argAtPosition = $node->getArgs()[$argPosition] ?? null;
 
+        $errors = [];
         if ($argAtPosition === null) {
-            $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+            foreach ($this->optionNames as $optionName) {
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+            }
             return  $errors;
         }
 
-        $errors = [];
         $argAtPositionType = ($scope->getType($argAtPosition->value));
-        if ($argAtPositionType instanceof ConstantArrayType) {
-            $optionalKeys = $argAtPositionType->getOptionalKeys();
-            $requiredOptions = [];
-            $optionalOptions = [];
-            foreach ($argAtPositionType->getKeyTypes() as $i => $keyType) {
-                if (in_array($i, $optionalKeys, true)) {
-                    $optionalOptions[] = $keyType->getValue();
-                } else {
-                    $requiredOptions[] = $keyType->getValue();
-                }
+        if (!$argAtPositionType instanceof ConstantArrayType) {
+            return $errors;
+        }
+        $optionalKeys = $argAtPositionType->getOptionalKeys();
+        $requiredOptions = [];
+        $optionalOptions = [];
+        foreach ($argAtPositionType->getKeyTypes() as $i => $keyType) {
+            if (in_array($i, $optionalKeys, true)) {
+                $optionalOptions[] = $keyType->getValue();
+            } else {
+                $requiredOptions[] = $keyType->getValue();
             }
+        }
 
-            if (!in_array($this->optionName, $requiredOptions, true)) {
-                if (!in_array($this->optionName, $optionalOptions, true)) {
-                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
-                } else {
-                    $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is possibly called without ' . $this->optionName . ' option.')->file($file)->line($node->getStartLine())->build();
-                }
+        foreach ($this->optionNames as $optionName) {
+            if (in_array($optionName, $requiredOptions, true)) {
+                continue;
+            }
+            if (!in_array($optionName, $optionalOptions, true)) {
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+            } else {
+                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is possibly called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
             }
         }
         return $errors;

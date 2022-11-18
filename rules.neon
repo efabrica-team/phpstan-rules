@@ -1,16 +1,11 @@
 services:
-    guzzleClientCallWithoutTimeoutOptionRule:
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('timeout')
+    -
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
         tags:
             - phpstan.rules.rule
 
-    guzzleClientCallWithoutConnectTimeoutOptionRule:
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule('connect_timeout')
-        tags:
-            - phpstan.rules.rule
-
-    disableCallMethodInObjectMethodRule:
-        factory: Efabrica\PHPStanRules\Rule\General\DisableCallMethodInObjectMethodRule('Efabrica\Cms\Core\Plugin\PluginDefinitionInterface', 'pageConfiguration', 'Efabrica\Cms\Core\Plugin\Config\PluginConfigInterface', 'setRequired')
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
         tags:
             - phpstan.rules.rule
 
