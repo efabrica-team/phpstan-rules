@@ -2,12 +2,15 @@
 
 ## [Unreleased][unreleased]
 
+### Fixed
+- Better error message for `DisableMethodCallInContextRule`
+
 ## [0.4.0] - 2022-11-18
 ### Changed
 - Parameter option name for `GuzzleClientCallWithoutOptionRule` changed to array option names 
 
 ### Added
-- Rule for check calling method in some context
+- Rule for check calling method in some context (`DisableMethodCallInContextRule`)
 
 ## [0.3.0] - 2022-08-17
 ### Changed

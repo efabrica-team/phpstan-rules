@@ -82,7 +82,7 @@ final class DisableMethodCallInContextRule implements Rule
             }
 
             $file = $scope->getFile();
-            $errors[] = RuleErrorBuilder::message('Calling method ' . $callerType->getClassName() . '::' . $methodName . '() in '  . $className . '::' . $scope->getFunctionName() . '() is forbidden.')->file($file)->line($node->getLine())->build();
+            $errors[] = RuleErrorBuilder::message('Calling method ' . $callerType->getClassName() . '::' . $methodName . '() in ' . $className . '::' . $scope->getFunctionName() . '() is forbidden.')->file($file)->line($node->getLine())->build();
         }
         return $errors;
     }
