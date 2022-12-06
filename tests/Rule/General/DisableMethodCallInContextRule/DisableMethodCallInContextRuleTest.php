@@ -27,7 +27,7 @@ final class DisableMethodCallInContextRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/ClassWithCallDisabledMethod.php'], [
             [
-                'Method Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Fixtures\ClassWithCallDisabledMethod::checkedMethod() called Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\CheckedClass::disabledMethod().',
+                'Calling method Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Source\CheckedClass::disabledMethod() in Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Fixtures\ClassWithCallDisabledMethod::checkedMethod() is forbidden.',
                 24,
             ],
         ]);
