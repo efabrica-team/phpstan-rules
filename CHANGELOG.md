@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+## [0.4.2] - 2023-01-11
+### Fixed
+- Fixed PHP constraint in composer.json
+
 ## [0.4.1] - 2022-12-06
 ### Fixed
 - Better error message for `DisableMethodCallInContextRule`
@@ -34,7 +38,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.1...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.2...HEAD
+[0.4.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.1...0.4.2
 [0.4.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.2.0...0.3.0
