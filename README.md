@@ -141,8 +141,8 @@ Checks if some method is not used in disabled context - specific method of objec
 parameters:
     disabledMethodCalls:
         -
-            context: 'ContextClass::contextMethod'
-            disabled: 'DisabledClass::disabledMethod'
+            context: 'WithCallInterface::checkedMethod'
+            disabled: 'ClassWithDisabledMethod::disabledMethod'
 
 services:
     -
@@ -154,9 +154,11 @@ services:
 ```php
 class ClassWithDisabledMethod implements WithDisabledMethodInterface
 {
-    public function disabledMethod() {}
+    public function disabledMethod() {} // this method shouldn't be called in WithCallInterface::checkedMethod
 }
+```
 
+```php
 final class SomeClass implements WithCallInterface
 {
     public function checkedMethod(): array
@@ -168,16 +170,61 @@ final class SomeClass implements WithCallInterface
 :x:
 
 ```php
-class ClassWithDisabledMethod implements WithDisabledMethodInterface
-{
-    public function disabledMethod() {}
-}
-
 final class SomeClass implements WithCallInterface
 {
     public function checkedMethod(): array
     {
         return [(new ClassWithDisabledMethod)]
+    }
+}
+```
+:+1:
+
+### Check calling method with required parameters
+Checks if some method is called with all required parameters with corresponding types.
+
+```neon
+parameters:
+    requiredParametersInMethodCalls:
+        -
+            context: 'SomeClass::someMethod'
+            parameters:
+                someParameter: string
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\RequiredParametersInMethodCallRule(%requiredParametersInMethodCalls%)
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+class SomeClass
+{
+    public function someMethod(?string $someParameter = null): void
+    {
+        // this method should be called with string value of $someParameter
+    }
+}
+```
+
+```php
+class Foo
+{
+    public function bar(SomeClass $someClass)
+    {
+        $someClass->someMethod();
+    }
+}
+```
+:x:
+
+```php
+class Foo
+{
+    public function bar(SomeClass $someClass)
+    {
+        $someClass->someMethod('baz');
     }
 }
 ```
