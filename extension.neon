@@ -1,10 +1,13 @@
 parameters:
     disabledMethodCalls: []
     requiredParametersInMethodCalls: []
+    forbiddenConstructorParametersTypes: []
 
 parametersSchema:
     disabledMethodCalls: arrayOf(arrayOf(string(), string()))
     requiredParametersInMethodCalls: arrayOf(arrayOf(anyOf(array(), string()), string()))
+    forbiddenConstructorParametersTypes: arrayOf(arrayOf(anyOf(array(), string()), string()))
 
 services:
     - PhpParser\NodeFinder
+    - Efabrica\PHPStanRules\Resolver\NameResolver

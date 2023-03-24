@@ -1,0 +1,14 @@
+parameters:
+    forbiddenConstructorParametersTypes:
+        -
+            context: Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypesRule\Source\SomeInterface
+            forbiddenTypes:
+                -
+                    type: Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypesRule\Source\ForbiddenType
+                    tip: 'Use Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypesRule\Source\NotForbiddenType instead.'
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\ForbiddenConstructorParametersTypesRule(%forbiddenConstructorParametersTypes%)
+        tags:
+            - phpstan.rules.rule

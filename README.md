@@ -232,3 +232,62 @@ class Foo
 }
 ```
 :+1:
+
+### Forbidden constructor parameters types
+This rule checks if constructor contains forbidden parameter types.
+
+```neon
+parameters:
+    forbiddenConstructorParametersTypes:
+        -
+            context: 'SomeClass'
+            forbiddenTypes:
+                -
+                    type: ForbiddenType
+                    tip: 'ForbiddenType is not allowed, use NotForbiddenType instead'
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\ForbiddenConstructorParametersTypesRule(%forbiddenConstructorParametersTypes%)
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+class SomeClass
+{
+
+}
+
+class ForbiddenType
+{
+
+}
+
+class NotForbiddenType
+{
+
+}
+```
+
+```php
+class Foo extends SomeClass
+{
+    public function __construct(ForbiddenType $type)
+    {
+    
+    }
+}
+```
+:x:
+
+```php
+class Foo extends SomeClass
+{
+    public function __construct(NotForbiddenType $type)
+    {
+    
+    }
+}
+```
+:+1:

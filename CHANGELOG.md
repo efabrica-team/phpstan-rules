@@ -4,6 +4,7 @@
 
 ### Added
 - Added rule for checking required parameters in method calls
+- Added forbidden constructor parameters types rule
 
 ## [0.4.2] - 2023-01-11
 ### Fixed
