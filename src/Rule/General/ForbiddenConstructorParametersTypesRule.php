@@ -70,7 +70,8 @@ final class ForbiddenConstructorParametersTypesRule implements Rule
             if ($paramType === null) {
                 continue;
             }
-            $methodParameters[$i + 1] = $this->typeStringResolver->resolve($paramType);
+            $paramName = $this->nameResolver->resolve($param->var);
+            $methodParameters[$paramName === null ? ('#' . ($i + 1)) : ('$' . $paramName)] = $this->typeStringResolver->resolve($paramType);
         }
 
         $errors = [];
@@ -83,11 +84,11 @@ final class ForbiddenConstructorParametersTypesRule implements Rule
             foreach ($forbiddenConstructorParametersType['forbiddenTypes'] as $forbiddenType) {
                 $forbiddenParamType = $this->typeStringResolver->resolve($forbiddenType['type']);
                 $tip = $forbiddenType['tip'] ?? null;
-                foreach ($methodParameters as $i => $methodParameter) {
+                foreach ($methodParameters as $paramName => $methodParameter) {
                     if (!$forbiddenParamType->accepts($methodParameter, true)->yes()) {
                         continue;
                     }
-                    $error = RuleErrorBuilder::message("Constructor parameter #$i of class $className has forbidden type {$methodParameter->describe(VerbosityLevel::typeOnly())}.")->file($file)->line($node->getLine());
+                    $error = RuleErrorBuilder::message("Constructor parameter $paramName of class $className has forbidden type {$methodParameter->describe(VerbosityLevel::typeOnly())}.")->file($file)->line($node->getLine());
                     if ($tip !== null) {
                         $error->tip($tip);
                     }

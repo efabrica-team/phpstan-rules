@@ -15,6 +15,11 @@ services:
             - phpstan.rules.rule
 
     -
+        factory: Efabrica\PHPStanRules\Rule\General\ForbiddenConstructorParametersTypesRule(%forbiddenConstructorParametersTypes%)
+        tags:
+            - phpstan.rules.rule
+
+    -
         factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
         tags:
             - phpstan.rules.rule
