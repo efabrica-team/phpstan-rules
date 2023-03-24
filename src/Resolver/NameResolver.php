@@ -9,6 +9,7 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -35,6 +36,10 @@ final class NameResolver
         if ($node instanceof ClassMethod) {
             return $this->resolveNext($node->name);
         }
+        if ($node instanceof Variable) {
+            return $this->resolveNext($node->name);
+        }
+
         return null;
     }
 
