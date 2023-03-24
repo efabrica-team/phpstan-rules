@@ -34,7 +34,7 @@ final class ForbiddenConstructorParametersTypesRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/UsingForbidden.php'], [
             [
                 'Constructor parameter #2 of class ' . UsingForbidden::class . ' has forbidden type ' . ForbiddenType::class . '.',
-                14,
+                16,
                 'Use ' . NotForbiddenType::class . ' instead.',
             ],
         ]);
@@ -45,12 +45,12 @@ final class ForbiddenConstructorParametersTypesRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/UsingForbiddenAndForbiddenChild.php'], [
             [
                 'Constructor parameter #2 of class ' . UsingForbiddenAndForbiddenChild::class . ' has forbidden type ' . ForbiddenType::class . '.',
-                16,
+                19,
                 'Use ' . NotForbiddenType::class . ' instead.',
             ],
             [
                 'Constructor parameter #3 of class ' . UsingForbiddenAndForbiddenChild::class . ' has forbidden type ' . ForbiddenChildType::class . '.',
-                16,
+                19,
                 'Use ' . NotForbiddenType::class . ' instead.',
             ],
         ]);
@@ -61,12 +61,12 @@ final class ForbiddenConstructorParametersTypesRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/UsingMultipleForbidden.php'], [
             [
                 'Constructor parameter #2 of class ' . UsingMultipleForbidden::class . ' has forbidden type ' . ForbiddenType::class . '.',
-                15,
+                18,
                 'Use ' . NotForbiddenType::class . ' instead.',
             ],
             [
                 'Constructor parameter #3 of class ' . UsingMultipleForbidden::class . ' has forbidden type ' . ForbiddenType::class . '.',
-                15,
+                18,
                 'Use ' . NotForbiddenType::class . ' instead.',
             ],
         ]);
