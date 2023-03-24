@@ -9,7 +9,9 @@ use Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypes
 final class UsingNotForbidden implements SomeInterface
 {
     private string $name;
+
     private NotForbiddenType $type;
+
     private int $count;
 
     public function __construct(string $name, NotForbiddenType $type, int $count)
@@ -21,6 +23,5 @@ final class UsingNotForbidden implements SomeInterface
 
     public function doNotCheckThisMethod(ForbiddenType $forbiddenType): void
     {
-
     }
 }

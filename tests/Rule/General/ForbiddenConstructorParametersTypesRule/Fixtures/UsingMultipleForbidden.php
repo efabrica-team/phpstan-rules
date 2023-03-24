@@ -8,8 +8,11 @@ use Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypes
 final class UsingMultipleForbidden implements SomeInterface
 {
     private string $name;
+
     private ForbiddenType $type1;
+
     private ForbiddenType $type2;
+
     private int $count;
 
     public function __construct(string $name, ForbiddenType $type1, ForbiddenType $type2, int $count)

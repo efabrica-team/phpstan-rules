@@ -8,7 +8,9 @@ use Efabrica\PHPStanRules\Tests\Rule\General\ForbiddenConstructorParametersTypes
 final class UsingForbidden implements SomeInterface
 {
     private string $name;
+
     private ForbiddenType $type;
+
     private int $count;
 
     public function __construct(string $name, ForbiddenType $type, int $count)
