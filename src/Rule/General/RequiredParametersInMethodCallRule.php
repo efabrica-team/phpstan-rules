@@ -114,7 +114,7 @@ final class RequiredParametersInMethodCallRule implements Rule
                     if ($tip !== null) {
                         $error->tip($tip);
                     }
-                    $errors[] = $error->build();;
+                    $errors[] = $error->build();
                     continue;
                 }
                 if (!$requiredType->accepts($calledType, true)->yes()) {
@@ -122,7 +122,7 @@ final class RequiredParametersInMethodCallRule implements Rule
                     if ($tip !== null) {
                         $error->tip($tip);
                     }
-                    $errors[] = $error->build();;
+                    $errors[] = $error->build();
                 }
             }
         }
