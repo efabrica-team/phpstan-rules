@@ -1,8 +1,10 @@
 parameters:
     disabledMethodCalls: []
+    requiredParametersInMethodCalls: []
 
 parametersSchema:
     disabledMethodCalls: arrayOf(arrayOf(string(), string()))
+    requiredParametersInMethodCalls: arrayOf(arrayOf(anyOf(array(), string()), string()))
 
 services:
     - PhpParser\NodeFinder

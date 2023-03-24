@@ -83,7 +83,7 @@ final class ClientCallWithoutOptionRule implements Rule
             foreach ($this->optionNames as $optionName) {
                 $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
             }
-            return  $errors;
+            return $errors;
         }
 
         $argAtPositionType = ($scope->getType($argAtPosition->value));

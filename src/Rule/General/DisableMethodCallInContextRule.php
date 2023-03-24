@@ -25,7 +25,7 @@ final class DisableMethodCallInContextRule implements Rule
     private array $disabledMethodCalls;
 
     /**
-     * @param array<array{context: string, disabled:string}> $disabledMethodCalls
+     * @param array<array{context: string, disabled: string}> $disabledMethodCalls
      */
     public function __construct(array $disabledMethodCalls)
     {

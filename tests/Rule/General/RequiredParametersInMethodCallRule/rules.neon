@@ -1,0 +1,15 @@
+parameters:
+    requiredParametersInMethodCalls:
+        -
+            context: 'Efabrica\PHPStanRules\Tests\Rule\General\RequiredParametersInMethodCallRule\Source\Selection::count'
+            parameters:
+                -
+                    name: column
+                    type: string
+                    tip: 'Always use parameter column as string, because...'
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\RequiredParametersInMethodCallRule(%requiredParametersInMethodCalls%)
+        tags:
+            - phpstan.rules.rule
