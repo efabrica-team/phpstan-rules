@@ -14,7 +14,6 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
 use Throwable;
-use function PHPStan\dumpType;
 
 /**
  * @implements Rule<MethodCall>
