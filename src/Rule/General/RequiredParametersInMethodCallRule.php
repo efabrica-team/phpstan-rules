@@ -20,13 +20,13 @@ use Throwable;
  */
 final class RequiredParametersInMethodCallRule implements Rule
 {
-    /** @var array<array{context: string, parameters: array<string, string>}> */
+    /** @var array<array{context: string, parameters: array<array{name: string, type: string, tip: ?string}>}> */
     private array $requiredParametersInMethodCalls;
 
     private TypeStringResolver $typeStringResolver;
 
     /**
-     * @param array<array{context: string, parameters: array<string, string>}> $requiredParametersInMethodCalls
+     * @param array<array{context: string, parameters: array<array{name: string, type: string, tip: ?string}>}> $requiredParametersInMethodCalls
      */
     public function __construct(array $requiredParametersInMethodCalls, TypeStringResolver $typeStringResolver)
     {
@@ -104,15 +104,25 @@ final class RequiredParametersInMethodCallRule implements Rule
             }
 
             $requiredParameters = $requiredParametersInMethodCall['parameters'];
-            foreach ($requiredParameters as $parameterName => $parameterType) {
-                $requiredType = $this->typeStringResolver->resolve($parameterType);
+            foreach ($requiredParameters as $requiredParameter) {
+                $parameterName = $requiredParameter['name'];
+                $requiredType = $this->typeStringResolver->resolve($requiredParameter['type']);
+                $tip = $requiredParameter['tip'] ?? null;
                 $calledType = $callArgs[$parameterName] ?? null;
                 if ($calledType === null) {
-                    $errors[] = RuleErrorBuilder::message("Parameter '$parameterName' of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, none given.")->file($file)->line($node->getLine())->build();
+                    $error = RuleErrorBuilder::message("Parameter '$parameterName' of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, none given.")->file($file)->line($node->getLine());
+                    if ($tip !== null) {
+                        $error->tip($tip);
+                    }
+                    $errors[] = $error->build();;
                     continue;
                 }
                 if (!$requiredType->accepts($calledType, true)->yes()) {
-                    $errors[] = RuleErrorBuilder::message("Parameter '$parameterName' of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, {$calledType->describe(VerbosityLevel::typeOnly())} given.")->file($file)->line($node->getLine())->build();
+                    $error = RuleErrorBuilder::message("Parameter '$parameterName' of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, {$calledType->describe(VerbosityLevel::typeOnly())} given.")->file($file)->line($node->getLine());
+                    if ($tip !== null) {
+                        $error->tip($tip);
+                    }
+                    $errors[] = $error->build();;
                 }
             }
         }

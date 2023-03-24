@@ -30,10 +30,12 @@ final class RequiredParametersInMethodCallRuleTest extends RuleTestCase
             [
                 'Parameter \'column\' of method ' . Selection::class . '::count() is required to be string, none given.',
                 19,
+                'Always use parameter column as string, because...'
             ],
             [
                 'Parameter \'column\' of method ' . Selection::class . '::count() is required to be string, null given.',
                 20,
+                'Always use parameter column as string, because...'
             ],
         ]);
     }

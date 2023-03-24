@@ -189,7 +189,10 @@ parameters:
         -
             context: 'SomeClass::someMethod'
             parameters:
-                someParameter: string
+                -
+                    name: someParameter
+                    type: string
+                    tip: 'Always use parameter someParameter as string because...'
 
 services:
     -
