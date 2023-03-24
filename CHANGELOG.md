@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- Added rule for checking required parameters in method calls
+
 ## [0.4.2] - 2023-01-11
 ### Fixed
 - Fixed PHP constraint in composer.json

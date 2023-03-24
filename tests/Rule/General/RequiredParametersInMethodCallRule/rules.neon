@@ -1,0 +1,12 @@
+parameters:
+    requiredParametersInMethodCalls:
+        -
+            context: 'Efabrica\PHPStanRules\Tests\Rule\General\RequiredParametersInMethodCallRule\Source\Selection::count'
+            parameters:
+                column: string
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\RequiredParametersInMethodCallRule(%requiredParametersInMethodCalls%)
+        tags:
+            - phpstan.rules.rule
