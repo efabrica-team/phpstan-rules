@@ -7,10 +7,8 @@ namespace Efabrica\PHPStanRules\Rule\Performance;
 use Efabrica\PHPStanRules\Resolver\NameResolver;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
-use PhpParser\Node\Expr\BinaryOp\BooleanOr;
-use PhpParser\Node\Expr\BinaryOp\LogicalAnd;
-use PhpParser\Node\Expr\BinaryOp\LogicalOr;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
@@ -27,11 +25,13 @@ use PHPStan\Type\VerbosityLevel;
 /**
  * @implements Rule<If_>
  */
-final class CheckSlowCallsInConditionsRule implements Rule
+final class CheckCallsInConditionsRule implements Rule
 {
     private const FUNCTION_CALL = 'function_call';
     private const METHOD_CALL = 'method_call';
     private const STATIC_METHOD_CALL = 'static_method_call';
+
+    private bool $checkAllCalls;
 
     /** @var array{function_call: string[], method_call: array<string, string[]>, static_method_call: array<string, string[]>} */
     private array $conditionSlowCalls = [
@@ -39,7 +39,6 @@ final class CheckSlowCallsInConditionsRule implements Rule
         self::METHOD_CALL => [],
         self::STATIC_METHOD_CALL => [],
     ];
-
     private NameResolver $nameResolver;
 
     /**
@@ -47,6 +46,7 @@ final class CheckSlowCallsInConditionsRule implements Rule
      */
     public function __construct(array $conditionSlowCalls, NameResolver $nameResolver)
     {
+        $this->checkAllCalls = $conditionSlowCalls === [];
         foreach ($conditionSlowCalls as $conditionSlowCall) {
             if (str_contains($conditionSlowCall, '->')) {
                 [$class, $method] = explode('->', $conditionSlowCall, 2);
@@ -102,7 +102,7 @@ final class CheckSlowCallsInConditionsRule implements Rule
             }
 
             foreach ($slowCalls as $slowCall) {
-                $errors[] = RuleErrorBuilder::message('Performance: Slow call "' . $slowCall . '()" is called in condition before faster expressions. Move it to the end.')->line($expr->getLine())->build();
+                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before faster expressions. Move it to the end.')->line($expr->getLine())->build();
             }
 
             $slowCalls = [];
@@ -117,10 +117,13 @@ final class CheckSlowCallsInConditionsRule implements Rule
     private function getConditionExprList(Expr $expr, Scope $scope): array
     {
         $expressions = [];
-        if ($expr instanceof BooleanAnd || $expr instanceof BooleanOr || $expr instanceof LogicalAnd || $expr instanceof LogicalOr) {
+        if ($expr instanceof BinaryOp) {
             return array_merge($this->getConditionExprList($expr->left, $scope), $expressions, $this->getConditionExprList($expr->right, $scope));
         }
         if ($expr instanceof BooleanNot) {
+            return $this->getConditionExprList($expr->expr, $scope);
+        }
+        if ($expr instanceof Assign) {
             return $this->getConditionExprList($expr->expr, $scope);
         }
 
@@ -132,6 +135,10 @@ final class CheckSlowCallsInConditionsRule implements Rule
     {
         if ($callName === null) {
             return false;
+        }
+
+        if ($this->checkAllCalls) {
+            return true;
         }
 
         if (str_contains($callName, '->')) {
@@ -188,7 +195,7 @@ final class CheckSlowCallsInConditionsRule implements Rule
             return $this->nameResolver->resolve($call->class) . '::' . $this->nameResolver->resolve($call->name);
         }
         if ($call instanceof MethodCall) {
-            $scope->getType($call->var)->describe(VerbosityLevel::typeOnly()) . '->' . $this->nameResolver->resolve($call->name);
+            return $scope->getType($call->var)->describe(VerbosityLevel::value()) . '->' . $this->nameResolver->resolve($call->name);
         }
         return null;
     }

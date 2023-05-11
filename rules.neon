@@ -20,7 +20,7 @@ services:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\Performance\CheckSlowCallsInConditionsRule(%conditionSlowCalls%)
+        factory: Efabrica\PHPStanRules\Rule\Performance\CheckCallsInConditionsRule(%conditionSlowCalls%)
         tags:
             - phpstan.rules.rule
 

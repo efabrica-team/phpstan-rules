@@ -2,8 +2,7 @@ parameters:
     disabledMethodCalls: []
     requiredParametersInMethodCalls: []
     forbiddenConstructorParametersTypes: []
-    conditionSlowCalls:
-        - file_*
+    conditionSlowCalls: []
 
 parametersSchema:
     disabledMethodCalls: arrayOf(arrayOf(string(), string()))

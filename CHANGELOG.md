@@ -3,7 +3,7 @@
 ## [Unreleased][unreleased]
 
 ### Added
-- Added rule for checking conditions for slow calls
+- Added rule for checking conditions for calls
 
 ## [0.5.0] - 2023-03-29
 ### Added

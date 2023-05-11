@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Efabrica\PHPStanRules\Tests\Rule\Performance\CheckSlowCallsInConditionsRule\Fixtures;
+namespace Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures;
 
 final class NoSlowCallsInConditions
 {
