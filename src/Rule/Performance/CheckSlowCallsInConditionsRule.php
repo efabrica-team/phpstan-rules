@@ -135,26 +135,12 @@ final class CheckSlowCallsInConditionsRule implements Rule
         }
 
         if (str_contains($callName, '->')) {
-            return $this->isSlowMethod($callName);
+            return $this->isSlowMethod($callName, '->', $this->conditionSlowCalls[self::METHOD_CALL]);
         } elseif (str_contains($callName, '::')) {
-            [$class, $method] = explode('::', $callName, 2);
-            $caller = new ObjectType($class);
-
-            foreach ($this->conditionSlowCalls[self::STATIC_METHOD_CALL] as $staticMethodCallClass => $staticMethodPatterns) {
-                if (!$caller->isInstanceOf($staticMethodCallClass)->yes()) {
-                    continue;
-                }
-
-                foreach ($staticMethodPatterns as $staticMethodPattern) {
-                    $staticMethodPattern = '/' . str_replace('*', '(.*?)', $staticMethodPattern) . '/';
-                    if (preg_match($staticMethodPattern, $method) === 1) {
-                        return true;
-                    }
-                }
-            }
+            return $this->isSlowMethod($callName, '::', $this->conditionSlowCalls[self::STATIC_METHOD_CALL]);
         } else {
             foreach ($this->conditionSlowCalls[self::FUNCTION_CALL] as $functionPattern) {
-                $functionPattern = '/' . str_replace('*', '(.*?)', $functionPattern) . '/';
+                $functionPattern = $this->createPattern($functionPattern);
                 if (preg_match($functionPattern, $callName) === 1) {
                     return true;
                 }
@@ -164,24 +150,33 @@ final class CheckSlowCallsInConditionsRule implements Rule
         return false;
     }
 
+    /**
+     * @param non-empty-string $separator
+     * @param array<string, string[]> $slowMethodCalls
+     */
     private function isSlowMethod(string $callName, string $separator, array $slowMethodCalls): bool
     {
-        [$class, $method] = explode('->', $callName, 2);
+        [$class, $method] = explode($separator, $callName, 2);
         $caller = new ObjectType($class);
 
-        foreach ($this->conditionSlowCalls[self::METHOD_CALL] as $methodCallClass => $methodPatterns) {
+        foreach ($slowMethodCalls as $methodCallClass => $methodPatterns) {
             if (!$caller->isInstanceOf($methodCallClass)->yes()) {
                 continue;
             }
 
             foreach ($methodPatterns as $methodPattern) {
-                $methodPattern = '/' . str_replace('*', '(.*?)', $methodPattern) . '/';
+                $methodPattern = $this->createPattern($methodPattern);
                 if (preg_match($methodPattern, $method) === 1) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private function createPattern(string $slowCall): string
+    {
+        return '/' . str_replace('*', '(.*?)', $slowCall) . '/';
     }
 
     private function getCallName(CallLike $call, Scope $scope): ?string
