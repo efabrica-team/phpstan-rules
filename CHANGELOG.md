@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- Added rule for checking conditions for slow calls
+
 ## [0.5.0] - 2023-03-29
 ### Added
 - Added rule for checking required parameters in method calls
