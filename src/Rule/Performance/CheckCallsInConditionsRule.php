@@ -39,6 +39,7 @@ final class CheckCallsInConditionsRule implements Rule
         self::METHOD_CALL => [],
         self::STATIC_METHOD_CALL => [],
     ];
+
     private NameResolver $nameResolver;
 
     /**
