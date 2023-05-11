@@ -33,7 +33,7 @@ final class CheckSlowCallsInConditionsRule implements Rule
     private const METHOD_CALL = 'method_call';
     private const STATIC_METHOD_CALL = 'static_method_call';
 
-    /** @var array{function_call: string[], method_call: array{string, string[]}, static_method_call: array{string, string[]}} */
+    /** @var array{function_call: string[], method_call: array<string, string[]>, static_method_call: array<string, string[]>} */
     private array $conditionSlowCalls = [
         self::FUNCTION_CALL => [],
         self::METHOD_CALL => [],
@@ -111,6 +111,9 @@ final class CheckSlowCallsInConditionsRule implements Rule
         return $errors;
     }
 
+    /**
+     * @return Expr[]
+     */
     private function getConditionExprList(Expr $expr, Scope $scope): array
     {
         $expressions = [];
@@ -125,24 +128,14 @@ final class CheckSlowCallsInConditionsRule implements Rule
         return $expressions;
     }
 
-    private function isSlow(string $callName): bool
+    private function isSlow(?string $callName): bool
     {
+        if ($callName === null) {
+            return false;
+        }
+
         if (str_contains($callName, '->')) {
-            [$class, $method] = explode('->', $callName, 2);
-            $caller = new ObjectType($class);
-
-            foreach ($this->conditionSlowCalls[self::METHOD_CALL] as $methodCallClass => $methodPatterns) {
-                if (!$caller->isInstanceOf($methodCallClass)->yes()) {
-                    continue;
-                }
-
-                foreach ($methodPatterns as $methodPattern) {
-                    $methodPattern = '/' . str_replace('*', '(.*?)', $methodPattern) . '/';
-                    if (preg_match($methodPattern, $method) === 1) {
-                        return true;
-                    }
-                }
-            }
+            return $this->isSlowMethod($callName);
         } elseif (str_contains($callName, '::')) {
             [$class, $method] = explode('::', $callName, 2);
             $caller = new ObjectType($class);
@@ -168,6 +161,26 @@ final class CheckSlowCallsInConditionsRule implements Rule
             }
         }
 
+        return false;
+    }
+
+    private function isSlowMethod(string $callName, string $separator, array $slowMethodCalls): bool
+    {
+        [$class, $method] = explode('->', $callName, 2);
+        $caller = new ObjectType($class);
+
+        foreach ($this->conditionSlowCalls[self::METHOD_CALL] as $methodCallClass => $methodPatterns) {
+            if (!$caller->isInstanceOf($methodCallClass)->yes()) {
+                continue;
+            }
+
+            foreach ($methodPatterns as $methodPattern) {
+                $methodPattern = '/' . str_replace('*', '(.*?)', $methodPattern) . '/';
+                if (preg_match($methodPattern, $method) === 1) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
