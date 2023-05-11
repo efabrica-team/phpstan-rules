@@ -107,7 +107,10 @@ final class CheckCallsInConditionsRule implements Rule
             }
 
             foreach ($slowCalls as $slowCall) {
-                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before faster expressions. Move it to the end.')->line($expr->getLine())->build();
+                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before expressions which seem to be faster.')
+                    ->tip('Move faster expressions to the beginning of the condition and calls to the end.')
+                    ->line($expr->getLine())
+                    ->build();
             }
 
             $slowCalls = [];
