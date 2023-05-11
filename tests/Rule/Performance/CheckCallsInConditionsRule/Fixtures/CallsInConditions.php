@@ -6,7 +6,7 @@ namespace Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRul
 
 use Nette\Utils\Strings;
 
-final class SlowCallsInConditions
+final class CallsInConditions
 {
     private bool $bool;
 
@@ -14,14 +14,14 @@ final class SlowCallsInConditions
 
     private array $array;
 
-    private SlowCallsInConditions $slowCallsInConditions;
+    private CallsInConditions $callsInConditions;
 
-    public function __construct(bool $bool, string $string, array $array, SlowCallsInConditions $slowCallsInConditions)
+    public function __construct(bool $bool, string $string, array $array, CallsInConditions $callsInConditions)
     {
         $this->bool = $bool;
         $this->string = $string;
         $this->array = $array;
-        $this->slowCallsInConditions = $slowCallsInConditions;
+        $this->callsInConditions = $callsInConditions;
     }
 
     public function fileExistsAsFirstInOr(): bool
@@ -106,7 +106,7 @@ final class SlowCallsInConditions
 
     public function methodCallFirst(): bool
     {
-        if ($this->slowCallsInConditions->emptyAsFirst() && $this->bool) {
+        if ($this->callsInConditions->emptyAsFirst() && $this->bool) {
             return true;
         }
         return false;
@@ -136,9 +136,25 @@ final class SlowCallsInConditions
         return false;
     }
 
+    public function onlyComparingWithMethodCalls(): bool
+    {
+        if ($this->fileExistsAsFirstInAnd() === false) {
+            return true;
+        }
+        return false;
+    }
+
     public function comparingResultOfMethodCallsFirst(): bool
     {
-        if ($this->fileExistsAsFirstInAnd() === $this->fileExistsAsFirstInOr() && $this->string && $this->bool) {
+        if ($this->fileExistsAsFirstInAnd() == $this->fileExistsAsFirstInOr() && $this->string && $this->bool) {
+            return true;
+        }
+        return false;
+    }
+
+    public function onlyAssignWithMethodCall(): bool
+    {
+        if ($file = $this->fileExistsAsFirstInAnd()) {
             return true;
         }
         return false;

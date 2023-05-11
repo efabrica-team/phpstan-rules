@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures;
 
-final class NoSlowCallsInConditions
+final class NoCallsInConditions
 {
     private bool $bool;
 

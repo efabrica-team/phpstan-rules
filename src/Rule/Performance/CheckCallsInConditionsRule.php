@@ -9,6 +9,10 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BinaryOp;
+use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
+use PhpParser\Node\Expr\BinaryOp\BooleanOr;
+use PhpParser\Node\Expr\BinaryOp\LogicalAnd;
+use PhpParser\Node\Expr\BinaryOp\LogicalOr;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
@@ -31,7 +35,7 @@ final class CheckCallsInConditionsRule implements Rule
     private const METHOD_CALL = 'method_call';
     private const STATIC_METHOD_CALL = 'static_method_call';
 
-    private bool $checkAllCalls;
+    private bool $considerAllCallsAsSlow;
 
     /** @var array{function_call: string[], method_call: array<string, string[]>, static_method_call: array<string, string[]>} */
     private array $conditionSlowCalls = [
@@ -47,7 +51,7 @@ final class CheckCallsInConditionsRule implements Rule
      */
     public function __construct(array $conditionSlowCalls, NameResolver $nameResolver)
     {
-        $this->checkAllCalls = $conditionSlowCalls === [];
+        $this->considerAllCallsAsSlow = $conditionSlowCalls === [];
         foreach ($conditionSlowCalls as $conditionSlowCall) {
             if (str_contains($conditionSlowCall, '->')) {
                 [$class, $method] = explode('->', $conditionSlowCall, 2);
@@ -119,7 +123,17 @@ final class CheckCallsInConditionsRule implements Rule
     {
         $expressions = [];
         if ($expr instanceof BinaryOp) {
-            return array_merge($this->getConditionExprList($expr->left, $scope), $expressions, $this->getConditionExprList($expr->right, $scope));
+            if ($expr instanceof BooleanAnd || $expr instanceof BooleanOr || $expr instanceof LogicalAnd || $expr instanceof LogicalOr) {
+                return array_merge($this->getConditionExprList($expr->left, $scope), $this->getConditionExprList($expr->right, $scope));
+            } else {
+                if ($expr->left instanceof CallLike) {
+                    $expressions[] = $expr->left;
+                }
+                if ($expr->right instanceof CallLike) {
+                    $expressions[] = $expr->right;
+                }
+                return $expressions;
+            }
         }
         if ($expr instanceof BooleanNot) {
             return $this->getConditionExprList($expr->expr, $scope);
@@ -138,7 +152,7 @@ final class CheckCallsInConditionsRule implements Rule
             return false;
         }
 
-        if ($this->checkAllCalls) {
+        if ($this->considerAllCallsAsSlow) {
             return true;
         }
 
@@ -184,7 +198,7 @@ final class CheckCallsInConditionsRule implements Rule
 
     private function createPattern(string $slowCall): string
     {
-        return '/' . str_replace('*', '(.*?)', $slowCall) . '/';
+        return '/^' . str_replace('*', '(.*?)', $slowCall) . '$/';
     }
 
     private function getCallName(CallLike $call, Scope $scope): ?string

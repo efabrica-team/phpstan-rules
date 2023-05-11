@@ -23,14 +23,14 @@ final class CheckCallsInConditionsRuleTest extends RuleTestCase
         return $this->getContainer()->getByType(CheckCallsInConditionsRule::class);
     }
 
-    public function testNoSlowCallsInConditions(): void
+    public function testNoCallsInConditions(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/NoSlowCallsInConditions.php'], []);
+        $this->analyse([__DIR__ . '/Fixtures/NoCallsInConditions.php'], []);
     }
 
-    public function testSlowCallsInConditions(): void
+    public function testCallsInConditions(): void
     {
-        $this->analyse([__DIR__ . '/Fixtures/SlowCallsInConditions.php'], [
+        $this->analyse([__DIR__ . '/Fixtures/CallsInConditions.php'], [
             [
                 'Performance: "file_exists()" is called in condition before faster expressions. Move it to the end.',
                 29,
@@ -52,11 +52,11 @@ final class CheckCallsInConditionsRuleTest extends RuleTestCase
                 77,
             ],
             [
-                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\SlowCallsInConditions)->emptyAsFirst()" is called in condition before faster expressions. Move it to the end.',
+                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->emptyAsFirst()" is called in condition before faster expressions. Move it to the end.',
                 101,
             ],
             [
-                'Performance: "Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\SlowCallsInConditions->emptyAsFirst()" is called in condition before faster expressions. Move it to the end.',
+                'Performance: "Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions->emptyAsFirst()" is called in condition before faster expressions. Move it to the end.',
                 109,
             ],
             [
@@ -72,16 +72,16 @@ final class CheckCallsInConditionsRuleTest extends RuleTestCase
                 133,
             ],
             [
-                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\SlowCallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before faster expressions. Move it to the end.',
-                141,
-            ],
-            [
-                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\SlowCallsInConditions)->fileExistsAsFirstInOr()" is called in condition before faster expressions. Move it to the end.',
-                141,
-            ],
-            [
-                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\SlowCallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before faster expressions. Move it to the end.',
+                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before faster expressions. Move it to the end.',
                 149,
+            ],
+            [
+                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInOr()" is called in condition before faster expressions. Move it to the end.',
+                149,
+            ],
+            [
+                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before faster expressions. Move it to the end.',
+                165,
             ],
         ]);
     }
