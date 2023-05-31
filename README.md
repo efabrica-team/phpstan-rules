@@ -1,5 +1,12 @@
 # eFabrica PHPStan extension
+
 Extension for PHPStan is providing several services and rules to help find bugs in your applications.
+
+[![PHP unit](https://github.com/efabrica-team/phpstan-rules/workflows/PHPunit/badge.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3APHPunit)
+[![PHPStan level](https://img.shields.io/badge/PHPStan-level:%20max-brightgreen.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3A"PHP+static+analysis")
+[![PHP static analysis](https://github.com/efabrica-team/phpstan-rules/workflows/PHP%20static%20analysis/badge.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3A"PHP+static+analysis")
+[![Latest Stable Version](https://img.shields.io/packagist/v/efabrica/phpstan-rules.svg)](https://packagist.org/packages/efabrica/phpstan-rules)
+[![Total Downloads](https://img.shields.io/packagist/dt/efabrica/phpstan-rules.svg?style=flat-square)](https://packagist.org/packages/efabrica/phpstan-rules)
 
 ## Installation
 
