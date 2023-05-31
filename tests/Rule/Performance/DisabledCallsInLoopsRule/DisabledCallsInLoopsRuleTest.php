@@ -34,6 +34,14 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
                 'Performance: Do not use "array_merge" in loop.',
                 22,
             ],
+            [
+                'Performance: Do not use "array_merge" in loop.',
+                32,
+            ],
+            [
+                'Performance: Do not use "array_merge" in loop.',
+                43,
+            ],
         ]);
     }
 
@@ -47,6 +55,14 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
             [
                 'Performance: Do not use "array_merge_recursive" in loop.',
                 22,
+            ],
+            [
+                'Performance: Do not use "array_merge_recursive" in loop.',
+                32,
+            ],
+            [
+                'Performance: Do not use "array_merge_recursive" in loop.',
+                43,
             ],
         ]);
     }

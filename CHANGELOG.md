@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- Added performance rule to disable function calls (array_merge, array_merge_recursive) in loops
+
 ## [0.5.0] - 2023-03-29
 ### Added
 - Added rule for checking required parameters in method calls

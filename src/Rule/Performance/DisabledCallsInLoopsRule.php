@@ -7,8 +7,10 @@ namespace Efabrica\PHPStanRules\Rule\Performance;
 use Efabrica\PHPStanRules\Resolver\NameResolver;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Stmt\Do_;
 use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
+use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
@@ -66,6 +68,14 @@ final class DisabledCallsInLoopsRule implements Rule
         }
 
         if ($parentNode instanceof Foreach_) {
+            return true;
+        }
+
+        if ($parentNode instanceof While_) {
+            return true;
+        }
+
+        if ($parentNode instanceof Do_) {
             return true;
         }
 

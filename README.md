@@ -298,3 +298,28 @@ class Foo extends SomeClass
 }
 ```
 :+1:
+
+### Performance - DisabledCallsInLoopsRule
+Some functions are not recommended to be called in loops. For example array_merge.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+$result = [];
+for ($i = 0; $i < 100; $i++) {
+    $result = array_merge($result, $data[$i]);
+}
+
+```
+:x:
+
+```php
+$result = array_merge([], ...$data);
+```
+:+1:

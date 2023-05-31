@@ -24,6 +24,28 @@ final class ArrayMerge
         return $result;
     }
 
+    public function callArrayMergeInWhile(array $data): array
+    {
+        $result = [];
+        $i = 0;
+        while (isset($data[$i])) {
+            $result = array_merge($result, $data[$i]);
+            $i++;
+        }
+        return $result;
+    }
+
+    public function callArrayMergeInDoWhile(array $data): array
+    {
+        $result = [];
+        $i = 0;
+        do {
+            $result = array_merge($result, $data[$i]);
+            $i++;
+        } while (isset($data[$i]));
+        return $result;
+    }
+
     public function callArrayMergeOnce(array $data): array
     {
         return array_merge([], ...$data);
