@@ -16,6 +16,7 @@ use PhpParser\Node\Expr\BinaryOp\LogicalOr;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Stmt\If_;
@@ -145,6 +146,10 @@ final class CheckCallsInConditionsRule implements Rule
             return $this->getConditionExprList($expr->expr, $scope);
         }
 
+        if ($expr instanceof Instanceof_) {
+            return $this->getConditionExprList($expr->expr, $scope);
+        }
+
         $expressions[] = $expr;
         return $expressions;
     }
@@ -152,6 +157,10 @@ final class CheckCallsInConditionsRule implements Rule
     private function isSlow(?string $callName): bool
     {
         if ($callName === null) {
+            return false;
+        }
+
+        if (in_array($callName, ['array_key_exists', 'is_array', 'in_array'], true)) {
             return false;
         }
 
