@@ -18,6 +18,11 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class DisabledCallsInLoopsRule implements Rule
 {
+    private array $disabledFunctions = [
+        'array_merge',
+        'array_merge_recursive',
+    ];
+
     private NameResolver $nameResolver;
 
     public function __construct(NameResolver $nameResolver)
@@ -36,7 +41,7 @@ final class DisabledCallsInLoopsRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $functionName = $this->nameResolver->resolve($node);
-        if ($functionName !== 'array_merge') {
+        if (!in_array($functionName, $this->disabledFunctions, true)) {
             return [];
         }
 
@@ -45,7 +50,7 @@ final class DisabledCallsInLoopsRule implements Rule
         }
 
         return [
-            RuleErrorBuilder::message('Do not use "' . $functionName . '" in loop.')->build(),
+            RuleErrorBuilder::message('Performance: Do not use "' . $functionName . '" in loop.')->build(),
         ];
     }
 

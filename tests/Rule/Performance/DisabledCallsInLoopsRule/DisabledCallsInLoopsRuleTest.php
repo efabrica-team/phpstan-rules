@@ -27,11 +27,25 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/ArrayMerge.php'], [
             [
-                'Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop.',
                 13,
             ],
             [
-                'Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop.',
+                22,
+            ],
+        ]);
+    }
+
+    public function testArrayMergeRecursive(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/ArrayMergeRecursive.php'], [
+            [
+                'Performance: Do not use "array_merge_recursive" in loop.',
+                13,
+            ],
+            [
+                'Performance: Do not use "array_merge_recursive" in loop.',
                 22,
             ],
         ]);
