@@ -20,6 +20,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class DisabledCallsInLoopsRule implements Rule
 {
+    /** @var string[]  */
     private array $disabledFunctions = [
         'array_merge',
         'array_merge_recursive',
@@ -59,7 +60,7 @@ final class DisabledCallsInLoopsRule implements Rule
     private function isInLoop(Node $node): bool
     {
         $parentNode = $node->getAttribute('parent');
-        if ($parentNode === null) {
+        if (!$parentNode instanceof Node) {
             return false;
         }
 
