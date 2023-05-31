@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures;
 
+use DateTime;
 use Nette\Utils\Strings;
 
 final class CallsInConditions
@@ -166,5 +167,26 @@ final class CallsInConditions
             return true;
         }
         return false;
+    }
+
+    public function compareMethodCallInFirst(): bool
+    {
+        if ($this->createDateTime('-1 week') < new DateTime() && $this->string) {
+            return true;
+        }
+        return false;
+    }
+
+    public function compareMethodCallInBoth(): bool
+    {
+        if ($this->createDateTime('-1 week') < new DateTime() && $this->createDateTime('+2 weeks') >= new DateTime()) {
+            return true;
+        }
+        return false;
+    }
+
+    private function createDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

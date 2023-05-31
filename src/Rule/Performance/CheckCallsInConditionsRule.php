@@ -125,6 +125,9 @@ final class CheckCallsInConditionsRule implements Rule
      */
     private function getConditionExprList(Expr $expr, Scope $scope): array
     {
+        // we should rework this to something where we split boolean and/or, logical and/or and boolean not and then each part separately finds if there is some CallLike expression
+        // because $this->callSomething() > new DateTime() && $this->>callSomethingElse() < new DateTime() is correct but this rule thinks new DateTime() can be called first
+
         $expressions = [];
         if ($expr instanceof BinaryOp) {
             if ($expr instanceof BooleanAnd || $expr instanceof BooleanOr || $expr instanceof LogicalAnd || $expr instanceof LogicalOr) {

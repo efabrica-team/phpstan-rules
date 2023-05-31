@@ -33,67 +33,72 @@ final class CheckCallsInConditionsRuleTest extends RuleTestCase
         $this->analyse([__DIR__ . '/Fixtures/CallsInConditions.php'], [
             [
                 'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
-                29,
+                30,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
-                37,
+                38,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
-                45,
+                46,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
-                53,
+                54,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
-                77,
+                78,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->emptyAsFirst()" is called in condition before expressions which seem to be faster.',
-                101,
+                102,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions->emptyAsFirst()" is called in condition before expressions which seem to be faster.',
-                109,
+                110,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "Nette\Utils\Strings::webalize()" is called in condition before expressions which seem to be faster.',
-                117,
+                118,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "Nette\Utils\Strings::webalize()" is called in condition before expressions which seem to be faster.',
-                125,
+                126,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "Nette\Utils\Strings::webalize()" is called in condition before expressions which seem to be faster.',
-                133,
+                134,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before expressions which seem to be faster.',
-                149,
+                150,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInOr()" is called in condition before expressions which seem to be faster.',
-                149,
+                150,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
             [
                 'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->fileExistsAsFirstInAnd()" is called in condition before expressions which seem to be faster.',
-                165,
+                166,
+                'Move faster expressions to the beginning of the condition and calls to the end.',
+            ],
+            [
+                'Performance: "$this(Efabrica\PHPStanRules\Tests\Rule\Performance\CheckCallsInConditionsRule\Fixtures\CallsInConditions)->createDateTime()" is called in condition before expressions which seem to be faster.',
+                174,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
         ]);
