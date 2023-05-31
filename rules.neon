@@ -28,3 +28,8 @@ services:
         factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
         tags:
             - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
+        tags:
+            - phpstan.rules.rule
