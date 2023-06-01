@@ -315,11 +315,48 @@ $result = [];
 for ($i = 0; $i < 100; $i++) {
     $result = array_merge($result, $data[$i]);
 }
-
 ```
 :x:
 
 ```php
 $result = array_merge([], ...$data);
+```
+:+1:
+
+### Check calls in conditions
+This rule checks if there are some (slow) calls (function call, method call, static method call) in if conditions before other expressions.
+There can be set list of slow calls in parameters. If not set, all calls are considered slower than other expressions.
+
+```neon
+parameters:
+    conditionSlowCalls:
+        - 'file_*'            # all functions starting with file_
+        - 'Foo\Bar\Baz->foo'  # method foo called on object of type Foo\Bar\Baz
+        - 'Foo\Bar\Baz::bar'  # static method bar from Foo\Bar\Baz
+```
+
+```php
+class SomeClass
+{
+    public function doSomething(bool $someOption): void
+    {
+        if (file_exists($someFile) && $someOption) {
+            // do something
+        }
+    }
+}
+```
+:x:
+
+```php
+class SomeClass
+{
+    public function doSomething(bool $someOption): void
+    {
+        if ($someOption && file_exists($someFile)) {
+            // do something
+        }
+    }
+}
 ```
 :+1:
