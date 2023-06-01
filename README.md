@@ -1,5 +1,12 @@
 # eFabrica PHPStan extension
+
 Extension for PHPStan is providing several services and rules to help find bugs in your applications.
+
+[![PHP unit](https://github.com/efabrica-team/phpstan-rules/workflows/PHPunit/badge.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3APHPunit)
+[![PHPStan level](https://img.shields.io/badge/PHPStan-level:%20max-brightgreen.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3A"PHP+static+analysis")
+[![PHP static analysis](https://github.com/efabrica-team/phpstan-rules/workflows/PHP%20static%20analysis/badge.svg)](https://github.com/efabrica-team/phpstan-rules/actions?query=workflow%3A"PHP+static+analysis")
+[![Latest Stable Version](https://img.shields.io/packagist/v/efabrica/phpstan-rules.svg)](https://packagist.org/packages/efabrica/phpstan-rules)
+[![Total Downloads](https://img.shields.io/packagist/dt/efabrica/phpstan-rules.svg?style=flat-square)](https://packagist.org/packages/efabrica/phpstan-rules)
 
 ## Installation
 
@@ -292,6 +299,29 @@ class Foo extends SomeClass
 ```
 :+1:
 
+### Performance - DisabledCallsInLoopsRule
+Some functions are not recommended to be called in loops. For example array_merge.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+$result = [];
+for ($i = 0; $i < 100; $i++) {
+    $result = array_merge($result, $data[$i]);
+}
+```
+:x:
+
+```php
+$result = array_merge([], ...$data);
+```
+:+1:
 
 ### Check calls in conditions
 This rule checks if there are some (slow) calls (function call, method call, static method call) in if conditions before other expressions.

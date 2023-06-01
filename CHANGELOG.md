@@ -3,7 +3,8 @@
 ## [Unreleased][unreleased]
 
 ### Added
-- Added rule for checking conditions for calls
+- Added performance rule to disable function calls (array_merge, array_merge_recursive) in loops
+- Added performance rule for checking calls in conditions
 
 ## [0.5.0] - 2023-03-29
 ### Added
