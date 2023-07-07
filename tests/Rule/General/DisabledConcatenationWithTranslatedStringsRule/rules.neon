@@ -1,0 +1,11 @@
+parameters:
+    translateCalls:
+        - iAmTranslateFunction
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateMethod
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateStaticMethod
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%)
+        tags:
+            - phpstan.rules.rule
