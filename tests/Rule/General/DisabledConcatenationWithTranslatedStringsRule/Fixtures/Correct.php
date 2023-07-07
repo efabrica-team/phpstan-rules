@@ -24,7 +24,7 @@ final class Correct
 
     public function thisShouldBeOK(string $message): void
     {
-        echo  'this should be OK ' . $this->helperMethod() . $message;
+        echo 'this should be OK ' . $this->helperMethod() . $message;
     }
 
     private function helperMethod(): string

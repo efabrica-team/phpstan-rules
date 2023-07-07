@@ -29,72 +29,72 @@ final class DisabledConcatenationWithTranslatedStringsRuleTest extends RuleTestC
             [
                 'Do not concatenate translated strings.',
                 14,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 15,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 16,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 21,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 22,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 23,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 28,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 29,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 30,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 35,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 36,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 37,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 38,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
             [
                 'Do not concatenate translated strings.',
                 38,
-                'Every language has its own word ordering, use variables instead.'
+                'Every language has its own word ordering, use variables instead.',
             ],
         ]);
     }

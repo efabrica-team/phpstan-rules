@@ -4,6 +4,7 @@
 
 ### Added
 - Added performance rule to disable function calls (array_merge, array_merge_recursive) in loops
+- Added disabled concatenation with translated strings rule
 
 ## [0.5.0] - 2023-03-29
 ### Added
