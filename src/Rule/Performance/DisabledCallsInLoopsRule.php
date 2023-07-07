@@ -53,7 +53,7 @@ final class DisabledCallsInLoopsRule implements Rule
         }
 
         return [
-            RuleErrorBuilder::message('Performance: Do not use "' . $functionName . '" in loop.')->build(),
+            RuleErrorBuilder::message('Performance: Do not use "' . $functionName . '" in loop.')->tip('See https://www.exakat.io/en/speeding-up-array_merge/')->build(),
         ];
     }
 

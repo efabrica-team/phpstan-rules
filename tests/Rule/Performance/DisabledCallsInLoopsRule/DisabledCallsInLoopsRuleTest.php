@@ -29,18 +29,22 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
             [
                 'Performance: Do not use "array_merge" in loop.',
                 13,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge" in loop.',
                 22,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge" in loop.',
                 32,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge" in loop.',
                 43,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
         ]);
     }
@@ -51,18 +55,22 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
             [
                 'Performance: Do not use "array_merge_recursive" in loop.',
                 13,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge_recursive" in loop.',
                 22,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge_recursive" in loop.',
                 32,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
                 'Performance: Do not use "array_merge_recursive" in loop.',
                 43,
+                'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
         ]);
     }
