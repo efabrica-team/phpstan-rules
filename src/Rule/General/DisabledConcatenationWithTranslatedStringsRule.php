@@ -104,7 +104,6 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
                 if (in_array($methodName, $methods, true) && (new ObjectType($class))->isSuperTypeOf($callerType)->yes()) {
                     return true;
                 }
-
             }
             return false;
         }
