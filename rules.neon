@@ -1,10 +1,5 @@
 services:
     -
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
-        tags:
-            - phpstan.rules.rule
-
-    -
         factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
         tags:
             - phpstan.rules.rule
@@ -20,12 +15,17 @@ services:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
+        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
         tags:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%)
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
         tags:
             - phpstan.rules.rule
 
@@ -33,3 +33,9 @@ services:
         factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
         tags:
             - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule
+        tags:
+            - phpstan.rules.rule
+

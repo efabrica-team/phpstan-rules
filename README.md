@@ -240,6 +240,39 @@ class Foo
 ```
 :+1:
 
+### Do not concatenate translated strings
+Every language has its own word order in sentences, we can't use e.g. variables at the same place for all languages. There are mechanisms in translate libraries e.g. symfony/translator - we can use placeholders like %name% etc.
+This rule checks if you use translated messages and then concat them with some other strings.
+
+```neon
+parameters:
+    translateCalls:
+        - iAmTranslateFunction
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateMethod
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateStaticMethod
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%)
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+$message = 'Hello';
+$name = 'Mark';
+echo $translator->iAmTranslateMethod($message) . ' ' . $name;
+```
+
+:x:
+
+```php
+$message = 'Hello %name%';
+$name = 'Mark';
+echo $translator->iAmTranslateMethod($message, ['name' => $name];
+```
+:+1:
+
 ### Forbidden constructor parameters types
 This rule checks if constructor contains forbidden parameter types.
 
