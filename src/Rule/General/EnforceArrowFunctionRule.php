@@ -7,7 +7,7 @@ use PhpParser\Node\Expr\Closure;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 
-class EnforceArrowFunctionRule
+class EnforceArrowFunctionRule implements Rule
 {
     public function getNodeType(): string
     {
@@ -25,7 +25,7 @@ class EnforceArrowFunctionRule
             return [];
         }
 
-        $onlyStatement = $node->stmts[0];
+        $onlyStatement = reset($node->stmts);
         if (!$onlyStatement instanceof Node\Stmt\Return_) {
             return [];
         }
