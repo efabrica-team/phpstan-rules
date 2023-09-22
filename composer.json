@@ -10,7 +10,8 @@
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
-        "tomaj/nette-api": "^2.7"
+        "tomaj/nette-api": "^2.7",
+        "nette/database": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -21,6 +22,5 @@
         "psr-4": {
             "Efabrica\\PHPStanRules\\Tests\\": "tests/"
         }
-    },
-    "prefer-stable": true
+    }
 }
