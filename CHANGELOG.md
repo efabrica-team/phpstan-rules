@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Fixed
+- Check function call in loop only if it is re-assign of variable 
+
 ## [0.6.0] - 2023-09-22
 ### Added
 - Added performance rule to disable function calls (array_merge, array_merge_recursive) in loops

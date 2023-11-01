@@ -27,22 +27,22 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/ArrayMerge.php'], [
             [
-                'Performance: Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop to reassign variable "result".',
                 13,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop to reassign variable "result".',
                 22,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop to reassign variable "result".',
                 32,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge" in loop.',
+                'Performance: Do not use "array_merge" in loop to reassign variable "result".',
                 43,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
@@ -53,22 +53,22 @@ final class DisabledCallsInLoopsRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/ArrayMergeRecursive.php'], [
             [
-                'Performance: Do not use "array_merge_recursive" in loop.',
+                'Performance: Do not use "array_merge_recursive" in loop to reassign variable "result".',
                 13,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge_recursive" in loop.',
+                'Performance: Do not use "array_merge_recursive" in loop to reassign variable "result".',
                 22,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge_recursive" in loop.',
+                'Performance: Do not use "array_merge_recursive" in loop to reassign variable "result".',
                 32,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
             [
-                'Performance: Do not use "array_merge_recursive" in loop.',
+                'Performance: Do not use "array_merge_recursive" in loop to reassign variable "result".',
                 43,
                 'See https://www.exakat.io/en/speeding-up-array_merge/',
             ],
