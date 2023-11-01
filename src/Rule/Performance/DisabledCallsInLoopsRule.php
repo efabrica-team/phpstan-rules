@@ -60,7 +60,7 @@ final class DisabledCallsInLoopsRule implements Rule
         }
 
         return [
-            RuleErrorBuilder::message("Performance: Do not use \"$functionName\" in loop  to reassign variable \"$reassignedVariable\".")->tip('See https://www.exakat.io/en/speeding-up-array_merge/')->build(),
+            RuleErrorBuilder::message("Performance: Do not use \"$functionName\" in loop to reassign variable \"$reassignedVariable\".")->tip('See https://www.exakat.io/en/speeding-up-array_merge/')->build(),
         ];
     }
 
