@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+### Fixed
+- Check function call in loop only if it is re-assign of variable 
+
+## [0.6.0] - 2023-09-22
 ### Added
 - Added performance rule to disable function calls (array_merge, array_merge_recursive) in loops
 - Added disabled concatenation with translated strings rule
@@ -47,7 +51,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.5.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.2...0.5.0
 [0.4.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.1...0.4.2
 [0.4.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.0...0.4.1
