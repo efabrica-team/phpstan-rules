@@ -4,6 +4,7 @@
 
 ### Added
 - Possibility to allow using some defined patterns with translated strings concatenation
+- Support for PHP 8.3
 
 ### Fixed
 - Check function call in loop only if it is re-assign of variable 
