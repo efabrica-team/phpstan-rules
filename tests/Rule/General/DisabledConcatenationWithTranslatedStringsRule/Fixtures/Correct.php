@@ -31,4 +31,20 @@ final class Correct
     {
         return 'some string';
     }
+
+    public function concatWithAllowedStrings(MyTranslator $translator): void
+    {
+        echo $translator->iAmTranslateMethod('message') . '<i class="fa fa-facebook"></i>';
+        echo '<i class="fa fa-facebook"></i>' . $translator->iAmTranslateMethod('message');
+        echo $translator->iAmTranslateMethod('message') . ' <i class="fa fa-facebook"></i>';
+        echo '<i class="fa fa-facebook"></i> ' . $translator->iAmTranslateMethod('message');
+        echo $translator->iAmTranslateMethod('message') . 'This is allowed text';
+        echo 'This is allowed text' . $translator->iAmTranslateMethod('message');
+        echo $translator->iAmTranslateMethod('message') . ' This is allowed text';
+        echo 'This is allowed text ' . $translator->iAmTranslateMethod('message');
+        echo $translator->iAmTranslateMethod('message') . '#123';
+        echo '#123' . $translator->iAmTranslateMethod('message');
+        echo $translator->iAmTranslateMethod('message') . ' #123';
+        echo '#123 ' . $translator->iAmTranslateMethod('message');
+    }
 }

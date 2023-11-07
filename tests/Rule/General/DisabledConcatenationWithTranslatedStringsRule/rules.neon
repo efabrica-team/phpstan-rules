@@ -3,9 +3,13 @@ parameters:
         - iAmTranslateFunction
         - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateMethod
         - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateStaticMethod
+    allowedTranslateConcatenationPatterns:
+        - '[\s]*<.*?>[\s]*<\/.*?>[\s]*'
+        - '[\s]*This is allowed text[\s]*'
+        - '[\s]*\#[0-9]+[\s]*'
 
 services:
     -
-        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%)
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%, %allowedTranslateConcatenationPatterns%)
         tags:
             - phpstan.rules.rule

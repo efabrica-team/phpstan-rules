@@ -3,12 +3,14 @@ parameters:
     requiredParametersInMethodCalls: []
     forbiddenConstructorParametersTypes: []
     translateCalls: []
+    allowedTranslateConcatenationPatterns: []
 
 parametersSchema:
     disabledMethodCalls: arrayOf(arrayOf(string(), string()))
     requiredParametersInMethodCalls: arrayOf(arrayOf(anyOf(array(), string()), string()))
     forbiddenConstructorParametersTypes: arrayOf(arrayOf(anyOf(array(), string()), string()))
     translateCalls: arrayOf(string())
+    allowedTranslateConcatenationPatterns: arrayOf(string())
 
 services:
     - PhpParser\NodeFinder
