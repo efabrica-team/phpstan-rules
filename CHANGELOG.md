@@ -2,6 +2,7 @@
 
 ## [Unreleased][unreleased]
 
+## [0.7.0] - 2023-11-07
 ### Added
 - Possibility to allow using some defined patterns with translated strings concatenation
 - Support for PHP 8.3
@@ -55,7 +56,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.0...HEAD
+[0.7.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.2...0.5.0
 [0.4.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.1...0.4.2
