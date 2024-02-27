@@ -2,11 +2,11 @@
     "name": "efabrica/phpstan-rules",
     "license": ["MIT"],
     "require": {
-        "php": ">=7.4 <=8.3",
-        "nikic/php-parser": "^4.14",
+        "php": ">=7.4 <8.4",
         "phpstan/phpstan": "^1.8"
     },
     "require-dev": {
+        "nikic/php-parser": "^4.14",
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
