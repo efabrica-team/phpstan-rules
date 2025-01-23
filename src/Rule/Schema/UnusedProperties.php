@@ -17,7 +17,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class UnusedProperties implements Rule
 {
-    private mixed $schemaDefinitions = [];
+    private mixed $schemaDefinitions;
 
     public function getNodeType(): string
     {
