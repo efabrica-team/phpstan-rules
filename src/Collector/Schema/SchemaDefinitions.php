@@ -27,13 +27,13 @@ final class SchemaDefinitions implements Collector
         }
 
         /** @var class-string */
-        $className = $node->namespacedName?->toString();
-        if (!str_contains($className, '\\Schema\\')) {
+        $className = ($node->namespacedName) ? $node->namespacedName->toString() : '';
+        if (!strpos($className, '\\Schema\\')) {
              return null;
         }
         $reflectionClass = new ReflectionClass($className);
         $reflectionConstructor = $reflectionClass->hasMethod('__construct') ? $reflectionClass->getMethod('__construct') : null;
-        $reflectionConstructorParameters = $reflectionConstructor?->getParameters();
+        $reflectionConstructorParameters = ($reflectionConstructor) ? $reflectionConstructor->getParameters() : null;
 
         $params = [];
         if ($reflectionConstructorParameters) {
