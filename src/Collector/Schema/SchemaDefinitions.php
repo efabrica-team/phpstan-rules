@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * @implements Collector<Class_, array{string, bool, string, int}>
@@ -27,16 +28,16 @@ final class SchemaDefinitions implements Collector
         }
 
         /** @var class-string */
-        $className = ($node->namespacedName) ? $node->namespacedName->toString() : '';
-        if (!strpos($className, '\\Schema\\')) {
+        $className = !is_null($node->namespacedName) ? $node->namespacedName->toString() : '';
+        if (strpos($className, '\\Schema\\') !== false) {
              return null;
         }
         $reflectionClass = new ReflectionClass($className);
         $reflectionConstructor = $reflectionClass->hasMethod('__construct') ? $reflectionClass->getMethod('__construct') : null;
-        $reflectionConstructorParameters = ($reflectionConstructor) ? $reflectionConstructor->getParameters() : null;
+        $reflectionConstructorParameters = ($reflectionConstructor instanceof ReflectionMethod) ? $reflectionConstructor->getParameters() : null;
 
         $params = [];
-        if ($reflectionConstructorParameters) {
+        if (count($reflectionConstructorParameters ?? []) > 0) {
             foreach ($reflectionConstructorParameters as $arg) {
                 $tmp = [];
                 $tmp['name'] = $arg->getName();

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Rule\Schema;
 
-use Cms\PHPStan\Collectors\SchemaDefinitions;
-use Cms\PHPStan\Collectors\SchemaUsage;
+use Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions;
+use Efabrica\PHPStanRules\Collector\Schema\SchemaUsage;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
@@ -17,7 +17,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class NeverUsedProperties implements Rule
 {
-    private mixed $schemaDefinitions;
+    private array $schemaDefinitions = [];
 
     public function getNodeType(): string
     {
@@ -36,7 +36,7 @@ final class NeverUsedProperties implements Rule
         foreach ($this->schemaDefinitions as $schemaName => $schemaData) {
             $schemaUse = $this->getSchemasUse($schemaUsage, $schemaName);
             $unusedProperties = $this->getUnusedProperties($schemaUse, $schemaName);
-            if ($unusedProperties) {
+            if (count($unusedProperties) > 0) {
                 $warnings[] = RuleErrorBuilder::message(sprintf(
                     'Class "%s" contains never used properties "%s".',
                     $schemaName,
@@ -49,14 +49,16 @@ final class NeverUsedProperties implements Rule
         return $warnings;
     }
 
-    private function convertSchemaDefinitions(mixed $schemaDefinitions): mixed
+    private function convertSchemaDefinitions(array $schemaDefinitions): array
     {
         $result = [];
         foreach ($schemaDefinitions as $key => $value) {
             $tmp = $value[0];
             $attributes = json_decode($tmp[2], true);
-            foreach ($attributes as $attribute) {
-                $tmp['attributes'][$attribute['key']] = $attribute['name'];
+            if(is_array($attributes)){
+                foreach ($attributes as $attribute) {
+                    $tmp['attributes'][$attribute['key']] = $attribute['name'];
+                }
             }
             $tmp['file'] = $key;
             $result[$tmp[0]] = $tmp;
@@ -64,7 +66,7 @@ final class NeverUsedProperties implements Rule
         return $result;
     }
 
-    private function getSchemasUse(mixed $schemaUsage, string $schemaName): mixed
+    private function getSchemasUse(array $schemaUsage, string $schemaName): array
     {
         $tmp = [];
         foreach ($schemaUsage as $schemaArray) {
@@ -77,7 +79,7 @@ final class NeverUsedProperties implements Rule
         return $tmp;
     }
 
-    private function getUnusedProperties(mixed $schemas, string $schemaName): mixed
+    private function getUnusedProperties(array $schemas, string $schemaName): array
     {
         if (empty($schemas)) {
             return [];
@@ -87,11 +89,15 @@ final class NeverUsedProperties implements Rule
         foreach ($schemas as $schema) {
             $attributesArray[] = json_decode($schema[1], true);
         }
+
         foreach ($attributesArray as $attributes) {
-            foreach ($attributes as $attribute) {
-                $result[$attribute['key']] = true;
+            if (is_array($attributes)) {
+                foreach ($attributes as $attribute) {
+                    $result[$attribute['key']] = true;
+                }
             }
         }
+
         $return = [];
         foreach ($this->schemaDefinitions[trim($schemaName, '\\')]['attributes'] as $k => $r) {
             if (!isset($result[$k])) {

@@ -31,14 +31,10 @@ final class SchemaUsage implements Collector
              return null;
         }
 
-        if (!$node->class->toCodeString()) {
-            return null;
-        }
-
         $params = [];
         foreach ($node->getArgs() as $key => $arg) {
             $tmp = [];
-            if ($arg->name) {
+            if (!empty($arg->name)) {
                 $tmp['name'] = $arg->name->name;
             }
             $tmp['key'] = $key;
@@ -46,7 +42,7 @@ final class SchemaUsage implements Collector
             if ($arg->value instanceof Array_) {
                 $tmp['aditional'] = count($arg->value->items);
             }
-            if (str_contains($tmp['type'], 'Scalar') && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
+            if (strpos($tmp['type'], 'Scalar') !== false && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
                 $tmp['aditional'] = $arg->value->value;
             }
 

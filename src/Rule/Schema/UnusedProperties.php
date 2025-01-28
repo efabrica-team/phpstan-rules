@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Rule\Schema;
 
-use Cms\PHPStan\Collectors\SchemaDefinitions;
-use Cms\PHPStan\Collectors\SchemaUsage;
+use Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions;
+use Efabrica\PHPStanRules\Collector\Schema\SchemaUsage;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
@@ -17,7 +17,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class UnusedProperties implements Rule
 {
-    private mixed $schemaDefinitions;
+    private array $schemaDefinitions = [];
 
     public function getNodeType(): string
     {
