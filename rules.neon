@@ -49,10 +49,10 @@ services:
 
 conditionalTags:
     Efabrica\PHPStanRules\Rule\Schema\UnusedProperties:
-        phpstan.rules.rule: true
+        phpstan.rules.rule: false
     Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties:
-        phpstan.rules.rule: true
+        phpstan.rules.rule: false
     Efabrica\PHPStanRules\Collector\Schema\SchemaUsage:
-        phpstan.collector: true
+        phpstan.collector: false
     Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions:
-        phpstan.collector: true
+        phpstan.collector: false
