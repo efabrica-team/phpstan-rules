@@ -51,7 +51,7 @@ final class TraitContextRule implements Rule
                 $usedTrait = $usedTraitName->toString();
                 $reflectionClass = new ReflectionClass($usedTrait);
                 $comment = $reflectionClass->getDocComment();
-                if (!$comment) {
+                if ($comment === false) {
                     continue;
                 }
 

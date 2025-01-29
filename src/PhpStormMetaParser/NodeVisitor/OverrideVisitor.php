@@ -60,7 +60,7 @@ final class OverrideVisitor extends NodeVisitorAbstract
         $classNameParts = $call->class->parts;
         $alias = $classNameParts[0] ?? null;
 
-        if ($alias && isset($this->uses[$alias])) {
+        if (!is_null($alias) && isset($this->uses[$alias])) {
             unset($classNameParts[0]);
             $classNameParts = array_merge($this->uses[$alias], $classNameParts);
         }

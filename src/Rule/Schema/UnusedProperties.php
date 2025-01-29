@@ -37,7 +37,7 @@ final class UnusedProperties implements Rule
         foreach ($uniqeSchemas as $schemaName) {
             $schemaUse = $this->getSchemasUse($schemaUsage, $schemaName);
             $unusedProperties = $this->getUnusedProperties($schemaUse, $schemaName);
-            if ($unusedProperties) {
+            if (!empty($unusedProperties)) {
                 $warnings[] = RuleErrorBuilder::message(sprintf(
                     'Class "%s" contains properties  "%s" called with same static values.',
                     $schemaName,
@@ -50,22 +50,25 @@ final class UnusedProperties implements Rule
         return $warnings;
     }
 
-    private function convertSchemaDefinitions(mixed $schemaDefinitions): mixed
+    private function convertSchemaDefinitions(array $schemaDefinitions): array
     {
         $result = [];
         foreach ($schemaDefinitions as $key => $value) {
             $tmp = $value[0];
             $attributes = json_decode($tmp[2], true);
-            foreach ($attributes as $attribute) {
-                $tmp['attributes'][$attribute['key']] = $attribute['name'];
+            if (is_array($attributes)) {
+                foreach ($attributes as $attribute) {
+                    $tmp['attributes'][$attribute['key']] = $attribute['name'];
+                }
             }
+
             $tmp['file'] = $key;
             $result[$tmp[0]] = $tmp;
         }
         return $result;
     }
 
-    private function getUniqueSchemas(mixed $schemaUsage): mixed
+    private function getUniqueSchemas(array $schemaUsage): array
     {
         $tmp = [];
         foreach ($schemaUsage as $schemaArray) {
@@ -76,7 +79,7 @@ final class UnusedProperties implements Rule
         return array_keys($tmp);
     }
 
-    private function getSchemasUse(mixed $schemaUsage, string $schemaName): mixed
+    private function getSchemasUse(array $schemaUsage, string $schemaName): array
     {
         $tmp = [];
         foreach ($schemaUsage as $schemaArray) {
@@ -89,7 +92,7 @@ final class UnusedProperties implements Rule
         return $tmp;
     }
 
-    private function getUnusedProperties(mixed $schemas, string $schemaName): mixed
+    private function getUnusedProperties(array $schemas, string $schemaName): array
     {
         $attributesArray = [];
         $result = [];
@@ -97,6 +100,9 @@ final class UnusedProperties implements Rule
             $attributesArray[] = json_decode($schema[1], true);
         }
         foreach ($attributesArray as $attributes) {
+            if (!is_array($attributes)) {
+                continue;
+            }
             foreach ($attributes as $attribute) {
                 if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
                     continue;
@@ -113,7 +119,7 @@ final class UnusedProperties implements Rule
         return $return;
     }
 
-    private function isUnused(mixed $attribute): bool
+    private function isUnused(array $attribute): bool
     {
         if ($attribute['type'] == 'PhpParser\\Node\\Expr\\ConstFetch') {
             return true;
