@@ -21,7 +21,7 @@ final class SchemaDefinitions implements Collector
         return Class_::class;
     }
 
-    public function processNode(Node $node, Scope $scope)
+    public function processNode(Node $node, Scope $scope): ?array
     {
         if (!$node instanceof Class_) {
             return null;

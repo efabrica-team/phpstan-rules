@@ -17,6 +17,16 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class UnusedProperties implements Rule
 {
+    /**
+     * @var array<string, array{
+     * 0: string,
+     * 1: bool,
+     * 2: string,
+     * 3: int,
+     * attributes: array<int, string>,
+     * file: string
+     * }>
+     */
     private array $schemaDefinitions = [];
 
     public function getNodeType(): string
@@ -50,12 +60,30 @@ final class UnusedProperties implements Rule
         return $warnings;
     }
 
+    /**
+     * @param array<string, array<int, array{
+     *      0: string,
+     *      1: bool,
+     *      2: string,
+     *      3: int
+     *  }>> $schemaDefinitions
+     *
+     * @return array<string, array{
+     *      0: string,
+     *      1: bool,
+     *      2: string,
+     *      3: int,
+     *      attributes: array<int, string>,
+     *      file: string
+     *  }>
+     */
     private function convertSchemaDefinitions(array $schemaDefinitions): array
     {
         $result = [];
         foreach ($schemaDefinitions as $key => $value) {
             $tmp = $value[0];
             $attributes = json_decode($tmp[2], true);
+            $tmp['attributes'] = [];
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
                     $tmp['attributes'][$attribute['key']] = $attribute['name'];
@@ -68,6 +96,15 @@ final class UnusedProperties implements Rule
         return $result;
     }
 
+    /**
+     * @param array<string, array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }>> $schemaUsage
+     *
+     * @return array<int, string>
+     */
     private function getUniqueSchemas(array $schemaUsage): array
     {
         $tmp = [];
@@ -79,6 +116,19 @@ final class UnusedProperties implements Rule
         return array_keys($tmp);
     }
 
+    /**
+     * @param array<string, array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }>> $schemaUsage
+     *
+     * @return array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }>
+     */
     private function getSchemasUse(array $schemaUsage, string $schemaName): array
     {
         $tmp = [];
@@ -92,6 +142,15 @@ final class UnusedProperties implements Rule
         return $tmp;
     }
 
+    /**
+     * @param array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }> $schemas
+     *
+     * @return array<int, string>
+     */
     private function getUnusedProperties(array $schemas, string $schemaName): array
     {
         $attributesArray = [];
@@ -119,15 +178,23 @@ final class UnusedProperties implements Rule
         return $return;
     }
 
+    /**
+     * @param array{
+     *      key: int,
+     *      type: class-string,
+     *      aditional?: int|string
+     *  } $attribute
+     *
+     */
     private function isUnused(array $attribute): bool
     {
         if ($attribute['type'] == 'PhpParser\\Node\\Expr\\ConstFetch') {
             return true;
         }
-        if (strpos($attribute['type'], 'Scalar') !== false && !$attribute['aditional']) {
+        if (strpos($attribute['type'], 'Scalar') !== false && !isset($attribute['aditional'])) {
             return true;
         }
-        if ($attribute['type'] == 'PhpParser\\Node\\Expr\\Array_' && $attribute['aditional'] == 0) {
+        if ($attribute['type'] == 'PhpParser\\Node\\Expr\\Array_' && isset($attribute['aditional']) && $attribute['aditional'] == 0) {
             return true;
         }
         return false;

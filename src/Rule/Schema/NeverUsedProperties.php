@@ -17,6 +17,16 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 final class NeverUsedProperties implements Rule
 {
+    /**
+     * @var array<string, array{
+     * 0: string,
+     * 1: bool,
+     * 2: string,
+     * 3: int,
+     * attributes: array<int, string>,
+     * file: string
+     * }>
+     */
     private array $schemaDefinitions = [];
 
     public function getNodeType(): string
@@ -49,13 +59,26 @@ final class NeverUsedProperties implements Rule
         return $warnings;
     }
 
+    /**
+     * @param array<string, array<int, array{0: string, 1: bool, 2: string, 3: int}>> $schemaDefinitions
+     *
+     * @return array<string, array{
+     *      0: string,
+     *      1: bool,
+     *      2: string,
+     *      3: int,
+     *      attributes: array<int, string>,
+     *      file: string
+     *  }>
+     */
     private function convertSchemaDefinitions(array $schemaDefinitions): array
     {
         $result = [];
         foreach ($schemaDefinitions as $key => $value) {
             $tmp = $value[0];
             $attributes = json_decode($tmp[2], true);
-            if(is_array($attributes)){
+            $tmp['attributes'] = [];
+            if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
                     $tmp['attributes'][$attribute['key']] = $attribute['name'];
                 }
@@ -65,7 +88,19 @@ final class NeverUsedProperties implements Rule
         }
         return $result;
     }
-
+    /**
+     * @param array<string, array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }>> $schemaUsage
+     *
+     * @return array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }>
+     */
     private function getSchemasUse(array $schemaUsage, string $schemaName): array
     {
         $tmp = [];
@@ -78,7 +113,15 @@ final class NeverUsedProperties implements Rule
         }
         return $tmp;
     }
-
+    /**
+     * @param array<int, array{
+     *      0: string,
+     *      1: string,
+     *      2: int
+     *  }> $schemas
+     *
+     * @return array<int, string>
+     */
     private function getUnusedProperties(array $schemas, string $schemaName): array
     {
         if (empty($schemas)) {
