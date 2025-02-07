@@ -86,7 +86,7 @@ final class UnusedProperties implements Rule
             $tmp['attributes'] = [];
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
-                    $tmp['attributes'][$attribute['key']] = $attribute['name'];
+                    $tmp['attributes'][(int) $attribute['key']] = (string) $attribute['name'];
                 }
             }
 

@@ -80,7 +80,7 @@ final class NeverUsedProperties implements Rule
             $tmp['attributes'] = [];
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
-                    $tmp['attributes'][$attribute['key']] = $attribute['name'];
+                    $tmp['attributes'][(int) $attribute['key']] = (string) $attribute['name'];
                 }
             }
             $tmp['file'] = $key;
@@ -88,6 +88,7 @@ final class NeverUsedProperties implements Rule
         }
         return $result;
     }
+
     /**
      * @param array<string, array<int, array{
      *      0: string,
@@ -113,6 +114,7 @@ final class NeverUsedProperties implements Rule
         }
         return $tmp;
     }
+
     /**
      * @param array<int, array{
      *      0: string,

@@ -37,7 +37,7 @@ final class SchemaDefinitions implements Collector
         $reflectionConstructorParameters = ($reflectionConstructor instanceof ReflectionMethod) ? $reflectionConstructor->getParameters() : null;
 
         $params = [];
-        if (count($reflectionConstructorParameters ?? []) > 0) {
+        if (is_array($reflectionConstructorParameters) && count($reflectionConstructorParameters) > 0) {
             foreach ($reflectionConstructorParameters as $arg) {
                 $tmp = [];
                 $tmp['name'] = $arg->getName();
