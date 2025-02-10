@@ -3,8 +3,8 @@
     "license": ["MIT"],
     "require": {
         "php": ">=7.4 <8.4",
-        "phpstan/phpstan": "^1.8",
         "ext-json": "*",
+        "phpstan/phpstan": "^1.8",
         "ext-random": "*"
     },
     "require-dev": {
