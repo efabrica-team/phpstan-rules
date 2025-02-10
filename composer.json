@@ -4,8 +4,7 @@
     "require": {
         "php": ">=7.4 <8.4",
         "ext-json": "*",
-        "phpstan/phpstan": "^1.8",
-        "ext-random": "*"
+        "phpstan/phpstan": "^1.8"
     },
     "require-dev": {
         "nikic/php-parser": "^4.14",
