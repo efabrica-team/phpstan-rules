@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+## [0.7.2] - 2025-02-23
+### Added
+- Unused schema properties
+
 ## [0.7.1] - 2024-02-27
 ### Fixed
 - Support for PHP 8.3
@@ -60,7 +64,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.1...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.2...HEAD
+[0.7.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.1...0.7.2
 [0.7.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.0...0.7.1
 [0.7.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.5.0...0.6.0
