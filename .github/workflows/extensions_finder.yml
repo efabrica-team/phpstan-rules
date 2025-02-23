@@ -22,4 +22,9 @@ jobs:
         run: composer require efabrica/php-extensions-finder --dev
 
       - name: PHP extensions finder
-        run: vendor/bin/php-extensions-finder check src tests
+        if: matrix.php <= '8.1'
+        run: composer update --no-progress --no-interaction
+
+      - name: PHP extensions finder
+        if: matrix.php >= '8.2'
+        run: composer update --no-progress --no-interaction --ignore=ext-random
