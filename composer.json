@@ -3,6 +3,8 @@
     "license": ["MIT"],
     "require": {
         "php": ">=7.4 <8.4",
+        "ext-json": "*",
+        "ext-random": "*",
         "phpstan/phpstan": "^1.8"
     },
     "require-dev": {
@@ -10,7 +12,8 @@
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
-        "tomaj/nette-api": "^2.7"
+        "tomaj/nette-api": "^2.7",
+        "efabrica/php-extensions-finder": "^0.4.0"
     },
     "autoload": {
         "psr-4": {

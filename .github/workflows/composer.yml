@@ -26,16 +26,21 @@ jobs:
           php-version: ${{ matrix.php }}
 
       - name: Composer update
+        if: matrix.php <= '8.1'
+        run: composer update --no-progress --no-interaction --ignore-platform-req=ext-random
+
+      - name: Composer update
+        if: matrix.php >= '8.2'
         run: composer update --no-progress --no-interaction
 
       - name: Composer outdated
         if: matrix.php == '8.1'
-        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore nikic/php-parser
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore nikic/php-parser --ignore phpstan/phpstan
 
       - name: Composer outdated
         if: matrix.php == '8.2' || matrix.php == '8.3'
-        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api --ignore nikic/php-parser
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api --ignore nikic/php-parser --ignore phpstan/phpstan
 
       - name: Composer outdated
         if: matrix.php != '8.1' && matrix.php != '8.2' && matrix.php != '8.3'
-        run: composer outdated -D --strict --ignore nikic/php-parser
+        run: composer outdated -D --strict --ignore nikic/php-parser --ignore phpstan/phpstan

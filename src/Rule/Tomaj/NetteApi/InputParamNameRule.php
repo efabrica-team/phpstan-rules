@@ -41,7 +41,7 @@ final class InputParamNameRule implements Rule
         }
 
         $nameArg = $node->getArgs()[0] ?? null;
-        if (!$nameArg) {
+        if (is_null($nameArg)) {
             return [
                 RuleErrorBuilder::message('Missing name of input parameter.')->file($file)->line($node->getStartLine())->build(),
             ];
