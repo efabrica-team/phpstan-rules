@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Fixed
+- Removed ext-random from composer.json
+
 ## [0.7.2] - 2025-02-23
 ### Added
 - Unused schema properties

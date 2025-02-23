@@ -9,11 +9,22 @@ on:
 jobs:
   extensions_finder:
     runs-on: ubuntu-latest
-    name: PHP extensions finder
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+
+    name: PHP extensions finder - PHP ${{ matrix.php }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none # disable xdebug, pcov
 
       - name: Composer update
         run: composer update --no-progress --no-interaction
@@ -22,4 +33,9 @@ jobs:
         run: composer require efabrica/php-extensions-finder --dev
 
       - name: PHP extensions finder
+        if: matrix.php <= '8.1'
         run: vendor/bin/php-extensions-finder check src tests
+
+      - name: PHP extensions finder
+        if: matrix.php >= '8.2'
+        run: vendor/bin/php-extensions-finder check src tests --ignore=ext-random

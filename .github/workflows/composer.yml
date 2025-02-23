@@ -26,11 +26,6 @@ jobs:
           php-version: ${{ matrix.php }}
 
       - name: Composer update
-        if: matrix.php <= '8.1'
-        run: composer update --no-progress --no-interaction --ignore-platform-req=ext-random
-
-      - name: Composer update
-        if: matrix.php >= '8.2'
         run: composer update --no-progress --no-interaction
 
       - name: Composer outdated
