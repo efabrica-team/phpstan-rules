@@ -29,7 +29,7 @@ final class SchemaDefinitions implements Collector
 
         /** @var class-string */
         $className = !is_null($node->namespacedName) ? $node->namespacedName->toString() : '';
-        if (strpos($className, '\\Schema\\') !== false) {
+        if (strpos($className, '\\Schema\\') === false) {
              return null;
         }
         $reflectionClass = new ReflectionClass($className);
