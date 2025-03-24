@@ -4,14 +4,14 @@
     "require": {
         "php": ">=7.4 <8.4",
         "ext-json": "*",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
         "nikic/php-parser": "^4.14",
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
-        "tomaj/nette-api": "^2.7",
+        "tomaj/nette-api": "^3.0",
         "efabrica/php-extensions-finder": "^0.5.0"
     },
     "autoload": {
