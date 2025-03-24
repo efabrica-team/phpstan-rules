@@ -11,7 +11,7 @@
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
-        "tomaj/nette-api": "^2.7",
+        "tomaj/nette-api": "^3.0",
         "efabrica/php-extensions-finder": "^0.5.0"
     },
     "autoload": {
