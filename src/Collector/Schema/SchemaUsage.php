@@ -45,6 +45,12 @@ final class SchemaUsage implements Collector
             if (strpos($tmp['type'], 'Scalar') !== false && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
                 $tmp['aditional'] = $arg->value->value;
             }
+            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ConstFetch' && property_exists($arg->value, 'name')) {
+                $tmp['aditional'] = $arg->value->name->toString();
+            }
+            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ClassConstFetch' && property_exists($arg->value, 'name')) {
+                $tmp['aditional'] = $arg->value->name->toString();
+            }
 
             $params[] = $tmp;
         }
