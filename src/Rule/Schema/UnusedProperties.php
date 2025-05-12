@@ -163,7 +163,7 @@ final class UnusedProperties implements Rule
          *      key: int,
          *      type: class-string,
          *      name?: string,
-         *      aditional?: mixed
+         *      aditional?: bool|int|string
          *  }>> $attributesArray
          */
         foreach ($attributesArray as $attributes) {
