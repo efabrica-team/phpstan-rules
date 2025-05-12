@@ -171,9 +171,7 @@ final class UnusedProperties implements Rule
                 if (isset($attribute['name'])) {
                     $attribute['key'] = $this->getKey($schemaName, $attribute['name']);
                 }
-                if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
-                    continue;
-                }
+
                 if (isset($attribute['aditional'])) {
                     $values[$attribute['key']][] = $attribute['aditional'];
                 }
@@ -188,6 +186,11 @@ final class UnusedProperties implements Rule
                 if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
                     continue;
                 }
+
+                if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
+                    continue;
+                }
+
                 $result[$attribute['key']] = $this->isUnused($attribute, $values[$attribute['key']] ?? null);
             }
         }

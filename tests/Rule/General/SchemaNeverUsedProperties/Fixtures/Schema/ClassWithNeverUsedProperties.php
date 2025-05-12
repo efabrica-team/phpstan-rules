@@ -14,7 +14,7 @@ class ClassWithNeverUsedProperties extends BaseClassWithCall
 
     public function __construct(
         bool $propoetyA = false,
-        int  $propoetyB = 1,
+        int $propoetyB = 1,
         bool $propoetyC = false
     ) {
         $this->propertyA = $propoetyA;
