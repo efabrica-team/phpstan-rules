@@ -17,8 +17,7 @@ class ClassWithWrongPath extends BaseClassWithCall
          bool $propoetyA = false,
          bool $propoetyB = false,
          bool $propoetyC = false
-     )
-     {
+     ) {
          $this->propertyA = $propoetyA;
          $this->propertyB = $propoetyB;
          $this->propertyC = $propoetyC;

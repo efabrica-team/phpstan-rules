@@ -16,8 +16,7 @@ class ClassWithNeverUsedProperties extends BaseClassWithCall
          bool $propoetyA = false,
          int $propoetyB = 1,
          bool $propoetyC = false
-     )
-     {
+     ) {
          $this->propertyA = $propoetyA;
          $this->propertyB = $propoetyB;
          $this->propertyC = $propoetyC;

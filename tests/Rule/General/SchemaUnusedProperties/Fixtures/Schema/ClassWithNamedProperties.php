@@ -16,8 +16,7 @@ class ClassWithNamedProperties extends BaseClassWithCall
          string $propertyA = '',
          int $propertyB = 1,
          bool $propertyC = false
-     )
-     {
+     ) {
          $this->propertyA = $propertyA;
          $this->propertyB = $propertyB;
          $this->propertyC = $propertyC;
