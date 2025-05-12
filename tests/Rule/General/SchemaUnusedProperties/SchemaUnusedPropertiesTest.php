@@ -28,7 +28,6 @@ final class SchemaUnusedPropertiesTest extends RuleTestCase
     public function testCorrect(): void
     {
          $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithUsedProperties.php'], []);
-
     }
 
     public function testUnused(): void
