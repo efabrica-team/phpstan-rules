@@ -30,6 +30,7 @@ final class SchemaUnusedPropertiesTest extends RuleTestCase
          $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithUsedProperties.php'], []);
 
     }
+
     public function testUnused(): void
     {
         $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithNeverUsedProperties.php'], [
@@ -46,8 +47,8 @@ final class SchemaUnusedPropertiesTest extends RuleTestCase
             $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithNamedProperties.php'], [
                 [
                     'Class "\Efabrica\PHPStanRules\Tests\Rule\General\SchemaUnusedProperties\Fixtures\Schema\ClassWithNamedProperties" contains properties  "propertyA" called with same static values.'
-                    , 7
-                ]
+                    , 7,
+                ],
             ]);
         }
     }

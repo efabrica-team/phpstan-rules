@@ -6,12 +6,11 @@ use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Sour
 
 class ClassWithWrongPath extends BaseClassWithCall
 {
+     private bool $propertyA;
 
-    private bool $propertyA;
+     private bool $propertyB;
 
-    private bool $propertyB;
-
-    private bool $propertyC;
+     private bool $propertyC;
 
      public function __construct(
          bool $propoetyA = false,
