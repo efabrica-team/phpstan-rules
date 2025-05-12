@@ -16,7 +16,7 @@ class ClassWithNeverUsedProperties extends BaseClassWithCall
 
      private int $propertyD;
 
-     private float $propertyE;
+    private float $propertyE;
 
      public function __construct(
          string $propertyA = '',

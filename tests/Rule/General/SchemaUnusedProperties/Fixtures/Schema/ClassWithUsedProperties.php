@@ -22,11 +22,12 @@ class ClassWithUsedProperties extends BaseClassWithCall
 
     public function __construct(
         string $propertyA = '',
-        bool $propertyB = false,
-        array $propertyC = [],
-        int $propertyD = 0,
-        float $propertyE = 0.0
-    ) {
+        bool   $propertyB = false,
+        array  $propertyC = [],
+        int    $propertyD = 0,
+        float  $propertyE = 0.0
+    )
+    {
         $this->propertyA = $propertyA;
         $this->propertyB = $propertyB;
         $this->propertyC = $propertyC;

@@ -6,24 +6,25 @@ use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Sour
 
 class ClassWithUsedProperties extends BaseClassWithCall
 {
-     private bool $propertyA;
+    private bool $propertyA;
 
-     private bool $propertyB;
+    private bool $propertyB;
 
-     private bool $propertyC;
+    private bool $propertyC;
 
-     public function __construct(
-         bool $propoetyA = false,
-         bool $propoetyB = false,
-         bool $propoetyC = false
-     ) {
-         $this->propertyA = $propoetyA;
-         $this->propertyB = $propoetyB;
-         $this->propertyC = $propoetyC;
-     }
+    public function __construct(
+        bool $propoetyA = false,
+        bool $propoetyB = false,
+        bool $propoetyC = false
+    )
+    {
+        $this->propertyA = $propoetyA;
+        $this->propertyB = $propoetyB;
+        $this->propertyC = $propoetyC;
+    }
 
-     public static function test(): ClassWithUsedProperties
-     {
-         return new ClassWithUsedProperties(true, true, true);
-     }
+    public static function test(): ClassWithUsedProperties
+    {
+        return new ClassWithUsedProperties(true, true, true);
+    }
 }

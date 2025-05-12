@@ -10,20 +10,21 @@ class ClassWithNeverUsedProperties extends BaseClassWithCall
 
      private int $propertyB;
 
-     private bool $propertyC;
+    private bool $propertyC;
 
-     public function __construct(
-         bool $propoetyA = false,
-         int $propoetyB = 1,
-         bool $propoetyC = false
-     ) {
-         $this->propertyA = $propoetyA;
-         $this->propertyB = $propoetyB;
-         $this->propertyC = $propoetyC;
-     }
+    public function __construct(
+        bool $propoetyA = false,
+        int  $propoetyB = 1,
+        bool $propoetyC = false
+    )
+    {
+        $this->propertyA = $propoetyA;
+        $this->propertyB = $propoetyB;
+        $this->propertyC = $propoetyC;
+    }
 
-     public static function test(): ClassWithNeverUsedProperties
-     {
-         return new ClassWithNeverUsedProperties(true);
-     }
+    public static function test(): ClassWithNeverUsedProperties
+    {
+        return new ClassWithNeverUsedProperties(true);
+    }
 }
