@@ -27,4 +27,9 @@ jobs:
           coverage: none # disable xdebug, pcov
 
       - name: Check syntax
+        if: matrix.php == '7.4'
+        run: find src tests -name "*.php" ! -name "ClassWithNamedProperties.php" -print0 | xargs -0 -n1 -P8 php -l
+
+      - name: Check syntax
+        if: matrix.php != '7.4'
         run: find src tests -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
