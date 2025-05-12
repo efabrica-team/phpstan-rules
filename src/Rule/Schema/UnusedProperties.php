@@ -158,6 +158,14 @@ final class UnusedProperties implements Rule
         foreach ($schemas as $schema) {
             $attributesArray[] = json_decode($schema[1], true);
         }
+        /**
+         * @var $attributesArray array<int, array<int, array{
+         *      key: int,
+         *      type: class-string,
+         *      name?: string,
+         *      aditional?: mixed
+         *  }>>
+         */
         foreach ($attributesArray as $attributes) {
             foreach ($attributes as $attribute) {
                 if (isset($attribute['name'])) {
