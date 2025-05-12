@@ -7,7 +7,6 @@ namespace Efabrica\PHPStanRules\Tests\Rule\General\SchemaNeverUsedProperties;
 use Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions;
 use Efabrica\PHPStanRules\Collector\Schema\SchemaUsage;
 use Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties;
-use Efabrica\PHPStanRules\Rule\Schema\UnusedProperties;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 
@@ -30,10 +29,12 @@ final class SchemaNeverUsedPropertiesTest extends RuleTestCase
     {
          $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithUsedProperties.php'], []);
     }
+
     public function testWrongPath(): void
     {
         $this->analyse([__DIR__ . '/Fixtures/ClassWithWrongPath.php'], []);
     }
+
     public function testUnused(): void
     {
         $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithNeverUsedProperties.php'], [

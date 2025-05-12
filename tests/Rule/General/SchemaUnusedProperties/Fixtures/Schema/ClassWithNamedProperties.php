@@ -7,7 +7,9 @@ use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Sour
 class ClassWithNamedProperties extends BaseClassWithCall
 {
     private bool $propertyA;
+
     private bool $propertyB;
+
     private bool $propertyC;
 
      public function __construct(
@@ -16,9 +18,9 @@ class ClassWithNamedProperties extends BaseClassWithCall
          bool $propertyC = false
      )
      {
-        $this->propertyA = $propertyA;
-        $this->propertyB = $propertyB;
-        $this->propertyC = $propertyC;
+         $this->propertyA = $propertyA;
+         $this->propertyB = $propertyB;
+         $this->propertyC = $propertyC;
      }
 
      public static function test(): void

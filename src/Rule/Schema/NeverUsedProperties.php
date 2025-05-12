@@ -138,7 +138,7 @@ final class NeverUsedProperties implements Rule
         foreach ($attributesArray as $attributes) {
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
-                    if(isset($attribute['name'])){
+                    if (isset($attribute['name'])) {
                         $result[$attribute['name']] = true;
                     } else {
                         $result[$attribute['key']] = true;

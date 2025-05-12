@@ -7,12 +7,19 @@ use Efabrica\PHPStanRules\Tests\Rule\General\DisableMethodCallInContextRule\Sour
 class ClassWithUsedProperties extends BaseClassWithCall
 {
     const CONSTANT = 3.14;
+
     const CONSTANT2 = 3.14;
+
     private string $propertyA;
+
     private bool $propertyB;
+
     private array $propertyC;
+
     private int $propertyD;
+
     private float $propertyE;
+
     public function __construct(
         string $propertyA = '',
         bool $propertyB = false,
