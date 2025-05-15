@@ -11,6 +11,9 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -158,15 +161,40 @@ final class UnusedProperties implements Rule
         foreach ($schemas as $schema) {
             $attributesArray[] = json_decode($schema[1], true);
         }
+        /**
+         * @var array<int, array<int, array{
+         *      key: int,
+         *      type: class-string,
+         *      name?: string,
+         *      aditional?: bool|int|string
+         *  }>> $attributesArray
+         */
+        foreach ($attributesArray as $attributes) {
+            foreach ($attributes as $attribute) {
+                if (isset($attribute['name'])) {
+                    $attribute['key'] = $this->getKey($schemaName, $attribute['name']);
+                }
+
+                if (isset($attribute['aditional'])) {
+                    $values[$attribute['key']][] = $attribute['aditional'];
+                }
+            }
+        }
         foreach ($attributesArray as $attributes) {
             if (!is_array($attributes)) {
                 continue;
             }
+
             foreach ($attributes as $attribute) {
                 if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
                     continue;
                 }
-                $result[$attribute['key']] = $this->isUnused($attribute);
+
+                if (isset($result[$attribute['key']]) && $result[$attribute['key']] === false) {
+                    continue;
+                }
+
+                $result[$attribute['key']] = $this->isUnused($attribute, $values[$attribute['key']] ?? null);
             }
         }
         $return = [];
@@ -178,23 +206,38 @@ final class UnusedProperties implements Rule
         return $return;
     }
 
+    private function getKey(string $schemaName, string $attributeName): int
+    {
+        foreach ($this->schemaDefinitions[trim($schemaName, '\\')]['attributes'] as $k => $r) {
+            if ($r === $attributeName) {
+                return $k;
+            }
+        }
+        return 0;
+    }
+
     /**
      * @param array{
      *      key: int,
      *      type: class-string,
-     *      aditional?: int|string
+     *      aditional?: int|string|bool
      *  } $attribute
-     *
+     * @param null|array<int|string|bool> $values
      */
-    private function isUnused(array $attribute): bool
+    private function isUnused(array $attribute, ?array $values): bool
     {
-        if ($attribute['type'] == 'PhpParser\\Node\\Expr\\ConstFetch') {
+        if (($attribute['type'] == ConstFetch::class || $attribute['type'] == ClassConstFetch::class) && is_array($values) && count(array_unique($values)) === 1) {
             return true;
         }
-        if (strpos($attribute['type'], 'Scalar') !== false && !isset($attribute['aditional'])) {
-            return true;
+        if (strpos($attribute['type'], 'Scalar') !== false) {
+            if (is_array($values) && count(array_unique($values)) === 1) {
+                return true;
+            } elseif (!isset($attribute['aditional'])) {
+                return true;
+            }
+            return false;
         }
-        if ($attribute['type'] == 'PhpParser\\Node\\Expr\\Array_' && isset($attribute['aditional']) && $attribute['aditional'] == 0) {
+        if ($attribute['type'] == Array_::class && isset($attribute['aditional']) && $attribute['aditional'] == 0) {
             return true;
         }
         return false;

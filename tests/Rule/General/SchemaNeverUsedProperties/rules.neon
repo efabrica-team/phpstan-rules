@@ -1,0 +1,19 @@
+services:
+    -
+        class: Efabrica\PHPStanRules\Rule\Schema\UnusedProperties
+    -
+        class: Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties
+    -
+        class: Efabrica\PHPStanRules\Collector\Schema\SchemaUsage
+    -
+        class: Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions
+
+conditionalTags:
+    Efabrica\PHPStanRules\Rule\Schema\UnusedProperties:
+        phpstan.rules.rule: true
+    Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties:
+        phpstan.rules.rule: true
+    Efabrica\PHPStanRules\Collector\Schema\SchemaUsage:
+        phpstan.collector: true
+    Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions:
+        phpstan.collector: true

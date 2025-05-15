@@ -138,14 +138,18 @@ final class NeverUsedProperties implements Rule
         foreach ($attributesArray as $attributes) {
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
-                    $result[$attribute['key']] = true;
+                    if (isset($attribute['name'])) {
+                        $result[$attribute['name']] = true;
+                    } else {
+                        $result[$attribute['key']] = true;
+                    }
                 }
             }
         }
 
         $return = [];
         foreach ($this->schemaDefinitions[trim($schemaName, '\\')]['attributes'] as $k => $r) {
-            if (!isset($result[$k])) {
+            if (!isset($result[$k]) && !isset($result[$r])) {
                 $return[] = $r;
             }
         }
