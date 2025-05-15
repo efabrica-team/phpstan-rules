@@ -11,6 +11,9 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -223,7 +226,7 @@ final class UnusedProperties implements Rule
      */
     private function isUnused(array $attribute, ?array $values): bool
     {
-        if (($attribute['type'] == 'PhpParser\\Node\\Expr\\ConstFetch' || $attribute['type'] == 'PhpParser\\Node\\Expr\\ClassConstFetch') && is_array($values) && count(array_unique($values)) === 1) {
+        if (($attribute['type'] == ConstFetch::class || $attribute['type'] == ClassConstFetch::class) && is_array($values) && count(array_unique($values)) === 1) {
             return true;
         }
         if (strpos($attribute['type'], 'Scalar') !== false) {
@@ -234,7 +237,7 @@ final class UnusedProperties implements Rule
             }
             return false;
         }
-        if ($attribute['type'] == 'PhpParser\\Node\\Expr\\Array_' && isset($attribute['aditional']) && $attribute['aditional'] == 0) {
+        if ($attribute['type'] == Array_::class && isset($attribute['aditional']) && $attribute['aditional'] == 0) {
             return true;
         }
         return false;
