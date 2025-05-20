@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+## [0.7.5] - 2025-05-20
+### Fixed
+- Named parameters in unused schema properties
+
 ## [0.7.4] - 2025-03-03
 ### Fixed
 - Searching Schema definition
@@ -72,7 +76,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.4...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.5...HEAD
+[0.7.5]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.4...0.7.5
 [0.7.4]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.3...0.7.4
 [0.7.3]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.2...0.7.3
 [0.7.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.1...0.7.2
