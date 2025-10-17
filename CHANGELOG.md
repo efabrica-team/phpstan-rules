@@ -2,6 +2,9 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- Support for PHP 8.4
+
 ## [0.7.5] - 2025-05-20
 ### Fixed
 - Named parameters in unused schema properties
