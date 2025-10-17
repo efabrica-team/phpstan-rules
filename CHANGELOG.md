@@ -2,6 +2,7 @@
 
 ## [Unreleased][unreleased]
 
+## [0.7.6] - 2025-10-17
 ### Added
 - Support for PHP 8.4
 
@@ -79,7 +80,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.5...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.6...HEAD
+[0.7.6]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.5...0.7.6
 [0.7.5]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.4...0.7.5
 [0.7.4]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.3...0.7.4
 [0.7.3]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.2...0.7.3
