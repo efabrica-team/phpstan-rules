@@ -12,7 +12,7 @@
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
         "tomaj/nette-api": "^3.0.0",
-        "efabrica/php-extensions-finder": "^0.5.0"
+        "efabrica/php-extensions-finder": "^0.8.0"
     },
     "autoload": {
         "psr-4": {

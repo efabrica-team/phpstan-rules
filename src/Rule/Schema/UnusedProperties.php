@@ -7,13 +7,13 @@ namespace Efabrica\PHPStanRules\Rule\Schema;
 use Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions;
 use Efabrica\PHPStanRules\Collector\Schema\SchemaUsage;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\ConstFetch;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PhpParser\Node\Expr\ConstFetch;
-use PhpParser\Node\Expr\ClassConstFetch;
-use PhpParser\Node\Expr\Array_;
 
 /**
  * @implements Rule<CollectedDataNode>
