@@ -30,12 +30,12 @@ jobs:
 
       - name: Composer outdated
         if: matrix.php == '8.1'
-        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore nikic/php-parser --ignore phpstan/phpstan
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
 
       - name: Composer outdated
         if: matrix.php == '8.2' || matrix.php == '8.3'
-        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api --ignore nikic/php-parser --ignore phpstan/phpstan
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
 
       - name: Composer outdated
         if: matrix.php != '8.1' && matrix.php != '8.2' && matrix.php != '8.3'
-        run: composer outdated -D --strict --ignore nikic/php-parser --ignore phpstan/phpstan
+        run: composer outdated -D --strict --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
