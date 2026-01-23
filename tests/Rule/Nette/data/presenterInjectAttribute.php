@@ -3,14 +3,10 @@
 namespace Efabrica\PHPStanRules\Tests\Rule\Nette\data;
 
 use Nette\DI\Attributes\Inject;
-
-class Service
-{
-
-}
+use stdClass;
 
 class InjectAttributePresenter
 {
     #[Inject]
-    public Service $service;
+    public stdClass $service;
 }

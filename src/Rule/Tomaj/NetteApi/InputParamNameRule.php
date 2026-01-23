@@ -13,6 +13,9 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
+use function is_null;
+use function is_string;
+use function str_replace;
 
 /**
  * @implements Rule<New_>

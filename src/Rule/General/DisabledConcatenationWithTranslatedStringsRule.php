@@ -18,6 +18,11 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use ReflectionException;
 use ReflectionMethod;
+use function explode;
+use function implode;
+use function in_array;
+use function preg_match;
+use function str_contains;
 
 /**
  * @implements Rule<Concat>

@@ -2,18 +2,11 @@
 
 namespace Efabrica\PHPStanRules\Tests\Rule\Nette;
 
-use Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension;
-use Efabrica\PHPStanRules\Rule\Tomaj\NetteApi\InputParamNameRule;
-use PHPStan\Rules\Rule;
-use PHPStan\Testing\RuleTestCase;
-use PHPUnit\Framework\TestCase;
-
 use PHPStan\Testing\LevelsTestCase;
 use const PHP_VERSION_ID;
 
 class PresenterInjectedPropertiesExtensionTest extends LevelsTestCase
 {
-
     public function dataTopics(): array
     {
         if (PHP_VERSION_ID < 70400) {
@@ -45,5 +38,4 @@ class PresenterInjectedPropertiesExtensionTest extends LevelsTestCase
     {
         return __DIR__ . '/phpstan.neon';
     }
-
 }

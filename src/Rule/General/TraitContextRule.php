@@ -12,6 +12,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use ReflectionClass;
+use function preg_match;
 
 /**
  * @implements Rule<ClassLike>

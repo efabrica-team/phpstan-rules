@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Efabrica\PHPStanRules\Rule\Nette;
 
@@ -10,7 +10,7 @@ use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Rules\Properties\ReadWritePropertiesExtension;
 use function strpos;
 
-class PresenterInjectedPropertiesExtension implements ReadWritePropertiesExtension
+final class PresenterInjectedPropertiesExtension implements ReadWritePropertiesExtension
 {
     private PhpVersion $phpVersion;
 

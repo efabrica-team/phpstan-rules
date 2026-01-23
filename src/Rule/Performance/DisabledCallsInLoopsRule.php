@@ -16,6 +16,8 @@ use PhpParser\Node\Stmt\While_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use function array_filter;
+use function in_array;
 
 /**
  * @implements Rule<FuncCall>

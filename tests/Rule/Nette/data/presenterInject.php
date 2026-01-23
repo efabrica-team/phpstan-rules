@@ -2,13 +2,10 @@
 
 namespace Efabrica\PHPStanRules\Tests\Rule\Nette\data;
 
-class Service
-{
-
-}
+use stdClass;
 
 class InjectPresenter
 {
-    /** @var Service @inject */
-    public Service $service;
+    /** @var stdClass @inject */
+    public stdClass $service;
 }
