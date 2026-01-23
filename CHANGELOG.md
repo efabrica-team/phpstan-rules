@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+### Added
+- Support for Neon DI attribute Inject
 
 ## [0.7.6] - 2025-10-17
 ### Added

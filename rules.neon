@@ -46,6 +46,8 @@ services:
         class: Efabrica\PHPStanRules\Collector\Schema\SchemaUsage
     -
         class: Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
 
 conditionalTags:
     Efabrica\PHPStanRules\Rule\Schema\UnusedProperties:
