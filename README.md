@@ -366,10 +366,10 @@ Will not report uninitialized properties with `@Inject` or `#[Inject]` attribute
 
 ```neon
 services:
-	-
-		class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
-		tags:
-			- phpstan.properties.readWriteExtension
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+        tags:
+            - phpstan.properties.readWriteExtension
 ```
 
 ```php

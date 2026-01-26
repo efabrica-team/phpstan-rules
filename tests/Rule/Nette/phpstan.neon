@@ -1,13 +1,13 @@
 parameters:
-	checkUninitializedProperties: true
+    checkUninitializedProperties: true
 
 services:
-	-
-		class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
-		tags:
-			- phpstan.properties.readWriteExtension
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+        tags:
+            - phpstan.properties.readWriteExtension
 
 includes:
-	- ../../../extension.neon
-	- ../../../rules.neon
-	- phar://phpstan.phar/conf/bleedingEdge.neon
+    - ../../../extension.neon
+    - ../../../rules.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon
