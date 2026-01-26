@@ -1,6 +1,12 @@
 parameters:
 	checkUninitializedProperties: true
 
+services:
+	-
+		class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+		tags:
+			- phpstan.properties.readWriteExtension
+
 includes:
 	- ../../../extension.neon
 	- ../../../rules.neon
