@@ -11,6 +11,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use function count;
+use function implode;
+use function is_array;
+use function json_decode;
+use function sprintf;
+use function trim;
 
 /**
  * @implements Rule<CollectedDataNode>

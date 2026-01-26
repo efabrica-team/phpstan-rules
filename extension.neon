@@ -15,3 +15,8 @@ parametersSchema:
 services:
     - PhpParser\NodeFinder
     - Efabrica\PHPStanRules\Resolver\NameResolver
+
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+        tags:
+            - phpstan.properties.readWriteExtension

@@ -10,6 +10,11 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use ReflectionClass;
 use ReflectionMethod;
+use function count;
+use function is_array;
+use function is_null;
+use function json_encode;
+use function strpos;
 
 /**
  * @implements Collector<Class_, array{string, bool, string, int}>

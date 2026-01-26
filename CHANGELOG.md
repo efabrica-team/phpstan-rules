@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+### Added
+- Support for Neon DI attribute Inject
+- Set PHP 8.1 as minimum version
 
 ## [0.7.6] - 2025-10-17
 ### Added
