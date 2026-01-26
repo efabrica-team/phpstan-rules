@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+### Changed
+- Turn off Neon DI attribute Inject check by default
 
 ## [0.8.0] - 2026-01-26
 ### Added
