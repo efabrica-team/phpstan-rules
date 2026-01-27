@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased][unreleased]
+
+## [0.8.1] - 2026-01-27
 ### Changed
 - Turn off Neon DI attribute Inject check by default
 
@@ -87,7 +89,8 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.8.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.8.1...HEAD
+[0.8.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.6...0.8.0
 [0.7.6]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.5...0.7.6
 [0.7.5]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.4...0.7.5
