@@ -13,6 +13,7 @@ use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use PhpParser\Node\Expr\BinaryOp\LogicalAnd;
 use PhpParser\Node\Expr\BinaryOp\LogicalOr;
+use PhpParser\Node\Expr\BinaryOp\LogicalXor;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
@@ -83,7 +84,7 @@ final class CheckCallsInConditionsRule implements Rule
     {
         $errors = $this->processExpr($node->cond, $scope);
         foreach ($node->elseifs as $elseif) {
-            $errors = array_merge($this->processExpr($elseif->cond, $scope));
+            $errors = array_merge($errors, $this->processExpr($elseif->cond, $scope));
         }
         return $errors;
     }
@@ -93,28 +94,25 @@ final class CheckCallsInConditionsRule implements Rule
      */
     private function processExpr(Expr $expr, Scope $scope): array
     {
-        $expressions = $this->getConditionExprList($expr, $scope);
-
         $errors = [];
+        $conditionParts = $this->splitConditionByBooleanOperators($expr);
 
-        $slowCalls = [];
-        foreach ($expressions as $expression) {
-            if ($expression instanceof CallLike) {
-                $name = $this->getCallName($expression, $scope);
-                if ($this->isSlow($name)) {
-                    $slowCalls[] = $name;
-                    continue;
-                }
+        $slowCallsInPreviousParts = [];
+        foreach ($conditionParts as $conditionPart) {
+            $slowCallsInCurrentPart = $this->getSlowCallsInExpr($conditionPart, $scope);
+            if ($slowCallsInCurrentPart !== []) {
+                $slowCallsInPreviousParts = array_merge($slowCallsInPreviousParts, $slowCallsInCurrentPart);
+                continue;
             }
 
-            foreach ($slowCalls as $slowCall) {
+            foreach ($slowCallsInPreviousParts as $slowCall) {
                 $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before expressions which seem to be faster.')
                     ->tip('Move faster expressions to the beginning of the condition and calls to the end.')
                     ->line($expr->getLine())
                     ->build();
             }
 
-            $slowCalls = [];
+            $slowCallsInPreviousParts = [];
         }
 
         return $errors;
@@ -123,38 +121,82 @@ final class CheckCallsInConditionsRule implements Rule
     /**
      * @return Expr[]
      */
-    private function getConditionExprList(Expr $expr, Scope $scope): array
+    private function splitConditionByBooleanOperators(Expr $expr): array
     {
-        // we should rework this to something where we split boolean and/or, logical and/or and boolean not and then each part separately finds if there is some CallLike expression
-        // because $this->callSomething() > new DateTime() && $this->>callSomethingElse() < new DateTime() is correct but this rule thinks new DateTime() can be called first
-
-        $expressions = [];
-        if ($expr instanceof BinaryOp) {
-            if ($expr instanceof BooleanAnd || $expr instanceof BooleanOr || $expr instanceof LogicalAnd || $expr instanceof LogicalOr) {
-                return array_merge($this->getConditionExprList($expr->left, $scope), $this->getConditionExprList($expr->right, $scope));
-            } else {
-                if ($expr->left instanceof CallLike) {
-                    $expressions[] = $expr->left;
-                }
-                if ($expr->right instanceof CallLike) {
-                    $expressions[] = $expr->right;
-                }
-                return $expressions;
-            }
-        }
         if ($expr instanceof BooleanNot) {
-            return $this->getConditionExprList($expr->expr, $scope);
+            return $this->splitConditionByBooleanOperators($expr->expr);
         }
         if ($expr instanceof Assign) {
-            return $this->getConditionExprList($expr->expr, $scope);
+            return $this->splitConditionByBooleanOperators($expr->expr);
         }
-
         if ($expr instanceof Instanceof_) {
-            return $this->getConditionExprList($expr->expr, $scope);
+            return $this->splitConditionByBooleanOperators($expr->expr);
         }
 
-        $expressions[] = $expr;
-        return $expressions;
+        if ($expr instanceof BinaryOp) {
+            if ($expr instanceof BooleanAnd || $expr instanceof BooleanOr || $expr instanceof LogicalAnd || $expr instanceof LogicalOr || $expr instanceof LogicalXor) {
+                return array_merge($this->splitConditionByBooleanOperators($expr->left), $this->splitConditionByBooleanOperators($expr->right));
+            }
+        }
+
+        return [$expr];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getSlowCallsInExpr(Expr $expr, Scope $scope): array
+    {
+        $slowCalls = [];
+        foreach ($this->collectCallLikes($expr) as $callLike) {
+            $callName = $this->getCallName($callLike, $scope);
+            if ($callName === null) {
+                continue;
+            }
+            if ($this->isSlow($callName)) {
+                $slowCalls[] = $callName;
+            }
+        }
+
+        return $slowCalls;
+    }
+
+    /**
+     * @return CallLike[]
+     */
+    private function collectCallLikes(Expr $expr): array
+    {
+        if ($expr instanceof CallLike) {
+            return [$expr];
+        }
+        if ($expr instanceof BooleanNot) {
+            return $this->collectCallLikes($expr->expr);
+        }
+        if ($expr instanceof Assign) {
+            return $this->collectCallLikes($expr->expr);
+        }
+        if ($expr instanceof Instanceof_) {
+            return $this->collectCallLikes($expr->expr);
+        }
+
+        $calls = [];
+        foreach ($expr->getSubNodeNames() as $subNodeName) {
+            $subNode = $expr->$subNodeName;
+            if ($subNode instanceof Expr) {
+                $calls = array_merge($calls, $this->collectCallLikes($subNode));
+                continue;
+            }
+            if (!is_array($subNode)) {
+                continue;
+            }
+            foreach ($subNode as $subNodeItem) {
+                if ($subNodeItem instanceof Expr) {
+                    $calls = array_merge($calls, $this->collectCallLikes($subNodeItem));
+                }
+            }
+        }
+
+        return $calls;
     }
 
     private function isSlow(?string $callName): bool

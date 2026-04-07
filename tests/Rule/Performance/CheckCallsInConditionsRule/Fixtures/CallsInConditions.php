@@ -185,6 +185,22 @@ final class CallsInConditions
         return false;
     }
 
+    public function fileExistsAsFirstInXor(): bool
+    {
+        if (file_exists($this->string) xor $this->bool) {
+            return true;
+        }
+        return false;
+    }
+
+    public function fileExistsAsLastInXor(): bool
+    {
+        if ($this->bool xor file_exists($this->string)) {
+            return true;
+        }
+        return false;
+    }
+
     private function createDateTime(string $dateTime): DateTime
     {
         return new DateTime($dateTime);

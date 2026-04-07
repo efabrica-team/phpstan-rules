@@ -101,6 +101,37 @@ final class CheckCallsInConditionsRuleTest extends RuleTestCase
                 174,
                 'Move faster expressions to the beginning of the condition and calls to the end.',
             ],
+            [
+                'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
+                190,
+                'Move faster expressions to the beginning of the condition and calls to the end.',
+            ],
         ]);
+    }
+
+    public function testCallsInElseIfConditions(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/ElseIfCallsInConditions.php'], [
+            [
+                'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
+                21,
+                'Move faster expressions to the beginning of the condition and calls to the end.',
+            ],
+            [
+                'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
+                23,
+                'Move faster expressions to the beginning of the condition and calls to the end.',
+            ],
+            [
+                'Performance: "file_exists()" is called in condition before expressions which seem to be faster.',
+                34,
+                'Move faster expressions to the beginning of the condition and calls to the end.',
+            ],
+        ]);
+    }
+
+    public function testMultipleCallsInOneIfDoNotReportFalsePositive(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/MultipleCallsInOneIfNoFalsePositive.php'], []);
     }
 }
