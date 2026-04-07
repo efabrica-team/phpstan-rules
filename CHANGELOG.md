@@ -5,6 +5,8 @@
 ### Added
 - Performance rule for Nette\Database\Table\Selection::fetch
 - Performance rule for checking calls in conditions
+- Performance rule for not use count($array) in conditions
+- Rule to Enforce arrow function when it contains only single return expression
 
 ## [0.8.1] - 2026-01-27
 ### Changed
