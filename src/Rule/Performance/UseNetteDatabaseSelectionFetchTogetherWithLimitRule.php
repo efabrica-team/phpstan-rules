@@ -11,7 +11,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Scalar;
+use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Analyser\Scope;
@@ -200,6 +200,6 @@ final class UseNetteDatabaseSelectionFetchTogetherWithLimitRule implements Rule
             return false;
         }
 
-        return $arg->value instanceof Scalar && $arg->value->value === 1;
+        return $arg->value instanceof LNumber && $arg->value->value === 1;
     }
 }

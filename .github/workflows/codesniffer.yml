@@ -24,5 +24,8 @@ jobs:
       - name: Install PHP code sniffer as dev dependency
         run: composer require efabrica/coding-standard --dev
 
-      - name: Code sniffer
-        run: vendor/bin/phpcs src tests --standard=vendor/efabrica/coding-standard/eFabrica -n
+      - name: Code sniffer src
+        run: vendor/bin/phpcs src --standard=vendor/efabrica/coding-standard/eFabricaStrict -n
+
+      - name: Code sniffer tests
+        run: vendor/bin/phpcs tests --standard=vendor/efabrica/coding-standard/eFabrica -n
