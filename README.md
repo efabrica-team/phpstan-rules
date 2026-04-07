@@ -336,6 +336,30 @@ class Foo extends SomeClass
 ```
 :+1:
 
+### Enforce arrow function
+Checks closures and reports those that only contain a single return expression, because they can be replaced with `fn`.
+This rule is optional and is not enabled by default in `rules.neon`.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\EnforceArrowFunctionRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+$doubled = array_map(function (int $number): int {
+    return $number * 2;
+}, $numbers);
+```
+:x:
+
+```php
+$doubled = array_map(fn (int $number): int => $number * 2, $numbers);
+```
+:+1:
+
 ### Performance - DisabledCallsInLoopsRule
 Some functions are not recommended to be called in loops. For example array_merge.
 

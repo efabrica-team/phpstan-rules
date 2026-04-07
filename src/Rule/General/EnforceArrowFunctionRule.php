@@ -1,13 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Efabrica\PHPStanRules\Rule\General;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\Stmt\Return_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleErrorBuilder;
+use function count;
 
-class EnforceArrowFunctionRule implements Rule
+/**
+ * @implements Rule<Closure>
+ */
+final class EnforceArrowFunctionRule implements Rule
 {
     public function getNodeType(): string
     {
@@ -16,8 +24,6 @@ class EnforceArrowFunctionRule implements Rule
 
     /**
      * @param Closure $node
-     * @param Scope   $scope
-     * @return array|string[]
      */
     public function processNode(Node $node, Scope $scope): array
     {
@@ -25,13 +31,25 @@ class EnforceArrowFunctionRule implements Rule
             return [];
         }
 
-        $onlyStatement = reset($node->stmts);
-        if (!$onlyStatement instanceof Node\Stmt\Return_) {
+        $onlyStatement = $node->stmts[0];
+        if (!$onlyStatement instanceof Return_) {
             return [];
         }
 
+        if ($onlyStatement->expr === null) {
+            return [];
+        }
+
+        foreach ($node->uses as $closureUse) {
+            if ($closureUse->byRef) {
+                return [];
+            }
+        }
+
         return [
-            'Closure only has a single return statement. Use an arrow function instead.',
+            RuleErrorBuilder::message('Closure has a single return expression. Use an arrow function instead.')
+                ->line($node->getLine())
+                ->build(),
         ];
     }
 }
