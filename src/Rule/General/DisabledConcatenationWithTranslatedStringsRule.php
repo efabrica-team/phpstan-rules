@@ -11,12 +11,18 @@ use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use ReflectionException;
 use ReflectionMethod;
+use function explode;
+use function implode;
+use function in_array;
+use function preg_match;
+use function str_contains;
 
 /**
  * @implements Rule<Concat>
@@ -32,12 +38,16 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
     /** @var array<class-string, string[]> */
     private array $staticCalls = [];
 
+    /** @var string[] */
+    private array $allowedTranslateConcatenationPatterns;
+
     private NameResolver $nameResolver;
 
     /**
      * @param string[] $translateCalls
+     * @param string[] $allowedTranslateConcatenationPatterns
      */
-    public function __construct(array $translateCalls, NameResolver $nameResolver)
+    public function __construct(array $translateCalls, array $allowedTranslateConcatenationPatterns, NameResolver $nameResolver)
     {
         foreach ($translateCalls as $translateCall) {
             if (!str_contains($translateCall, '::')) {
@@ -65,6 +75,7 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
             }
         }
 
+        $this->allowedTranslateConcatenationPatterns = $allowedTranslateConcatenationPatterns;
         $this->nameResolver = $nameResolver;
     }
 
@@ -83,8 +94,9 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
         }
 
         $errors = [];
-        if ($this->isTranslateCall($node->left, $scope) || $this->isTranslateCall($node->right, $scope)) {
-            $errors[] = RuleErrorBuilder::message('Do not concatenate translated strings.')->tip('Every language has its own word ordering, use variables instead.')->build();
+        if (($this->isTranslateCall($node->left, $scope) && !$this->isAllowedToConcatenate($node->right)) ||
+            ($this->isTranslateCall($node->right, $scope) && !$this->isAllowedToConcatenate($node->left))) {
+            $errors[] = RuleErrorBuilder::message('Do not concatenate translated strings.')->tip('Every language has its own word ordering, use variables in translations instead, e.g. Hello %name%.')->build();
         }
         return $errors;
     }
@@ -126,5 +138,14 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
         }
 
         return false;
+    }
+
+    private function isAllowedToConcatenate(Expr $expr): bool
+    {
+        if (!$expr instanceof String_) {
+            return false;
+        }
+
+        return (bool)preg_match('#' . implode('|', $this->allowedTranslateConcatenationPatterns) . '#', $expr->value);
     }
 }

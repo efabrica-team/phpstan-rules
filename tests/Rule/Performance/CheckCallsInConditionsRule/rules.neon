@@ -1,0 +1,5 @@
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\CheckCallsInConditionsRule(%conditionSlowCalls%)
+        tags:
+            - phpstan.rules.rule

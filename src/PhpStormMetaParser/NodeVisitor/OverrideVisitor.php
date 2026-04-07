@@ -14,6 +14,11 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeVisitorAbstract;
+use function array_filter;
+use function array_merge;
+use function explode;
+use function implode;
+use function is_null;
 
 final class OverrideVisitor extends NodeVisitorAbstract
 {
@@ -60,7 +65,7 @@ final class OverrideVisitor extends NodeVisitorAbstract
         $classNameParts = $call->class->parts;
         $alias = $classNameParts[0] ?? null;
 
-        if ($alias && isset($this->uses[$alias])) {
+        if (!is_null($alias) && isset($this->uses[$alias])) {
             unset($classNameParts[0]);
             $classNameParts = array_merge($this->uses[$alias], $classNameParts);
         }

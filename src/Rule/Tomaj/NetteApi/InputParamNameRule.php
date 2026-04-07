@@ -13,6 +13,9 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
+use function is_null;
+use function is_string;
+use function str_replace;
 
 /**
  * @implements Rule<New_>
@@ -41,7 +44,7 @@ final class InputParamNameRule implements Rule
         }
 
         $nameArg = $node->getArgs()[0] ?? null;
-        if (!$nameArg) {
+        if (is_null($nameArg)) {
             return [
                 RuleErrorBuilder::message('Missing name of input parameter.')->file($file)->line($node->getStartLine())->build(),
             ];
