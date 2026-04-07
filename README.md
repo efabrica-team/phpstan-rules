@@ -240,6 +240,43 @@ class Foo
 ```
 :+1:
 
+### Do not concatenate translated strings
+Every language has its own word order in sentences, we can't use e.g. variables at the same place for all languages. There are mechanisms in translate libraries e.g. symfony/translator - we can use placeholders like %name% etc.
+This rule checks if you use translated messages and then concat them with some other strings.
+
+```neon
+parameters:
+    translateCalls:
+        - iAmTranslateFunction
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateMethod
+        - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateStaticMethod
+    allowedTranslateConcatenationPatterns:
+        - '[\s]*<.*?>[\s]*<\/.*?>[\s]*'
+        - '[\s]*This is allowed text[\s]*'
+        - '[\s]*\#[0-9]+[\s]*'
+
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%)
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+$message = 'Hello';
+$name = 'Mark';
+echo $translator->iAmTranslateMethod($message) . ' ' . $name;
+```
+
+:x:
+
+```php
+$message = 'Hello %name%';
+$name = 'Mark';
+echo $translator->iAmTranslateMethod($message, ['name' => $name];
+```
+:+1:
+
 ### Forbidden constructor parameters types
 This rule checks if constructor contains forbidden parameter types.
 
@@ -315,11 +352,33 @@ $result = [];
 for ($i = 0; $i < 100; $i++) {
     $result = array_merge($result, $data[$i]);
 }
+
 ```
 :x:
 
 ```php
 $result = array_merge([], ...$data);
+```
+:+1:
+
+### Performance - UseNetteDatabaseSelectionFetchTogetherWithLimitRule
+Nette\Database\Table\Selection::fetch() should be used with limit(1) to avoid loading more rows than needed.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\UseNetteDatabaseSelectionFetchTogetherWithLimitRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+return $selection->where(['category_id' => 1])->fetch();
+```
+:x:
+
+```php
+return $selection->where(['category_id' => 1])->limit(1)->fetch();
 ```
 :+1:
 
@@ -360,3 +419,26 @@ class SomeClass
 }
 ```
 :+1:
+
+### Nette DI - PresenterInjectedPropertiesExtension
+Will not report uninitialized properties with `@Inject` or `#[Inject]` attribute.
+
+```neon
+services:
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+        tags:
+            - phpstan.properties.readWriteExtension
+```
+
+```php
+class InjectPresenter
+{
+    /** @var SomeInjectedClass @inject */
+    public SomeInjectedClass $someService;
+    ...
+    
+    #[Inject]
+    public OtherInjectedClass $otherService;
+    ...
+```

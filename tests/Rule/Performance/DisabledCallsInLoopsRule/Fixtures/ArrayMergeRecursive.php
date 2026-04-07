@@ -19,7 +19,7 @@ final class ArrayMergeRecursive
     {
         $result = [];
         foreach ($data as $row) {
-            $result = array_merge_recursive($result, $row);
+            $result = array_merge_recursive($row, $result);
         }
         return $result;
     }
@@ -40,7 +40,7 @@ final class ArrayMergeRecursive
         $result = [];
         $i = 0;
         do {
-            $result = array_merge_recursive($result, $data[$i]);
+            $result = array_merge_recursive($data[$i], $result);
             $i++;
         } while (isset($data[$i]));
         return $result;
@@ -49,5 +49,28 @@ final class ArrayMergeRecursive
     public function callArrayMergeRecursiveOnce(array $data): array
     {
         return array_merge_recursive([], ...$data);
+    }
+
+    public function arrayMergeRecursiveInForeachWithoutAssign(array $defaultParams, array $allParams): array
+    {
+        return array_merge_recursive($defaultParams, $allParams);
+    }
+
+    public function arrayMergeRecursiveWithAssignToAnotherVariable(array $defaultParams, array $allParams): array
+    {
+        $paramsList = [];
+        foreach ($allParams as $oneParams) {
+            $paramsList[] = array_merge_recursive($defaultParams, $oneParams);
+        }
+        return $paramsList;
+    }
+
+    public function arrayMergeRecursiveDirectlyInForeach(array $defaultParams, array $otherParams): array
+    {
+        $params = [];
+        foreach (array_merge_recursive($defaultParams, $otherParams) as $param) {
+            $params[] = $param;
+        }
+        return $params;
     }
 }

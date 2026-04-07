@@ -1,10 +1,5 @@
 services:
     -
-        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
-        tags:
-            - phpstan.rules.rule
-
-    -
         factory: Efabrica\PHPStanRules\Rule\General\DisableMethodCallInContextRule(%disabledMethodCalls%)
         tags:
             - phpstan.rules.rule
@@ -20,7 +15,27 @@ services:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\Performance\CheckCallsInConditionsRule(%conditionSlowCalls%)
+        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\DisabledConcatenationWithTranslatedStringsRule(%translateCalls%, %allowedTranslateConcatenationPatterns%)
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Guzzle\ClientCallWithoutOptionRule(['timeout', 'connect_timeout'])
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
+        tags:
+            - phpstan.rules.rule
+
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\UseNetteDatabaseSelectionFetchTogetherWithLimitRule
         tags:
             - phpstan.rules.rule
 
@@ -30,11 +45,28 @@ services:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\General\TraitContextRule
+        factory: Efabrica\PHPStanRules\Rule\Performance\CheckCallsInConditionsRule(%conditionSlowCalls%)
         tags:
             - phpstan.rules.rule
 
     -
-        factory: Efabrica\PHPStanRules\Rule\Performance\DisabledCallsInLoopsRule
-        tags:
-            - phpstan.rules.rule
+        class: Efabrica\PHPStanRules\Rule\Schema\UnusedProperties
+
+    -
+        class: Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties
+
+    -
+        class: Efabrica\PHPStanRules\Collector\Schema\SchemaUsage
+
+    -
+        class: Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions
+
+conditionalTags:
+    Efabrica\PHPStanRules\Rule\Schema\UnusedProperties:
+        phpstan.rules.rule: false
+    Efabrica\PHPStanRules\Rule\Schema\NeverUsedProperties:
+        phpstan.rules.rule: false
+    Efabrica\PHPStanRules\Collector\Schema\SchemaUsage:
+        phpstan.collector: false
+    Efabrica\PHPStanRules\Collector\Schema\SchemaDefinitions:
+        phpstan.collector: false
