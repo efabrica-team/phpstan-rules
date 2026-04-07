@@ -444,6 +444,31 @@ class SomeClass
 ```
 :+1:
 
+### Performance - UseArrayComparisonInsteadOfCountInConditionRule
+This rule checks if `count($array)` is used in `if` / `elseif` conditions for empty/non-empty checks and recommends array comparison with `[]`.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\UseArrayComparisonInsteadOfCountInConditionRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+if (count($items) > 0) {
+    // ...
+}
+```
+:x:
+
+```php
+if ($items !== []) {
+    // ...
+}
+```
+:+1:
+
 ### Nette DI - PresenterInjectedPropertiesExtension
 Will not report uninitialized properties with `@Inject` or `#[Inject]` attribute.
 
