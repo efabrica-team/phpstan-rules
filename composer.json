@@ -14,6 +14,7 @@
         "tomaj/nette-api": "^3.0.0",
         "nette/database": "^3.0",
         "nette/di": "^2.3.0 || ^3.0.0",
+        "nette/utils": "^3.2 | ^4.0",
         "efabrica/php-extensions-finder": "^0.5"
     },
     "autoload": {

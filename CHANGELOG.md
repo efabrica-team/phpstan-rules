@@ -2,6 +2,10 @@
 
 ## [Unreleased][unreleased]
 
+### Added
+- Performance rule for Nette\Database\Table\Selection::fetch
+- Performance rule for checking calls in conditions
+
 ## [0.8.1] - 2026-01-27
 ### Changed
 - Turn off Neon DI attribute Inject check by default

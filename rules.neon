@@ -45,6 +45,11 @@ services:
             - phpstan.rules.rule
 
     -
+        factory: Efabrica\PHPStanRules\Rule\Performance\CheckCallsInConditionsRule(%conditionSlowCalls%)
+        tags:
+            - phpstan.rules.rule
+
+    -
         class: Efabrica\PHPStanRules\Rule\Schema\UnusedProperties
 
     -
