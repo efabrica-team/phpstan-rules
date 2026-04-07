@@ -27,6 +27,13 @@ use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
+use function array_merge;
+use function explode;
+use function in_array;
+use function is_array;
+use function preg_match;
+use function str_contains;
+use function str_replace;
 
 /**
  * @implements Rule<If_>
