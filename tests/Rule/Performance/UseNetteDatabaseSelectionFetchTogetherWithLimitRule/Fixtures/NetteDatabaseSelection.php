@@ -51,4 +51,23 @@ final class NetteDatabaseSelection
         }
         return $selection->fetch();
     }
+
+    public function fetchWithoutLimitOnCurrentSelection(Selection $selectionA, Selection $selectionB): ?ActiveRow
+    {
+        $selectionA->limit(1);
+        return $selectionB->fetch();
+    }
+
+    public function fetchWithFluentLimitOnCurrentSelection(Selection $selectionA, Selection $selectionB): ?ActiveRow
+    {
+        $selectionA->limit(1);
+        return $selectionB->where(['id' => 1])->limit(1)->fetch();
+    }
+
+    public function fetchWithNonFluentLimitOnCurrentSelection(Selection $selectionA, Selection $selectionB): ?ActiveRow
+    {
+        $selectionB->limit(1);
+        $selectionA->where(['id' => 1]);
+        return $selectionB->fetch();
+    }
 }

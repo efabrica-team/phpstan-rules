@@ -42,6 +42,10 @@ final class UseNetteDatabaseSelectionFetchTogetherWithLimitRuleTest extends Rule
                 'Use Nette\Database\Selection::fetch() in combination with limit(1)',
                 52,
             ],
+            [
+                'Use Nette\Database\Selection::fetch() in combination with limit(1)',
+                58,
+            ],
         ]);
     }
 }

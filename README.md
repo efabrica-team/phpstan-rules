@@ -361,6 +361,27 @@ $result = array_merge([], ...$data);
 ```
 :+1:
 
+### Performance - UseNetteDatabaseSelectionFetchTogetherWithLimitRule
+Nette\Database\Table\Selection::fetch() should be used with limit(1) to avoid loading more rows than needed.
+
+```neon
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\Performance\UseNetteDatabaseSelectionFetchTogetherWithLimitRule
+        tags:
+            - phpstan.rules.rule
+```
+
+```php
+return $selection->where(['category_id' => 1])->fetch();
+```
+:x:
+
+```php
+return $selection->where(['category_id' => 1])->limit(1)->fetch();
+```
+:+1:
+
 ### Nette DI - PresenterInjectedPropertiesExtension
 Will not report uninitialized properties with `@Inject` or `#[Inject]` attribute.
 
