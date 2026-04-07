@@ -1,0 +1,5 @@
+services:
+    -
+        factory: Efabrica\PHPStanRules\Rule\General\EnforceArrowFunctionRule
+        tags:
+            - phpstan.rules.rule
