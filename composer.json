@@ -12,8 +12,9 @@
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3",
         "tomaj/nette-api": "^3.0.0",
-        "efabrica/php-extensions-finder": "^0.5",
-        "nette/di": "^2.3.0 || ^3.0.0"
+        "nette/database": "^3.0",
+        "nette/di": "^2.3.0 || ^3.0.0",
+        "efabrica/php-extensions-finder": "^0.5"
     },
     "autoload": {
         "psr-4": {
@@ -24,6 +25,5 @@
         "psr-4": {
             "Efabrica\\PHPStanRules\\Tests\\": "tests/"
         }
-    },
-    "prefer-stable": true
+    }
 }
