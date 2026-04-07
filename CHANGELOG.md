@@ -2,6 +2,44 @@
 
 ## [Unreleased][unreleased]
 
+## [0.8.1] - 2026-01-27
+### Changed
+- Turn off Neon DI attribute Inject check by default
+
+## [0.8.0] - 2026-01-26
+### Added
+- Support for Neon DI attribute Inject
+- Set PHP 8.1 as minimum version
+
+## [0.7.6] - 2025-10-17
+### Added
+- Support for PHP 8.4
+
+## [0.7.5] - 2025-05-20
+### Fixed
+- Named parameters in unused schema properties
+
+## [0.7.4] - 2025-03-03
+### Fixed
+- Searching Schema definition
+
+## [0.7.3] - 2025-02-23
+### Fixed
+- Removed ext-random from composer.json
+
+## [0.7.2] - 2025-02-23
+### Added
+- Unused schema properties
+
+## [0.7.1] - 2024-02-27
+### Fixed
+- Support for PHP 8.3
+
+## [0.7.0] - 2023-11-07
+### Added
+- Possibility to allow using some defined patterns with translated strings concatenation
+- Support for PHP 8.3
+
 ### Fixed
 - Check function call in loop only if it is re-assign of variable 
 
@@ -51,7 +89,16 @@
 - Rule for checking trait context 
 - Phpstorm meta dynamic return types
 
-[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...HEAD
+[unreleased]: https://github.com/efabrica-team/phpstan-rules/compare/0.8.1...HEAD
+[0.8.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.8.0...0.8.1
+[0.8.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.6...0.8.0
+[0.7.6]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.5...0.7.6
+[0.7.5]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.4...0.7.5
+[0.7.4]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.3...0.7.4
+[0.7.3]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.2...0.7.3
+[0.7.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.1...0.7.2
+[0.7.1]: https://github.com/efabrica-team/phpstan-rules/compare/0.7.0...0.7.1
+[0.7.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.2...0.5.0
 [0.4.2]: https://github.com/efabrica-team/phpstan-rules/compare/0.4.1...0.4.2

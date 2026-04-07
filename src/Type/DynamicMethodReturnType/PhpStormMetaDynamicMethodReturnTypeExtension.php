@@ -10,6 +10,8 @@ use PHPStan\PhpDoc\TypeStringResolver;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
+use function array_keys;
+use function in_array;
 
 final class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {

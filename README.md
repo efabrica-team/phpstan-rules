@@ -250,6 +250,10 @@ parameters:
         - iAmTranslateFunction
         - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateMethod
         - Efabrica\PHPStanRules\Tests\Rule\General\DisabledConcatenationWithTranslatedStringsRule\Source\TranslatorInterface::iAmTranslateStaticMethod
+    allowedTranslateConcatenationPatterns:
+        - '[\s]*<.*?>[\s]*<\/.*?>[\s]*'
+        - '[\s]*This is allowed text[\s]*'
+        - '[\s]*\#[0-9]+[\s]*'
 
 services:
     -
@@ -356,3 +360,26 @@ for ($i = 0; $i < 100; $i++) {
 $result = array_merge([], ...$data);
 ```
 :+1:
+
+### Nette DI - PresenterInjectedPropertiesExtension
+Will not report uninitialized properties with `@Inject` or `#[Inject]` attribute.
+
+```neon
+services:
+    -
+        class: Efabrica\PHPStanRules\Rule\Nette\PresenterInjectedPropertiesExtension
+        tags:
+            - phpstan.properties.readWriteExtension
+```
+
+```php
+class InjectPresenter
+{
+    /** @var SomeInjectedClass @inject */
+    public SomeInjectedClass $someService;
+    ...
+    
+    #[Inject]
+    public OtherInjectedClass $otherService;
+    ...
+```

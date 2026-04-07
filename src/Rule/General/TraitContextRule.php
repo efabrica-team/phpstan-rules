@@ -12,6 +12,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use ReflectionClass;
+use function preg_match;
 
 /**
  * @implements Rule<ClassLike>
@@ -51,7 +52,7 @@ final class TraitContextRule implements Rule
                 $usedTrait = $usedTraitName->toString();
                 $reflectionClass = new ReflectionClass($usedTrait);
                 $comment = $reflectionClass->getDocComment();
-                if (!$comment) {
+                if ($comment === false) {
                     continue;
                 }
 

@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4', '8.0', '8.1', '8.2' ]
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3', '8.4' ]
 
     name: Composer outdated - PHP ${{ matrix.php }}
 
@@ -30,12 +30,12 @@ jobs:
 
       - name: Composer outdated
         if: matrix.php == '8.1'
-        run: composer outdated -D --strict --ignore phpunit/phpunit
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
 
       - name: Composer outdated
-        if: matrix.php == '8.2'
-        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api
+        if: matrix.php == '8.2' || matrix.php == '8.3' || matrix.php == '8.4'
+        run: composer outdated -D --strict --ignore phpunit/phpunit --ignore tomaj/nette-api --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
 
       - name: Composer outdated
-        if: matrix.php != '8.1' && matrix.php != '8.2'
-        run: composer outdated -D --strict
+        if: matrix.php != '8.1' && matrix.php != '8.2' && matrix.php != '8.3' && matrix.php != '8.4'
+        run: composer outdated -D --strict --ignore nikic/php-parser --ignore phpstan/phpstan --ignore efabrica/php-extensions-finder
