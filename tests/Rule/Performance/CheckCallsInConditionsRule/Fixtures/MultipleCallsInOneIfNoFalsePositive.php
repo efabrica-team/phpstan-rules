@@ -18,11 +18,7 @@ final class MultipleCallsInOneIfNoFalsePositive
 
     public function multipleCallsInOneIf(): bool
     {
-        if (
-            file_exists($this->string)
-            && $this->createDateTime('-1 week') < new DateTime()
-            && Strings::webalize($this->string) !== ''
-        ) {
+        if (file_exists($this->string) && $this->createDateTime('-1 week') < new DateTime() && Strings::webalize($this->string) !== '') {
             return true;
         }
 
