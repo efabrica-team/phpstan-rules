@@ -41,7 +41,7 @@ final class Correct
 
     public function closureWithoutReturnExpr(): ?int
     {
-        $closure = function (): ?int {
+        $closure = function () {
             return;
         };
 
