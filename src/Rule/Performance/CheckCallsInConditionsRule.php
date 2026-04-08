@@ -16,10 +16,14 @@ use PhpParser\Node\Expr\BinaryOp\LogicalOr;
 use PhpParser\Node\Expr\BinaryOp\LogicalXor;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\PropertyFetch;
+use PhpParser\Node\Expr\StaticPropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -112,8 +116,9 @@ final class CheckCallsInConditionsRule implements Rule
                 continue;
             }
 
+            $fasterExpression = $this->describeExpression($conditionPart);
             foreach ($slowCallsInPreviousParts as $slowCall) {
-                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before expressions which seem to be faster.')
+                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before faster expression "' . $fasterExpression . '".')
                     ->tip('Move faster expressions to the beginning of the condition and calls to the end.')
                     ->line($expr->getLine())
                     ->build();
@@ -204,6 +209,36 @@ final class CheckCallsInConditionsRule implements Rule
         }
 
         return $calls;
+    }
+
+    private function describeExpression(Expr $expr): string
+    {
+        if ($expr instanceof Variable) {
+            $variableName = $this->nameResolver->resolve($expr);
+            return $variableName !== null ? '$' . $variableName : '$variable';
+        }
+
+        if ($expr instanceof PropertyFetch) {
+            return $this->describeExpression($expr->var) . '->' . ($this->nameResolver->resolve($expr->name) ?? 'property');
+        }
+
+        if ($expr instanceof StaticPropertyFetch) {
+            return ($this->nameResolver->resolve($expr->class) ?? 'ClassName') . '::$' . ($this->nameResolver->resolve($expr->name) ?? 'property');
+        }
+
+        if ($expr instanceof ClassConstFetch) {
+            return ($this->nameResolver->resolve($expr->class) ?? 'ClassName') . '::' . ($this->nameResolver->resolve($expr->name) ?? 'CONST');
+        }
+
+        if ($expr instanceof BooleanNot) {
+            return '!' . $this->describeExpression($expr->expr);
+        }
+
+        if ($expr instanceof BinaryOp) {
+            return 'expression';
+        }
+
+        return 'expression';
     }
 
     private function isSlow(?string $callName): bool
