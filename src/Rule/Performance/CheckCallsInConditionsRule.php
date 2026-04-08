@@ -21,10 +21,11 @@ use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\PropertyFetch;
-use PhpParser\Node\Expr\StaticPropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\StaticPropertyFetch;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\PrettyPrinter\Standard;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -38,6 +39,8 @@ use function is_array;
 use function preg_match;
 use function str_contains;
 use function str_replace;
+use function strtolower;
+use function substr;
 
 /**
  * @implements Rule<If_>
@@ -58,6 +61,8 @@ final class CheckCallsInConditionsRule implements Rule
     ];
 
     private NameResolver $nameResolver;
+
+    private Standard $prettyPrinter;
 
     /**
      * @param string[] $conditionSlowCalls
@@ -80,6 +85,7 @@ final class CheckCallsInConditionsRule implements Rule
         }
 
         $this->nameResolver = $nameResolver;
+        $this->prettyPrinter = new Standard();
     }
 
     public function getNodeType(): string
@@ -213,6 +219,11 @@ final class CheckCallsInConditionsRule implements Rule
 
     private function describeExpression(Expr $expr): string
     {
+        $prettyPrintedExpression = $this->prettyPrinter->prettyPrintExpr($expr);
+        if ($prettyPrintedExpression !== '') {
+            return $prettyPrintedExpression;
+        }
+
         if ($expr instanceof Variable) {
             $variableName = $this->nameResolver->resolve($expr);
             return $variableName !== null ? '$' . $variableName : '$variable';
@@ -234,11 +245,11 @@ final class CheckCallsInConditionsRule implements Rule
             return '!' . $this->describeExpression($expr->expr);
         }
 
-        if ($expr instanceof BinaryOp) {
-            return 'expression';
-        }
+        $exprType = $expr->getType();
+        $exprType = str_replace('Expr_', '', $exprType);
+        $exprType = str_replace('_', ' ', $exprType);
 
-        return 'expression';
+        return strtolower(substr($exprType, 0, 1)) . substr($exprType, 1);
     }
 
     private function isSlow(?string $callName): bool
