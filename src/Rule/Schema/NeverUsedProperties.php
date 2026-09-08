@@ -11,6 +11,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use function count;
+use function implode;
+use function is_array;
+use function json_decode;
+use function sprintf;
+use function trim;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -138,14 +144,18 @@ final class NeverUsedProperties implements Rule
         foreach ($attributesArray as $attributes) {
             if (is_array($attributes)) {
                 foreach ($attributes as $attribute) {
-                    $result[$attribute['key']] = true;
+                    if (isset($attribute['name'])) {
+                        $result[$attribute['name']] = true;
+                    } else {
+                        $result[$attribute['key']] = true;
+                    }
                 }
             }
         }
 
         $return = [];
         foreach ($this->schemaDefinitions[trim($schemaName, '\\')]['attributes'] as $k => $r) {
-            if (!isset($result[$k])) {
+            if (!isset($result[$k]) && !isset($result[$r])) {
                 $return[] = $r;
             }
         }

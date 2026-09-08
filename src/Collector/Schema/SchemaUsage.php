@@ -10,6 +10,13 @@ use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
+use function count;
+use function get_class;
+use function is_numeric;
+use function is_string;
+use function json_encode;
+use function property_exists;
+use function strpos;
 
 /**
  * @implements Collector<New_, array{string, string, int}>
@@ -44,6 +51,12 @@ final class SchemaUsage implements Collector
             }
             if (strpos($tmp['type'], 'Scalar') !== false && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
                 $tmp['aditional'] = $arg->value->value;
+            }
+            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ConstFetch' && property_exists($arg->value, 'name')) {
+                $tmp['aditional'] = $arg->value->name->toString();
+            }
+            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ClassConstFetch' && property_exists($arg->value, 'name')) {
+                $tmp['aditional'] = $arg->value->name->toString();
             }
 
             $params[] = $tmp;
