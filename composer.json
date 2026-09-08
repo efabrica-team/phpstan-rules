@@ -10,7 +10,7 @@
         "nikic/php-parser": "^4.14",
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.3 | ^8",
         "tomaj/nette-api": "^3.0.0",
         "nette/database": "^3.0",
         "nette/di": "^2.3.0 || ^3.0.0",
