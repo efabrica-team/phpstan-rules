@@ -9,13 +9,13 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\ClassReflection;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
-use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ObjectType;
+use function count;
 use function explode;
+use function implode;
 
 /**
  * @implements Rule<MethodCall>
@@ -44,12 +44,8 @@ final class DisableMethodCallInContextRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$scope->isInClass()) {
-            return [];
-        }
-
         $classReflection = $scope->getClassReflection();
-        if (!$classReflection instanceof ClassReflection) {
+        if ($classReflection === null) {
             return [];
         }
 
@@ -73,7 +69,7 @@ final class DisableMethodCallInContextRule implements Rule
             }
 
             $callerType = $scope->getType($node->var);
-            if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf($disabledClass)->yes()) {
+            if (!(new ObjectType($disabledClass))->isSuperTypeOf($callerType)->yes()) {
                 continue;
             }
 
@@ -83,7 +79,12 @@ final class DisableMethodCallInContextRule implements Rule
             }
 
             $file = $scope->getFile();
-            $errors[] = RuleErrorBuilder::message('Calling method ' . $callerType->getClassName() . '::' . $methodName . '() in ' . $className . '::' . $scope->getFunctionName() . '() is forbidden.')->file($file)->line($node->getLine())->build();
+            $callerClassName = implode('|', $callerType->getObjectClassNames());
+            $errors[] = RuleErrorBuilder::message('Calling method ' . $callerClassName . '::' . $methodName . '() in ' . $className . '::' . $scope->getFunctionName() . '() is forbidden.')
+                ->identifier('efabrica.disabledMethodCallInContext')
+                ->file($file)
+                ->line($node->getLine())
+                ->build();
         }
         return $errors;
     }
@@ -96,9 +97,9 @@ final class DisableMethodCallInContextRule implements Rule
         if ($name instanceof Identifier) {
             return $name->toString();
         }
-        $nameType = $scope->getType($name);
-        if ($nameType instanceof ConstantStringType) {
-            return $nameType->getValue();
+        $constantStrings = $scope->getType($name)->getConstantStrings();
+        if (count($constantStrings) === 1) {
+            return $constantStrings[0]->getValue();
         }
         return null;
     }

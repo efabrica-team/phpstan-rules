@@ -13,11 +13,10 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
-use ReflectionException;
-use ReflectionMethod;
 use function explode;
 use function implode;
 use function in_array;
@@ -47,7 +46,7 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
      * @param string[] $translateCalls
      * @param string[] $allowedTranslateConcatenationPatterns
      */
-    public function __construct(array $translateCalls, array $allowedTranslateConcatenationPatterns, NameResolver $nameResolver)
+    public function __construct(array $translateCalls, array $allowedTranslateConcatenationPatterns, NameResolver $nameResolver, ReflectionProvider $reflectionProvider)
     {
         foreach ($translateCalls as $translateCall) {
             if (!str_contains($translateCall, '::')) {
@@ -56,13 +55,15 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
             }
             /** @var class-string $class */
             [$class, $method] = explode('::', $translateCall, 2);
-            try {
-                $reflectionMethod = new ReflectionMethod($class, $method);
-            } catch (ReflectionException $e) {
+            if (!$reflectionProvider->hasClass($class)) {
+                continue;
+            }
+            $classReflection = $reflectionProvider->getClass($class);
+            if (!$classReflection->hasNativeMethod($method)) {
                 continue;
             }
 
-            if ($reflectionMethod->isStatic()) {
+            if ($classReflection->getNativeMethod($method)->isStatic()) {
                 if (!isset($this->staticCalls[$class])) {
                     $this->staticCalls[$class] = [];
                 }
@@ -96,7 +97,10 @@ final class DisabledConcatenationWithTranslatedStringsRule implements Rule
         $errors = [];
         if (($this->isTranslateCall($node->left, $scope) && !$this->isAllowedToConcatenate($node->right)) ||
             ($this->isTranslateCall($node->right, $scope) && !$this->isAllowedToConcatenate($node->left))) {
-            $errors[] = RuleErrorBuilder::message('Do not concatenate translated strings.')->tip('Every language has its own word ordering, use variables in translations instead, e.g. Hello %name%.')->build();
+            $errors[] = RuleErrorBuilder::message('Do not concatenate translated strings.')
+                ->identifier('efabrica.concatenationWithTranslatedStrings')
+                ->tip('Every language has its own word ordering, use variables in translations instead, e.g. Hello %name%.')
+                ->build();
         }
         return $errors;
     }

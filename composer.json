@@ -4,10 +4,10 @@
     "require": {
         "php": ">=7.4 <8.7",
         "ext-json": "*",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
-        "nikic/php-parser": "^4.14",
+        "nikic/php-parser": "^5.0",
         "tracy/tracy": "*",
         "phpunit/phpunit": "^9.5",
         "guzzlehttp/guzzle": "^7.3 | ^8",
@@ -15,7 +15,7 @@
         "nette/database": "^3.0",
         "nette/di": "^2.3.0 || ^3.0.0",
         "nette/utils": "^3.2 | ^4.0",
-        "efabrica/php-extensions-finder": "^0.5"
+        "efabrica/php-extensions-finder": "^0.8"
     },
     "autoload": {
         "psr-4": {

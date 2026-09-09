@@ -1,0 +1,5 @@
+parameters:
+    ignoreErrors:
+        # parent attribute is provided by PhpParser\NodeVisitor\NodeConnectingVisitor registered in extension.neon
+        -
+            identifier: phpParser.nodeConnectingAttribute

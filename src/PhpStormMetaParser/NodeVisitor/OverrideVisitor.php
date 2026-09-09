@@ -6,7 +6,6 @@ namespace Efabrica\PHPStanRules\PhpStormMetaParser\NodeVisitor;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
@@ -18,7 +17,6 @@ use function array_filter;
 use function array_merge;
 use function explode;
 use function implode;
-use function is_null;
 
 final class OverrideVisitor extends NodeVisitorAbstract
 {
@@ -32,7 +30,7 @@ final class OverrideVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof Use_) {
             foreach ($node->uses as $use) {
-                $this->uses[$use->getAlias()->name] = $use->name->parts;
+                $this->uses[$use->getAlias()->name] = $use->name->getParts();
             }
             return null;
         }
@@ -62,10 +60,10 @@ final class OverrideVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $classNameParts = $call->class->parts;
-        $alias = $classNameParts[0] ?? null;
+        $classNameParts = $call->class->getParts();
+        $alias = $classNameParts[0];
 
-        if (!is_null($alias) && isset($this->uses[$alias])) {
+        if (isset($this->uses[$alias])) {
             unset($classNameParts[0]);
             $classNameParts = array_merge($this->uses[$alias], $classNameParts);
         }
@@ -83,7 +81,6 @@ final class OverrideVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        /** @var ArrayItem $mapArg */
         foreach ($mapArgs->items as $mapArg) {
             if ($mapArg->key instanceof String_ && $mapArg->key->value === '' && $mapArg->value instanceof String_) {
                 $value = implode('|', array_filter(explode('|', $mapArg->value->value), function ($item) {
