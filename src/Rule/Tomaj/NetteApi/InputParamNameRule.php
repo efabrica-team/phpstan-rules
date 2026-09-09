@@ -11,10 +11,9 @@ use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\ConstantScalarType;
 use PHPStan\Type\ObjectType;
+use function count;
 use function is_null;
-use function is_string;
 use function str_replace;
 
 /**
@@ -46,24 +45,28 @@ final class InputParamNameRule implements Rule
         $nameArg = $node->getArgs()[0] ?? null;
         if (is_null($nameArg)) {
             return [
-                RuleErrorBuilder::message('Missing name of input parameter.')->file($file)->line($node->getStartLine())->build(),
+                RuleErrorBuilder::message('Missing name of input parameter.')
+                    ->identifier('efabrica.netteApiInputParamName')
+                    ->file($file)
+                    ->line($node->getStartLine())
+                    ->build(),
             ];
         }
 
-        $nameArgType = $scope->getType($nameArg->value);
-        if (!$nameArgType instanceof ConstantScalarType) {
+        $constantStrings = $scope->getType($nameArg->value)->getConstantStrings();
+        if (count($constantStrings) !== 1) {
             return [];
         }
 
-        $paramName = $nameArgType->getValue();
-        if (!is_string($paramName)) {
-            return [];
-        }
-
+        $paramName = $constantStrings[0]->getValue();
         $recommendedName = str_replace('-', '_', Strings::webalize($paramName, null, false));
         if ($paramName !== $recommendedName) {
             return [
-                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead.')->file($file)->line($node->getStartLine())->build(),
+                RuleErrorBuilder::message('Incorrect parameter name "' . $paramName . '". Use "' . $recommendedName . '" instead.')
+                    ->identifier('efabrica.netteApiInputParamName')
+                    ->file($file)
+                    ->line($node->getStartLine())
+                    ->build(),
             ];
         }
 

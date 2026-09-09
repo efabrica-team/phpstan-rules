@@ -24,11 +24,11 @@ use PhpParser\Node\Expr\BinaryOp\Smaller;
 use PhpParser\Node\Expr\BinaryOp\SmallerOrEqual;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use function array_merge;
 
@@ -51,7 +51,7 @@ final class UseArrayComparisonInsteadOfCountInConditionRule implements Rule
 
     /**
      * @param If_ $node
-     * @return RuleError[]
+     * @return list<IdentifierRuleError>
      */
     public function processNode(Node $node, Scope $scope): array
     {
@@ -64,7 +64,7 @@ final class UseArrayComparisonInsteadOfCountInConditionRule implements Rule
     }
 
     /**
-     * @return RuleError[]
+     * @return list<IdentifierRuleError>
      */
     private function processConditionExpr(Expr $expr): array
     {
@@ -96,25 +96,21 @@ final class UseArrayComparisonInsteadOfCountInConditionRule implements Rule
         return [];
     }
 
-    private function processCountComparison(BinaryOp $expr): ?RuleError
+    private function processCountComparison(BinaryOp $expr): ?IdentifierRuleError
     {
-        $countCall = null;
-        $number = null;
-        $operator = $expr;
-
-        if ($this->isCountCall($expr->left) && $expr->right instanceof LNumber) {
-            $countCall = $expr->left;
-            $number = $expr->right->value;
-        } elseif ($expr->left instanceof LNumber && $this->isCountCall($expr->right)) {
-            $countCall = $expr->right;
-            $number = $expr->left->value;
-            $operator = $this->swapOperator($expr);
+        if ($this->isCountCall($expr->left) && $expr->right instanceof Int_) {
+            return $this->buildComparisonError($expr, $expr, $expr->right->value);
         }
 
-        if (!$countCall instanceof FuncCall || $number === null || !$operator instanceof BinaryOp) {
-            return null;
+        if ($expr->left instanceof Int_ && $this->isCountCall($expr->right)) {
+            return $this->buildComparisonError($expr, $this->swapOperator($expr), $expr->left->value);
         }
 
+        return null;
+    }
+
+    private function buildComparisonError(BinaryOp $expr, BinaryOp $operator, int $number): ?IdentifierRuleError
+    {
         if ($this->isNonEmptyComparison($operator, $number)) {
             return $this->buildNonEmptyError($expr->getLine());
         }
@@ -183,16 +179,18 @@ final class UseArrayComparisonInsteadOfCountInConditionRule implements Rule
         return $this->nameResolver->resolve($expr) === 'count';
     }
 
-    private function buildNonEmptyError(int $line): RuleError
+    private function buildNonEmptyError(int $line): IdentifierRuleError
     {
         return RuleErrorBuilder::message('Use "$array !== []" instead of count() when checking for non-empty array in condition.')
+            ->identifier('efabrica.useArrayComparisonInsteadOfCount')
             ->line($line)
             ->build();
     }
 
-    private function buildEmptyError(int $line): RuleError
+    private function buildEmptyError(int $line): IdentifierRuleError
     {
         return RuleErrorBuilder::message('Use "$array === []" instead of count() when checking for empty array in condition.')
+            ->identifier('efabrica.useArrayComparisonInsteadOfCount')
             ->line($line)
             ->build();
     }

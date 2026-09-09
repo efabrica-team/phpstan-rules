@@ -23,14 +23,14 @@ if (!function_exists('getClasssesMethodsAndTypes')) {
     }
 }
 
+/** @var iterable<SplFileInfo> $phpStormMetaFiles */
 $phpStormMetaFiles = include __DIR__ . '/find_phpstorm_meta_files.php';
 
 $parserFactory = new ParserFactory();
-$parser = $parserFactory->create(ParserFactory::PREFER_PHP7);
+$parser = $parserFactory->createForNewestSupportedVersion();
 
 $scanFiles = [];
 $classesMethodsAndTypes = [];
-/** @var SplFileInfo $phpStormMetaFile */
 foreach ($phpStormMetaFiles as $phpStormMetaFile) {
     $scanFiles[] = $filepath = $phpStormMetaFile->getRealPath();
     $phpStormMetaContent = (string)file_get_contents($phpStormMetaFile->getRealPath());

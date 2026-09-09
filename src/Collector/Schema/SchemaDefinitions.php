@@ -8,10 +8,8 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
-use ReflectionClass;
-use ReflectionMethod;
-use function count;
-use function is_array;
+use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Type\VerbosityLevel;
 use function is_null;
 use function json_encode;
 use function strpos;
@@ -21,6 +19,13 @@ use function strpos;
  */
 final class SchemaDefinitions implements Collector
 {
+    private ReflectionProvider $reflectionProvider;
+
+    public function __construct(ReflectionProvider $reflectionProvider)
+    {
+        $this->reflectionProvider = $reflectionProvider;
+    }
+
     public function getNodeType(): string
     {
         return Class_::class;
@@ -28,33 +33,32 @@ final class SchemaDefinitions implements Collector
 
     public function processNode(Node $node, Scope $scope): ?array
     {
-        if (!$node instanceof Class_) {
-            return null;
-        }
-
-        /** @var class-string */
         $className = !is_null($node->namespacedName) ? $node->namespacedName->toString() : '';
         if (strpos($className, '\\Schema\\') === false) {
              return null;
         }
-        $reflectionClass = new ReflectionClass($className);
-        $reflectionConstructor = $reflectionClass->hasMethod('__construct') ? $reflectionClass->getMethod('__construct') : null;
-        $reflectionConstructorParameters = ($reflectionConstructor instanceof ReflectionMethod) ? $reflectionConstructor->getParameters() : null;
-
-        $params = [];
-        if (is_array($reflectionConstructorParameters) && count($reflectionConstructorParameters) > 0) {
-            foreach ($reflectionConstructorParameters as $arg) {
-                $tmp = [];
-                $tmp['name'] = $arg->getName();
-                $tmp['type'] = (string) $arg->getType();
-                $tmp['key'] = $arg->getPosition();
-
-                $params[] = $tmp;
-            }
-        }
-        if (empty($params)) {
+        if (!$this->reflectionProvider->hasClass($className)) {
             return null;
         }
-        return [$className, $reflectionClass->isAbstract(), (string)json_encode($params), $node->getLine()];
+        $classReflection = $this->reflectionProvider->getClass($className);
+        if (!$classReflection->hasConstructor()) {
+            return null;
+        }
+
+        $params = [];
+        $constructorVariant = $classReflection->getConstructor()->getVariants()[0] ?? null;
+        if ($constructorVariant !== null) {
+            foreach ($constructorVariant->getParameters() as $position => $parameter) {
+                $params[] = [
+                    'name' => $parameter->getName(),
+                    'type' => $parameter->getType()->describe(VerbosityLevel::typeOnly()),
+                    'key' => $position,
+                ];
+            }
+        }
+        if ($params === []) {
+            return null;
+        }
+        return [$className, $classReflection->isAbstract(), (string)json_encode($params), $node->getLine()];
     }
 }

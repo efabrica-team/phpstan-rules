@@ -8,6 +8,10 @@
 - Performance rule for not use count($array) in conditions
 - Rule to Enforce arrow function when it contains only single return expression
 
+### Changed
+- Support for PHPStan 2 and php-parser 5 (error identifiers, NodeConnectingVisitor for parent node attribute, ReflectionProvider instead of runtime reflection)
+- Dev dependencies: nikic/php-parser ^5.0, efabrica/php-extensions-finder ^0.8
+
 ## [0.8.1] - 2026-01-27
 ### Changed
 - Turn off Neon DI attribute Inject check by default

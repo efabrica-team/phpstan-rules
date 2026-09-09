@@ -53,7 +53,7 @@ final class RequiredParametersInMethodCallRule implements Rule
         $methodName = $node->name->name;
 
         $callerType = $scope->getType($node->var);
-        if (!$callerType instanceof ObjectType) {
+        if (!$callerType->isObject()->yes() || !$callerType->hasMethod($methodName)->yes()) {
             return [];
         }
 
@@ -96,7 +96,7 @@ final class RequiredParametersInMethodCallRule implements Rule
             $context = $requiredParametersInMethodCall['context'];
             [$contextClass, $contextMethod] = explode('::', $context, 2);
 
-            if (!$callerType->isInstanceOf($contextClass)->yes()) {
+            if (!(new ObjectType($contextClass))->isSuperTypeOf($callerType)->yes()) {
                 continue;
             }
 
@@ -111,7 +111,10 @@ final class RequiredParametersInMethodCallRule implements Rule
                 $tip = $requiredParameter['tip'] ?? null;
                 $calledType = $callArgs[$parameterName] ?? null;
                 if ($calledType === null) {
-                    $error = RuleErrorBuilder::message('Parameter $' . $parameterName . " of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, none given.")->file($file)->line($node->getLine());
+                    $error = RuleErrorBuilder::message('Parameter $' . $parameterName . " of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, none given.")
+                        ->identifier('efabrica.requiredParametersInMethodCall')
+                        ->file($file)
+                        ->line($node->getLine());
                     if ($tip !== null) {
                         $error->tip($tip);
                     }
@@ -119,7 +122,10 @@ final class RequiredParametersInMethodCallRule implements Rule
                     continue;
                 }
                 if (!$requiredType->accepts($calledType, true)->yes()) {
-                    $error = RuleErrorBuilder::message('Parameter $' . $parameterName . " of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, {$calledType->describe(VerbosityLevel::typeOnly())} given.")->file($file)->line($node->getLine());
+                    $error = RuleErrorBuilder::message('Parameter $' . $parameterName . " of method $contextClass::$contextMethod() is required to be {$requiredType->describe(VerbosityLevel::typeOnly())}, {$calledType->describe(VerbosityLevel::typeOnly())} given.")
+                        ->identifier('efabrica.requiredParametersInMethodCall')
+                        ->file($file)
+                        ->line($node->getLine());
                     if ($tip !== null) {
                         $error->tip($tip);
                     }

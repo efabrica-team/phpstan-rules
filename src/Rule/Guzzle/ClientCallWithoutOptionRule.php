@@ -9,11 +9,11 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\Constant\ConstantArrayType;
-use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\ObjectType;
+use function count;
 use function in_array;
 
 /**
@@ -67,7 +67,7 @@ final class ClientCallWithoutOptionRule implements Rule
         $file = $scope->getFile();
         $callerType = $scope->getType($node->var);
 
-        if (!$callerType instanceof ObjectType || !$callerType->isInstanceOf('GuzzleHttp\Client')->yes()) {
+        if (!(new ObjectType('GuzzleHttp\Client'))->isSuperTypeOf($callerType)->yes()) {
             return [];
         }
 
@@ -82,15 +82,16 @@ final class ClientCallWithoutOptionRule implements Rule
         $errors = [];
         if ($argAtPosition === null) {
             foreach ($this->optionNames as $optionName) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+                $errors[] = $this->buildError('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.', $file, $node);
             }
             return $errors;
         }
 
-        $argAtPositionType = ($scope->getType($argAtPosition->value));
-        if (!$argAtPositionType instanceof ConstantArrayType) {
+        $constantArrays = $scope->getType($argAtPosition->value)->getConstantArrays();
+        if (count($constantArrays) !== 1) {
             return $errors;
         }
+        $argAtPositionType = $constantArrays[0];
         $optionalKeys = $argAtPositionType->getOptionalKeys();
         $requiredOptions = [];
         $optionalOptions = [];
@@ -107,12 +108,21 @@ final class ClientCallWithoutOptionRule implements Rule
                 continue;
             }
             if (!in_array($optionName, $optionalOptions, true)) {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+                $errors[] = $this->buildError('Method GuzzleHttp\Client::' . $methodName . ' is called without ' . $optionName . ' option.', $file, $node);
             } else {
-                $errors[] = RuleErrorBuilder::message('Method GuzzleHttp\Client::' . $methodName . ' is possibly called without ' . $optionName . ' option.')->file($file)->line($node->getStartLine())->build();
+                $errors[] = $this->buildError('Method GuzzleHttp\Client::' . $methodName . ' is possibly called without ' . $optionName . ' option.', $file, $node);
             }
         }
         return $errors;
+    }
+
+    private function buildError(string $message, string $file, MethodCall $node): IdentifierRuleError
+    {
+        return RuleErrorBuilder::message($message)
+            ->identifier('efabrica.guzzleClientCallWithoutOption')
+            ->file($file)
+            ->line($node->getStartLine())
+            ->build();
     }
 
     /**
@@ -123,9 +133,9 @@ final class ClientCallWithoutOptionRule implements Rule
         if ($name instanceof Identifier) {
             return $name->toString();
         }
-        $nameType = $scope->getType($name);
-        if ($nameType instanceof ConstantStringType) {
-            return $nameType->getValue();
+        $constantStrings = $scope->getType($name)->getConstantStrings();
+        if (count($constantStrings) === 1) {
+            return $constantStrings[0]->getValue();
         }
         return null;
     }

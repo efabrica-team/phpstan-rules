@@ -15,6 +15,7 @@ use function in_array;
 
 final class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMethodReturnTypeExtension
 {
+    /** @var class-string */
     private string $className;
 
     /** @var array<string, string> */
@@ -23,6 +24,7 @@ final class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMetho
     private TypeStringResolver $typeStringResolver;
 
     /**
+     * @param class-string $className
      * @param array<string, string> $methodsReturnTypes
      */
     public function __construct(string $className, array $methodsReturnTypes, TypeStringResolver $typeStringResolver)
@@ -43,7 +45,7 @@ final class PhpStormMetaDynamicMethodReturnTypeExtension implements DynamicMetho
         return in_array($methodName, array_keys($this->methodsReturnTypes), true);
     }
 
-    public function getTypeFromMethodCall(MethodReflection $methodReflection, MethodCall $methodCall, Scope $scope): ?Type
+    public function getTypeFromMethodCall(MethodReflection $methodReflection, MethodCall $methodCall, Scope $scope): Type
     {
         $methodName = $methodReflection->getName();
         return $this->typeStringResolver->resolve($this->methodsReturnTypes[$methodName]);
