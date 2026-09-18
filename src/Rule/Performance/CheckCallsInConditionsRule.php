@@ -16,11 +16,16 @@ use PhpParser\Node\Expr\BinaryOp\LogicalOr;
 use PhpParser\Node\Expr\BinaryOp\LogicalXor;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\CallLike;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Instanceof_;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\StaticPropertyFetch;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\If_;
+use PhpParser\PrettyPrinter\Standard;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -34,6 +39,8 @@ use function is_array;
 use function preg_match;
 use function str_contains;
 use function str_replace;
+use function strtolower;
+use function substr;
 
 /**
  * @implements Rule<If_>
@@ -54,6 +61,8 @@ final class CheckCallsInConditionsRule implements Rule
     ];
 
     private NameResolver $nameResolver;
+
+    private Standard $prettyPrinter;
 
     /**
      * @param string[] $conditionSlowCalls
@@ -76,6 +85,7 @@ final class CheckCallsInConditionsRule implements Rule
         }
 
         $this->nameResolver = $nameResolver;
+        $this->prettyPrinter = new Standard();
     }
 
     public function getNodeType(): string
@@ -112,8 +122,9 @@ final class CheckCallsInConditionsRule implements Rule
                 continue;
             }
 
+            $fasterExpression = $this->describeExpression($conditionPart);
             foreach ($slowCallsInPreviousParts as $slowCall) {
-                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before expressions which seem to be faster.')
+                $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before faster expression "' . $fasterExpression . '".')
                     ->tip('Move faster expressions to the beginning of the condition and calls to the end.')
                     ->line($expr->getLine())
                     ->build();
@@ -204,6 +215,41 @@ final class CheckCallsInConditionsRule implements Rule
         }
 
         return $calls;
+    }
+
+    private function describeExpression(Expr $expr): string
+    {
+        $prettyPrintedExpression = $this->prettyPrinter->prettyPrintExpr($expr);
+        if ($prettyPrintedExpression !== '') {
+            return $prettyPrintedExpression;
+        }
+
+        if ($expr instanceof Variable) {
+            $variableName = $this->nameResolver->resolve($expr);
+            return $variableName !== null ? '$' . $variableName : '$variable';
+        }
+
+        if ($expr instanceof PropertyFetch) {
+            return $this->describeExpression($expr->var) . '->' . ($this->nameResolver->resolve($expr->name) ?? 'property');
+        }
+
+        if ($expr instanceof StaticPropertyFetch) {
+            return ($this->nameResolver->resolve($expr->class) ?? 'ClassName') . '::$' . ($this->nameResolver->resolve($expr->name) ?? 'property');
+        }
+
+        if ($expr instanceof ClassConstFetch) {
+            return ($this->nameResolver->resolve($expr->class) ?? 'ClassName') . '::' . ($this->nameResolver->resolve($expr->name) ?? 'CONST');
+        }
+
+        if ($expr instanceof BooleanNot) {
+            return '!' . $this->describeExpression($expr->expr);
+        }
+
+        $exprType = $expr->getType();
+        $exprType = str_replace('Expr_', '', $exprType);
+        $exprType = str_replace('_', ' ', $exprType);
+
+        return strtolower(substr($exprType, 0, 1)) . substr($exprType, 1);
     }
 
     private function isSlow(?string $callName): bool
