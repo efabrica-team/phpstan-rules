@@ -16,8 +16,6 @@ use function implode;
 use function sprintf;
 
 /**
- * Reports constructor parameters of schema classes that are never passed a value different from their default.
- *
  * @implements Rule<CollectedDataNode>
  */
 final class NeverUsedProperties implements Rule

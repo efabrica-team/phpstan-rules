@@ -28,9 +28,6 @@ class ClassWithDefaultValues extends BaseClassWithCall
 
     public static function test(): void
     {
-        // refreshBlocks: once true -> used
-        // note: only ever explicit null which equals default -> never used
-        // limit: explicit 20, different from default -> used
         $test = new ClassWithDefaultValues('a');
         $test = new ClassWithDefaultValues('b', false, null, 20);
         $test = new ClassWithDefaultValues('c', true, null, 20);

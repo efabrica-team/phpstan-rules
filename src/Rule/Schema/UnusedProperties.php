@@ -17,9 +17,6 @@ use function implode;
 use function sprintf;
 
 /**
- * Reports constructor parameters of schema classes that are always called with the same static value.
- * Omitted arguments and arguments equal to the parameter default count as the default value.
- *
  * @implements Rule<CollectedDataNode>
  */
 final class UnusedProperties implements Rule

@@ -26,15 +26,8 @@ use function strrpos;
 use function strtolower;
 use function substr;
 
-/**
- * Converts static values from AST and from reflection into one comparable string form,
- * so that an argument passed in `new` can be compared with a constructor parameter default.
- */
 final class ValueNormalizer
 {
-    /**
-     * @return string|null normalized value, null when the expression is not a static value
-     */
     public static function fromExpr(Expr $expr): ?string
     {
         if ($expr instanceof ConstFetch) {
@@ -61,9 +54,6 @@ final class ValueNormalizer
         return null;
     }
 
-    /**
-     * @return string|null normalized default value, null when parameter has no default or default is not a static value
-     */
     public static function fromParameter(ReflectionParameter $parameter): ?string
     {
         if (!$parameter->isDefaultValueAvailable()) {

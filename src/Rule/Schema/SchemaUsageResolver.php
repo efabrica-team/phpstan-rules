@@ -10,8 +10,6 @@ use function json_decode;
 use function trim;
 
 /**
- * Shared logic for schema rules: converts collected definitions and usages into per-parameter statistics.
- *
  * @phpstan-type Definition array{
  *     name: string,
  *     file: string,
@@ -28,7 +26,7 @@ final class SchemaUsageResolver
     /**
      * @param array<string, array<int, array{0: string, 1: bool, 2: string, 3: int}>> $schemaDefinitions
      *
-     * @return array<string, Definition> keyed by class name without leading backslash
+     * @return array<string, Definition>
      */
     public function convertDefinitions(array $schemaDefinitions): array
     {
@@ -79,17 +77,10 @@ final class SchemaUsageResolver
     }
 
     /**
-     * For every constructor parameter computes:
-     *  - used: at least one call passes a value different from the parameter default (or a non-static value),
-     *  - dynamic: at least one value cannot be compared statically,
-     *  - values: effective static values of all calls (argument passed, or parameter default when omitted).
-     *
-     * Passing the default value explicitly is treated the same as omitting the argument.
-     *
      * @param Definition $definition
      * @param array<int, Call> $calls
      *
-     * @return array<int, ParameterStats> keyed by parameter position
+     * @return array<int, ParameterStats>
      */
     public function resolveParameters(array $definition, array $calls): array
     {

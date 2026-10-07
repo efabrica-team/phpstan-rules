@@ -28,9 +28,6 @@ class ClassWithDefaultValues extends BaseClassWithCall
 
     public static function test(): void
     {
-        // refreshBlocks: explicit false (equals default) and once true -> two different values, not reported
-        // note: always explicit null which equals default -> treated as omitted, not reported here
-        // limit: always explicit 20, different from default 10 -> reported
         $test = new ClassWithDefaultValues('a', false, null, 20);
         $test = new ClassWithDefaultValues('b', false, null, 20);
         $test = new ClassWithDefaultValues('c', true, null, 20);
