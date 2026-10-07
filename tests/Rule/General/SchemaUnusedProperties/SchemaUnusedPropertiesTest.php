@@ -34,7 +34,17 @@ final class SchemaUnusedPropertiesTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithNeverUsedProperties.php'], [
             [
-                'Class "\Efabrica\PHPStanRules\Tests\Rule\General\SchemaUnusedProperties\Fixtures\Schema\ClassWithNeverUsedProperties" contains properties  "propertyA,propertyB,propertyC,propertyD,propertyE" called with same static values.',
+                'Class "\Efabrica\PHPStanRules\Tests\Rule\General\SchemaUnusedProperties\Fixtures\Schema\ClassWithNeverUsedProperties" contains properties  "propertyD,propertyE" called with same static values.',
+                7,
+            ],
+        ]);
+    }
+
+    public function testDefaultValues(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithDefaultValues.php'], [
+            [
+                'Class "\\Efabrica\\PHPStanRules\\Tests\\Rule\\General\\SchemaUnusedProperties\\Fixtures\\Schema\\ClassWithDefaultValues" contains properties  "limit" called with same static values.',
                 7,
             ],
         ]);
@@ -45,7 +55,7 @@ final class SchemaUnusedPropertiesTest extends RuleTestCase
         if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
             $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithNamedProperties.php'], [
                 [
-                    'Class "\Efabrica\PHPStanRules\Tests\Rule\General\SchemaUnusedProperties\Fixtures\Schema\ClassWithNamedProperties" contains properties  "propertyA" called with same static values.'
+                    'Class "\Efabrica\PHPStanRules\Tests\Rule\General\SchemaUnusedProperties\Fixtures\Schema\ClassWithNamedProperties" contains properties  "propertyB" called with same static values.'
                     , 7,
                 ],
             ]);

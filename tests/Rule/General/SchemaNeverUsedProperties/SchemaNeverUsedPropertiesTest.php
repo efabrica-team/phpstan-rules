@@ -45,6 +45,16 @@ final class SchemaNeverUsedPropertiesTest extends RuleTestCase
         ]);
     }
 
+    public function testDefaultValues(): void
+    {
+        $this->analyse([__DIR__ . '/Fixtures/Schema/ClassWithDefaultValues.php'], [
+            [
+                'Class "Efabrica\\PHPStanRules\\Tests\\Rule\\General\\SchemaNeverUsedProperties\\Fixtures\\Schema\\ClassWithDefaultValues" contains never used properties "note".',
+                7,
+            ],
+        ]);
+    }
+
     public function testNamed(): void
     {
         if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
