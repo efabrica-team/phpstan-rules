@@ -8,6 +8,9 @@
 - Performance rule for not use count($array) in conditions
 - Rule to Enforce arrow function when it contains only single return expression
 
+### Fixed
+- Schema rules respect constructor parameter defaults
+
 ## [0.8.1] - 2026-01-27
 ### Changed
 - Turn off Neon DI attribute Inject check by default

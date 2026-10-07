@@ -48,6 +48,8 @@ final class SchemaDefinitions implements Collector
                 $tmp['name'] = $arg->getName();
                 $tmp['type'] = (string) $arg->getType();
                 $tmp['key'] = $arg->getPosition();
+                $tmp['hasDefault'] = $arg->isDefaultValueAvailable();
+                $tmp['default'] = ValueNormalizer::fromParameter($arg);
 
                 $params[] = $tmp;
             }

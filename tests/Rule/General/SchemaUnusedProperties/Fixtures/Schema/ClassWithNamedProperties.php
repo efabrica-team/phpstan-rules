@@ -26,7 +26,7 @@ class ClassWithNamedProperties extends BaseClassWithCall
     {
         if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
             $test = new ClassWithNamedProperties('', propertyB: 2, propertyC: true);
-            $test = new ClassWithNamedProperties('', propertyB: 1, propertyC: false);
+            $test = new ClassWithNamedProperties('', propertyB: 2, propertyC: false);
         }
     }
 }
