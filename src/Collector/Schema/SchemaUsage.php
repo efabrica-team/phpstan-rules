@@ -6,8 +6,12 @@ namespace Efabrica\PHPStanRules\Collector\Schema;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use PhpParser\Node\Scalar;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use function count;
@@ -49,13 +53,13 @@ final class SchemaUsage implements Collector
             if ($arg->value instanceof Array_) {
                 $tmp['aditional'] = count($arg->value->items);
             }
-            if (strpos($tmp['type'], 'Scalar') !== false && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
+            if ($arg->value instanceof Scalar && property_exists($arg->value, 'value') && (is_numeric($arg->value->value) || is_string($arg->value->value))) {
                 $tmp['aditional'] = $arg->value->value;
             }
-            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ConstFetch' && property_exists($arg->value, 'name')) {
+            if ($arg->value instanceof ConstFetch) {
                 $tmp['aditional'] = $arg->value->name->toString();
             }
-            if ($tmp['type'] == 'PhpParser\\Node\\Expr\\ClassConstFetch' && property_exists($arg->value, 'name')) {
+            if ($arg->value instanceof ClassConstFetch && $arg->value->name instanceof Identifier) {
                 $tmp['aditional'] = $arg->value->name->toString();
             }
 

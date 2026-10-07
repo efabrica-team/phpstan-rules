@@ -13,7 +13,6 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use function count;
 use function implode;
-use function is_array;
 use function json_decode;
 use function sprintf;
 use function trim;
@@ -42,9 +41,6 @@ final class NeverUsedProperties implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if (!$node instanceof CollectedDataNode) {
-            return [];
-        }
         $schemaUsage = $node->get(SchemaUsage::class);
         $this->schemaDefinitions = $this->convertSchemaDefinitions($node->get(SchemaDefinitions::class));
 
@@ -58,7 +54,10 @@ final class NeverUsedProperties implements Rule
                     $schemaName,
                     implode(',', $unusedProperties),
                 ))
-                    ->file($this->schemaDefinitions[trim($schemaName, '\\')]['file'])->line($this->schemaDefinitions[trim($schemaName, '\\')][3])->build();
+                    ->identifier('efabrica.schemaNeverUsedProperties')
+                    ->file($this->schemaDefinitions[trim($schemaName, '\\')]['file'])
+                    ->line($this->schemaDefinitions[trim($schemaName, '\\')][3])
+                    ->build();
             }
         }
 
@@ -82,12 +81,11 @@ final class NeverUsedProperties implements Rule
         $result = [];
         foreach ($schemaDefinitions as $key => $value) {
             $tmp = $value[0];
+            /** @var array<int, array{key: int, name: string, type: string}>|null $attributes */
             $attributes = json_decode($tmp[2], true);
             $tmp['attributes'] = [];
-            if (is_array($attributes)) {
-                foreach ($attributes as $attribute) {
-                    $tmp['attributes'][(int) $attribute['key']] = (string) $attribute['name'];
-                }
+            foreach ($attributes ?? [] as $attribute) {
+                $tmp['attributes'][$attribute['key']] = $attribute['name'];
             }
             $tmp['file'] = $key;
             $result[$tmp[0]] = $tmp;
@@ -141,14 +139,13 @@ final class NeverUsedProperties implements Rule
             $attributesArray[] = json_decode($schema[1], true);
         }
 
+        /** @var array<int, array<int, array{key: int, type: class-string, name?: string, aditional?: bool|int|string}>|null> $attributesArray */
         foreach ($attributesArray as $attributes) {
-            if (is_array($attributes)) {
-                foreach ($attributes as $attribute) {
-                    if (isset($attribute['name'])) {
-                        $result[$attribute['name']] = true;
-                    } else {
-                        $result[$attribute['key']] = true;
-                    }
+            foreach ($attributes ?? [] as $attribute) {
+                if (isset($attribute['name'])) {
+                    $result[$attribute['name']] = true;
+                } else {
+                    $result[$attribute['key']] = true;
                 }
             }
         }

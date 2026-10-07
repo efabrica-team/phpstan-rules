@@ -8,10 +8,10 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 use PHPStan\Analyser\Scope;
 use PHPStan\PhpDoc\TypeStringResolver;
+use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
-use ReflectionClass;
 use function preg_match;
 
 /**
@@ -21,9 +21,12 @@ final class TraitContextRule implements Rule
 {
     private TypeStringResolver $typeStringResolver;
 
-    public function __construct(TypeStringResolver $typeStringResolver)
+    private ReflectionProvider $reflectionProvider;
+
+    public function __construct(TypeStringResolver $typeStringResolver, ReflectionProvider $reflectionProvider)
     {
         $this->typeStringResolver = $typeStringResolver;
+        $this->reflectionProvider = $reflectionProvider;
     }
 
     public function getNodeType(): string
@@ -48,10 +51,11 @@ final class TraitContextRule implements Rule
         $errors = [];
         foreach ($classLike->getTraitUses() as $traitUse) {
             foreach ($traitUse->traits as $usedTraitName) {
-                /** @var class-string $usedTrait */
                 $usedTrait = $usedTraitName->toString();
-                $reflectionClass = new ReflectionClass($usedTrait);
-                $comment = $reflectionClass->getDocComment();
+                if (!$this->reflectionProvider->hasClass($usedTrait)) {
+                    continue;
+                }
+                $comment = $this->reflectionProvider->getClass($usedTrait)->getNativeReflection()->getDocComment();
                 if ($comment === false) {
                     continue;
                 }
@@ -63,7 +67,11 @@ final class TraitContextRule implements Rule
 
                 $contextType = $this->typeStringResolver->resolve($match['contextType']);
                 if ($contextType->accepts($classType, true)->no()) {
-                    $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')->file($file)->line($traitUse->getStartLine())->build();
+                    $errors[] = RuleErrorBuilder::message('Trait ' . $usedTrait . ' is used in wrong context.')
+                        ->identifier('efabrica.traitContext')
+                        ->file($file)
+                        ->line($traitUse->getStartLine())
+                        ->build();
                 }
             }
         }

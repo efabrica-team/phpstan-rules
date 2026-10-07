@@ -17,3 +17,7 @@ parametersSchema:
 services:
     - PhpParser\NodeFinder
     - Efabrica\PHPStanRules\Resolver\NameResolver
+    -
+        class: PhpParser\NodeVisitor\NodeConnectingVisitor
+        tags:
+            - phpstan.parser.richParserNodeVisitor

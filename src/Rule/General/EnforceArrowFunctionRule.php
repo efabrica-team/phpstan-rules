@@ -27,7 +27,7 @@ final class EnforceArrowFunctionRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if ($node->stmts === null || count($node->stmts) !== 1) {
+        if (count($node->stmts) !== 1) {
             return [];
         }
 
@@ -48,6 +48,7 @@ final class EnforceArrowFunctionRule implements Rule
 
         return [
             RuleErrorBuilder::message('Closure has a single return expression. Use an arrow function instead.')
+                ->identifier('efabrica.enforceArrowFunction')
                 ->line($node->getLine())
                 ->build(),
         ];

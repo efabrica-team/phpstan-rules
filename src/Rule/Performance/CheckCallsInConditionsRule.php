@@ -27,8 +27,8 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\PrettyPrinter\Standard;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
@@ -95,7 +95,7 @@ final class CheckCallsInConditionsRule implements Rule
 
     /**
      * @param If_ $node
-     * @return RuleError[]
+     * @return list<IdentifierRuleError>
      */
     public function processNode(Node $node, Scope $scope): array
     {
@@ -107,7 +107,7 @@ final class CheckCallsInConditionsRule implements Rule
     }
 
     /**
-     * @return RuleError[]
+     * @return list<IdentifierRuleError>
      */
     private function processExpr(Expr $expr, Scope $scope): array
     {
@@ -125,6 +125,7 @@ final class CheckCallsInConditionsRule implements Rule
             $fasterExpression = $this->describeExpression($conditionPart);
             foreach ($slowCallsInPreviousParts as $slowCall) {
                 $errors[] = RuleErrorBuilder::message('Performance: "' . $slowCall . '()" is called in condition before faster expression "' . $fasterExpression . '".')
+                    ->identifier('efabrica.slowCallsInCondition')
                     ->tip('Move faster expressions to the beginning of the condition and calls to the end.')
                     ->line($expr->getLine())
                     ->build();

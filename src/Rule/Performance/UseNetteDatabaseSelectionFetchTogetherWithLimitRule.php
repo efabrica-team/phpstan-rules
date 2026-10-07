@@ -11,7 +11,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Expression;
 use PHPStan\Analyser\Scope;
@@ -44,11 +44,7 @@ final class UseNetteDatabaseSelectionFetchTogetherWithLimitRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $callerType = $scope->getType($node->var);
-        if (!$callerType instanceof ObjectType) {
-            return [];
-        }
-
-        if (!$callerType->isInstanceOf(Selection::class)->yes()) {
+        if (!(new ObjectType(Selection::class))->isSuperTypeOf($callerType)->yes()) {
             return [];
         }
 
@@ -62,7 +58,9 @@ final class UseNetteDatabaseSelectionFetchTogetherWithLimitRule implements Rule
         }
 
         return [
-            RuleErrorBuilder::message('Use Nette\Database\Selection::fetch() in combination with limit(1)')->build(),
+            RuleErrorBuilder::message('Use Nette\Database\Selection::fetch() in combination with limit(1)')
+                ->identifier('efabrica.netteDatabaseSelectionFetchWithoutLimit')
+                ->build(),
         ];
     }
 
@@ -200,6 +198,6 @@ final class UseNetteDatabaseSelectionFetchTogetherWithLimitRule implements Rule
             return false;
         }
 
-        return $arg->value instanceof LNumber && $arg->value->value === 1;
+        return $arg->value instanceof Int_ && $arg->value->value === 1;
     }
 }

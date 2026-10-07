@@ -59,10 +59,7 @@ final class ForbiddenConstructorParametersTypesRule implements Rule
         }
 
         $className = $classReflection->getName();
-        $classType = $this->typeStringResolver->resolve($className);
-        if (!$classType instanceof ObjectType) {
-            return [];
-        }
+        $classType = new ObjectType($className);
 
         $methodParameters = [];
         foreach ($node->params as $i => $param) {
@@ -88,7 +85,10 @@ final class ForbiddenConstructorParametersTypesRule implements Rule
                     if (!$forbiddenParamType->accepts($methodParameter, true)->yes()) {
                         continue;
                     }
-                    $error = RuleErrorBuilder::message("Constructor parameter $paramName of class $className has forbidden type {$methodParameter->describe(VerbosityLevel::typeOnly())}.")->file($file)->line($node->getLine());
+                    $error = RuleErrorBuilder::message("Constructor parameter $paramName of class $className has forbidden type {$methodParameter->describe(VerbosityLevel::typeOnly())}.")
+                        ->identifier('efabrica.forbiddenConstructorParametersTypes')
+                        ->file($file)
+                        ->line($node->getLine());
                     if ($tip !== null) {
                         $error->tip($tip);
                     }
